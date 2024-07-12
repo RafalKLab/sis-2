@@ -100,6 +100,10 @@
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
                         Users
                     </a>
+                    <a class="nav-link" href="{{ route('logs.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
+                        Activity logs
+                    </a>
                     <a class="nav-link" href="tables.html">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                         Tables

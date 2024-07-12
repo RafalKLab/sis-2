@@ -12,6 +12,14 @@ class ActivityLogTransferObject
         ActivityLogConstants::DANGER_LOG,
     ];
 
+    private const AVAILABLE_ACTIONS = [
+        ActivityLogConstants::ACTION_ADD,
+        ActivityLogConstants::ACTION_UPDATE,
+        ActivityLogConstants::ACTION_DELETE,
+    ];
+
+    private string $action;
+
     private string $user;
     private string $title;
 
@@ -70,14 +78,30 @@ class ActivityLogTransferObject
         return $this;
     }
 
+    public function getAction(): string
+    {
+        return $this->action;
+    }
+
+    public function setAction(string $action): self
+    {
+        if (!in_array($action, self::AVAILABLE_ACTIONS)) {
+             throw new \Exception('Invalid action name');
+        }
+
+        $this->action = $action;
+
+        return $this;
+    }
+
     public function getFormattedDescription(): string
     {
-        if (!$this->newData) {
+        if (!$this->newData || !$this->action) {
             return '';
         }
 
         return isset($this->oldData) && $this->oldData
-            ? sprintf('%s updated to %s', $this->oldData, $this->newData)
-            : sprintf('Added new %s', $this->newData);
+            ? sprintf('%s %s %s', $this->oldData, $this->action, $this->newData)
+            : sprintf(' %s', $this->newData);
     }
 }

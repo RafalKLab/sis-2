@@ -29,8 +29,8 @@ class CreateAdminUser extends Command
     public function handle()
     {
         $password = $this->argument('password');
-        $email = 'admin@admin.com';
-        $name = 'admin';
+        $email = 'root@admin.com';
+        $name = 'Root Admin';
 
         if (!$password) {
             $this->error('Password is not provided');

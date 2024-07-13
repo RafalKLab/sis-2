@@ -10,5 +10,7 @@ interface ActivityLogConstants
 
     public const ACTION_ADD = 'Added';
     public const ACTION_UPDATE = 'updated to';
+    public const ACTION_BLOCKED = 'Blocked';
+    public const ACTION_UNBLOCKED = 'Unblocked';
     public const ACTION_DELETE = 'Deleted';
 }

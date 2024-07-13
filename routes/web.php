@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\BlockedUserController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
@@ -26,6 +27,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/admin/users/create', [UserController::class, 'store'])->name('user.store');
         Route::get('/admin/users/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
         Route::put('/admin/users/edit/{id}', [UserController::class, 'update'])->name('user.update');
+
+        /* Blocked users */
+        Route::get('/admin/blocked-users', [BlockedUserController::class, 'index'])->name('user-blocked.index');
+        Route::get('/admin/users/block/{id}', [BlockedUserController::class, 'block'])->name('user-blocked.block');
+        Route::get('/admin/users/unblock/{id}', [BlockedUserController::class, 'unblock'])->name('user-blocked.unblock');
 
         /* Activity logs */
         Route::get('/admin/logs', [ActivityLogController::class, 'index'])->name('logs.index');

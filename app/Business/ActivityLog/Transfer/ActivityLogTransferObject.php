@@ -15,6 +15,8 @@ class ActivityLogTransferObject
     private const AVAILABLE_ACTIONS = [
         ActivityLogConstants::ACTION_ADD,
         ActivityLogConstants::ACTION_UPDATE,
+        ActivityLogConstants::ACTION_BLOCKED,
+        ActivityLogConstants::ACTION_UNBLOCKED,
         ActivityLogConstants::ACTION_DELETE,
     ];
 
@@ -46,7 +48,7 @@ class ActivityLogTransferObject
     public function setTitle(string $title): self
     {
         if (!in_array($title, self::AVAILABLE_LOG_TITLES)) {
-            throw new \Exception('Invalid log title');
+            throw new \Exception('Invalid log title: ' . $title);
         }
 
         $this->title = $title;
@@ -86,7 +88,7 @@ class ActivityLogTransferObject
     public function setAction(string $action): self
     {
         if (!in_array($action, self::AVAILABLE_ACTIONS)) {
-             throw new \Exception('Invalid action name');
+             throw new \Exception('Invalid action name: ' . $action);
         }
 
         $this->action = $action;
@@ -102,6 +104,6 @@ class ActivityLogTransferObject
 
         return isset($this->oldData) && $this->oldData
             ? sprintf('%s %s %s', $this->oldData, $this->action, $this->newData)
-            : sprintf(' %s', $this->newData);
+            : sprintf(' %s %s', $this->action, $this->newData);
     }
 }

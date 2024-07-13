@@ -15,6 +15,11 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles;
 
+    public const DO_NOT_LOG = [
+        'is_blocked',
+        'remember_token',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -24,6 +29,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_blocked'
     ];
 
     /**
@@ -66,6 +72,10 @@ class User extends Authenticatable
 
             // Log the old and new values
             foreach ($changes as $attribute => $newValue) {
+                if (in_array($attribute, User::DO_NOT_LOG)) {
+                    continue;
+                }
+
                 $oldValue = $model->getOriginal($attribute);
 
                 $transfer = $factory

@@ -96,10 +96,17 @@
                     </div>
                     @role('admin')
                     <div class="sb-sidenav-menu-heading">Admin</div>
-                    <a class="nav-link" href="{{ route('user.index') }}">
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseUserManagement" aria-expanded="false" aria-controls="collapseUserManagement">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
-                        Users
+                        User management
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
+                    <div class="collapse" id="collapseUserManagement" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{{ route('user.index') }}">Active users</a>
+                            <a class="nav-link" href="{{ route('user-blocked.index') }}">Blocked users</a>
+                        </nav>
+                    </div>
                     <a class="nav-link" href="{{ route('logs.index') }}">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                         Activity logs

@@ -47,6 +47,7 @@ class CreateAdminUser extends Command
             'name' => $name,
             'email' => $email,
             'password' => Hash::make($password),
+            'is_root' => true
         ]);
 
         $adminUser->assignRole(ConfigDefaultInterface::ROLE_ADMIN);

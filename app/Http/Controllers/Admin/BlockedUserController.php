@@ -12,7 +12,7 @@ class BlockedUserController extends MainController
 {
     public function index()
     {
-        $users = User::select('id', 'name','email')->where('is_blocked', true)->get();
+        $users = User::select('id', 'name', 'email')->where('is_blocked', true)->get();
 
         return view('main.admin.user.blocked', compact('users'));
     }
@@ -22,6 +22,10 @@ class BlockedUserController extends MainController
 
         if (!$user) {
             return redirect()->route('user.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User not found');
+        }
+
+        if ($user->is_root) {
+            return redirect()->route('user.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Admin root can not be blocked');
         }
 
         if ($user->is_blocked) {

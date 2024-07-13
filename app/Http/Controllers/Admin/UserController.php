@@ -6,8 +6,6 @@ use App\Business\ActivityLog\Config\ActivityLogConstants;
 use App\Http\Controllers\MainController;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use shared\ConfigDefaultInterface;
@@ -16,7 +14,7 @@ class UserController extends MainController
 {
     public function index()
     {
-        $users = User::select('id', 'name','email')->where('is_blocked', false)->get();
+        $users = User::select('id', 'name', 'email', 'is_root')->where('is_blocked', false)->get();
 
         return view('main.admin.user.index', compact('users'));
     }
@@ -61,6 +59,10 @@ class UserController extends MainController
 
         if (!$user) {
             return redirect()->route('user.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User not found');
+        }
+
+        if ($user->is_root) {
+            return redirect()->route('user.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Admin root can not be edited');
         }
 
         return view('main.admin.user.edit', compact('user'));

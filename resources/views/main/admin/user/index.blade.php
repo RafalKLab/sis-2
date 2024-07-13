@@ -30,13 +30,15 @@
                                 <th>{{$user->id}}</th>
                                 <th>{{$user->name}}</th>
                                 <th>{{$user->email}}</th>
-                                <th>{{$user->roles->first()->name}}</th>
+                                <th>@if ($user->is_root) Root @endif {{$user->roles->first()->name}}</th>
                                 <th>
+                                    @if (!$user->is_root)
                                     <div class="btn-group" style="display: flex; justify-content: space-between; width: 100%;">
                                         <a href="{{ route('user.edit', ['id'=>$user->id]) }}" title="Edit" class="btn btn-outline-primary"><i class="fa-solid fa-pen"></i></a>
                                         <a href="" title="Assign fields" class="disabled btn btn-outline-primary"><i class="fa-solid fa-table-cells"></i></a>
                                         <a href="{{ route('user-blocked.block', ['id'=>$user->id]) }}" title="Block" class="btn btn-outline-danger"><i class="fa-solid fa-lock"></i></a>
                                     </div>
+                                    @endif
                                 </th>
                             </tr>
                         @endforeach

@@ -29,7 +29,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'is_blocked'
+        'is_blocked',
+        'is_root'
     ];
 
     /**

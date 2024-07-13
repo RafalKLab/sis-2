@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" rel="stylesheet" />
+    @yield('styles')
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
@@ -111,9 +112,9 @@
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                         Activity logs
                     </a>
-                    <a class="nav-link" href="tables.html">
+                    <a class="nav-link" href="{{ route('admin-table.index') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                        Tables
+                        Table
                     </a>
                     @endrole
                 </div>

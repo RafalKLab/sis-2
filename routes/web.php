@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\AdminTableController;
 use App\Http\Controllers\Admin\BlockedUserController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -35,6 +36,9 @@ Route::middleware('auth')->group(function () {
 
         /* Activity logs */
         Route::get('/admin/logs', [ActivityLogController::class, 'index'])->name('logs.index');
+
+        /* Admin table */
+        Route::get('/admin/table', [AdminTableController::class, 'index'])->name('admin-table.index');
     });
 });
 

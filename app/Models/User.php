@@ -90,5 +90,20 @@ class User extends Authenticatable
                $factory->createActivityLogManager()->log($transfer);
             }
         });
+
+        static::created(function ($model) {
+            $factory = new BusinessFactory();
+            $author = Auth::user();
+            $authorEmail = $author ? $author->email : 'System';
+
+            $transfer = $factory
+                ->getActivityLogTransferObject()
+                ->setUser($authorEmail)
+                ->setTitle(ActivityLogConstants::INFO_LOG)
+                ->setAction(ActivityLogConstants::ACTION_ADD)
+                ->setNewData(sprintf('User %s (id:%s)', $model->email, $model->id));
+
+            $factory->createActivityLogManager()->log($transfer);
+        });
     }
 }

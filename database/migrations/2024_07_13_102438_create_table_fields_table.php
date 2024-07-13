@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('type');
             $table->integer('order');
-            $table->string('color')->default('#fff');
+            $table->string('color')->default('#f2f2f2');
             $table->timestamps();
 
             $table->foreign('table_id')->references('id')->on('tables')->onDelete('cascade');

@@ -27,7 +27,7 @@ class CreateInitTable extends Command
      */
     public function handle()
     {
-        (new BusinessFactory())->createTableManager()->createInitTable();
+        (new BusinessFactory())->createTableManagerAdmin()->createInitTable();
 
         $this->info(sprintf('Table %s with fields created', TableConfig::MAIN_TABLE_NAME));
     }

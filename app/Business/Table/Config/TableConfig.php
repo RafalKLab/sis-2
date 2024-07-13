@@ -16,7 +16,7 @@ class TableConfig implements TableConfigInterface
         return [
             [
                 'name' => 'Užsakymo nr.',
-                'type' => 'string',
+                'type' => 'id',
                 'order' => 1,
             ],
             [

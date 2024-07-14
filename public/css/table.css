@@ -1,0 +1,8 @@
+#orders-table-admin th, td {
+    min-width: 200px;
+    border: 1px solid #D2D2D2;
+}
+
+#orders-table-admin th {
+    background-color: #f2f2f2;
+}

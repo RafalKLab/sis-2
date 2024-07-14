@@ -29,8 +29,8 @@ class CreateAdminUser extends Command
     public function handle()
     {
         $password = $this->argument('password');
-        $email = 'admin@admin.com';
-        $name = 'admin';
+        $email = 'root@admin.com';
+        $name = 'Root Admin';
 
         if (!$password) {
             $this->error('Password is not provided');
@@ -47,6 +47,7 @@ class CreateAdminUser extends Command
             'name' => $name,
             'email' => $email,
             'password' => Hash::make($password),
+            'is_root' => true
         ]);
 
         $adminUser->assignRole(ConfigDefaultInterface::ROLE_ADMIN);

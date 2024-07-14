@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Business\ActivityLog\Config\ActivityLogConstants;
+use App\Http\Controllers\MainController;
 use App\Models\User;
-use Hamcrest\Core\AllOf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use shared\ConfigDefaultInterface;
 
-class UserController extends Controller
+class UserController extends MainController
 {
     public function index()
     {
-        $users = User::select('id', 'name','email')->get();
+        $users = User::select('id', 'name', 'email', 'is_root')->where('is_blocked', false)->get();
 
         return view('main.admin.user.index', compact('users'));
     }
@@ -61,6 +61,10 @@ class UserController extends Controller
             return redirect()->route('user.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User not found');
         }
 
+        if ($user->is_root) {
+            return redirect()->route('user.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Admin root can not be edited');
+        }
+
         return view('main.admin.user.edit', compact('user'));
     }
 
@@ -102,6 +106,8 @@ class UserController extends Controller
         if (!$user->hasRole(ConfigDefaultInterface::ROLE_ADMIN)) {
             $user->removeRole(ConfigDefaultInterface::ROLE_USER);
             $user->assignRole(ConfigDefaultInterface::ROLE_ADMIN);
+
+            $this->logUserRoleUpdatedToAdmin($user);
         }
     }
 
@@ -110,6 +116,34 @@ class UserController extends Controller
         if (!$user->hasRole(ConfigDefaultInterface::ROLE_USER)) {
             $user->removeRole(ConfigDefaultInterface::ROLE_ADMIN);
             $user->assignRole(ConfigDefaultInterface::ROLE_USER);
+
+            $this->logAdminRoleUpdatedToUser($user);
         }
+    }
+
+    private function logUserRoleUpdatedToAdmin($user): void
+    {
+        $transfer = $this->factory()
+            ->getActivityLogTransferObject()
+            ->setUser(auth()->user()->email)
+            ->setTitle(ActivityLogConstants::WARNING_LOG)
+            ->setAction(ActivityLogConstants::ACTION_UPDATE)
+            ->setOldData(sprintf('User %s (id:%s) role',$user->email, $user->id))
+            ->setNewData('admin');
+
+        $this->factory()->createActivityLogManager()->log($transfer);
+    }
+
+    private function logAdminRoleUpdatedToUser($user): void
+    {
+        $transfer = $this->factory()
+            ->getActivityLogTransferObject()
+            ->setUser(auth()->user()->email)
+            ->setTitle(ActivityLogConstants::WARNING_LOG)
+            ->setAction(ActivityLogConstants::ACTION_UPDATE)
+            ->setOldData(sprintf('User admin %s (id:%s) role',$user->email, $user->id))
+            ->setNewData('user');
+
+        $this->factory()->createActivityLogManager()->log($transfer);
     }
 }

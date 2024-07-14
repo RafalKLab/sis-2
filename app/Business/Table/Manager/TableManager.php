@@ -5,6 +5,7 @@ namespace App\Business\Table\Manager;
 use App\Business\Table\Config\TableConfigInterface;
 use App\Business\Table\Reader\TableReaderInterface;
 use App\Models\Table\Table;
+use App\Models\Table\TableField;
 
 class TableManager
 {
@@ -31,6 +32,17 @@ class TableManager
     public function retrieveTableData(): array
     {
         return $this->reader->readTableData();
+    }
+
+    public function retrieveTableFields(): array
+    {
+        return $this->reader->readTableFields();
+    }
+
+
+    public function getField(int $id): ?TableField
+    {
+        return $this->reader->getTableField($id);
     }
 
     private function getOrCreateTable(): Table

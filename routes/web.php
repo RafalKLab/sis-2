@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\AdminFieldController;
 use App\Http\Controllers\Admin\AdminTableController;
 use App\Http\Controllers\Admin\BlockedUserController;
 use App\Http\Controllers\Admin\UserController;
@@ -39,6 +40,10 @@ Route::middleware('auth')->group(function () {
 
         /* Admin table */
         Route::get('/admin/table', [AdminTableController::class, 'index'])->name('admin-table.index');
+
+        /* Admin table fields */
+        Route::get('/admin/fields', [AdminFieldController::class, 'index'])->name('admin-fields.index');
+        Route::get('/admin/fields/{id}', [AdminFieldController::class, 'show'])->name('admin-fields.show');
     });
 });
 

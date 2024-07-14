@@ -6,6 +6,7 @@ use App\Business\Table\Config\TableConfig;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
 use App\Models\Table\Table;
+use App\Models\Table\TableField;
 
 class AdminTableReader implements TableReaderInterface
 {
@@ -18,7 +19,7 @@ class AdminTableReader implements TableReaderInterface
             return [];
         }
 
-        $fieldData = $this->findTableFields($mainTable);
+        $fieldData = $this->readTableFields($mainTable);
         $orders = $this->findOrders($mainTable);
 
         return [
@@ -28,16 +29,44 @@ class AdminTableReader implements TableReaderInterface
         ];
     }
 
+    public function readTableFields(?Table $mainTable = null): array
+    {
+        if (!$mainTable) {
+            $mainTable = $this->findMainTable();
+        }
+
+        $fieldData = [];
+        foreach ($mainTable->fields as $field) {
+            $fieldData[] = [
+                'id' => $field->id,
+                'name' => $field->name,
+                'type' => $field->type,
+                'color' => $field->color,
+                'order' => $field->order
+            ];
+        }
+
+        return $fieldData;
+    }
+
+    public function getTableField(int $id): ?TableField
+    {
+        return TableField::find($id);
+    }
+
+
+
     private function findMainTable(): ?Table
     {
         return Table::where('name', TableConfig::MAIN_TABLE_NAME)->first();
     }
 
-    private function findTableFields(Table $mainTable): array
+    public function findTableFields(Table $mainTable): array
     {
         $fieldData =[];
         foreach ($mainTable->fields as $field) {
             $fieldData[] = [
+                'id' => $field->id,
                 'name' => $field->name,
                 'type' => $field->type,
                 'color' => $field->color,

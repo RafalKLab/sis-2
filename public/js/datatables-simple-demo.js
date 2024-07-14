@@ -21,4 +21,11 @@ window.addEventListener('DOMContentLoaded', event => {
     if (dangerLogsTable) {
         new simpleDatatables.DataTable(dangerLogsTable);
     }
+
+    const adminFieldsTable = document.getElementById('adminFieldsTable');
+    if (adminFieldsTable) {
+        new simpleDatatables.DataTable(adminFieldsTable, {
+            paging: false
+        });
+    }
 });

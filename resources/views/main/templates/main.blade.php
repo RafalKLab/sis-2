@@ -114,13 +114,13 @@
                     </div>
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTable" aria-expanded="false" aria-controls="collapseTable">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                        Table
+                        Table settings
                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
                     <div class="collapse" id="collapseTable" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
                             <a class="nav-link" href="{{ route('admin-table.index') }}">View</a>
-                            <a class="nav-link" href="">Fields</a>
+                            <a class="nav-link" href="{{ route('admin-fields.index') }}">Fields settings</a>
                         </nav>
                     </div>
 

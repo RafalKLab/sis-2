@@ -3,7 +3,7 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <div class="col-md-5">
                 Field: <b>{{$targetField->name}}</b>
-                <a href="" title="Edit" class="text-primary"><i class="fa-solid fa-pen"></i></a>
+                <a href="{{ route('admin-fields.edit', ['id' => $targetField->id]) }}" title="Edit" class="text-primary"><i class="fa-solid fa-pen"></i></a>
             </div>
             <div class="col-md-1 d-flex justify-content-end">
                 <a href="{{ route('admin-fields.index') }}" title="Close" class="text-secondary"><i class="fa-solid fa-xmark"></i></a>

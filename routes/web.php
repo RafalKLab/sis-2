@@ -44,6 +44,10 @@ Route::middleware('auth')->group(function () {
         /* Admin table fields */
         Route::get('/admin/fields', [AdminFieldController::class, 'index'])->name('admin-fields.index');
         Route::get('/admin/fields/{id}', [AdminFieldController::class, 'show'])->name('admin-fields.show');
+        Route::get('/admin/fields/edit/{id}', [AdminFieldController::class, 'edit'])->name('admin-fields.edit');
+        Route::put('/admin/fields/edit/{id}', [AdminFieldController::class, 'update'])->name('admin-fields.update');
+        Route::get('/admin/fields/move-up/{id}', [AdminFieldController::class, 'moveUpFieldOrder'])->name('admin-fields.move-up');
+        Route::get('/admin/fields/move-down/{id}', [AdminFieldController::class, 'moveDownFieldOrder'])->name('admin-fields.move-down');
     });
 });
 

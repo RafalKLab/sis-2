@@ -84,7 +84,7 @@ class User extends Authenticatable
                     ->setUser($authorEmail)
                     ->setTitle(ActivityLogConstants::INFO_LOG)
                     ->setAction(ActivityLogConstants::ACTION_UPDATE)
-                    ->setOldData(sprintf('User %s (id:%s) attribute %s:%s ',$model->email, $model->id, $attribute, $oldValue))
+                    ->setOldData(sprintf('User %s (id:%s) attribute %s: %s ',$model->email, $model->id, $attribute, $oldValue))
                     ->setNewData($newValue);
 
                $factory->createActivityLogManager()->log($transfer);

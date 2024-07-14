@@ -12,6 +12,8 @@ class AdminTableReader implements TableReaderInterface
 {
     protected const PAGINATION_ITEMS_PER_PAGE = 15;
 
+    protected bool $failedSearch = false;
+
     public function readTableData(?string $search): array
     {
         $mainTable = $this->findMainTable();
@@ -67,6 +69,13 @@ class AdminTableReader implements TableReaderInterface
                 ->orderBy('updated_at', 'desc')
                 ->paginate(self::PAGINATION_ITEMS_PER_PAGE);
         } else {
+            if ($this->failedSearch) {
+                return [
+                    'data' => [],
+                    'links' => '',
+                ];
+            }
+
             $orders = Order::orderBy('updated_at', 'desc')->paginate(self::PAGINATION_ITEMS_PER_PAGE);
         }
 
@@ -96,6 +105,8 @@ class AdminTableReader implements TableReaderInterface
             ->toArray();
 
         if (!$foundIds) {
+            $this->failedSearch = true;
+
             return [];
         }
 

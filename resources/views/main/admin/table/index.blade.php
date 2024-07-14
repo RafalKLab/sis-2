@@ -6,7 +6,12 @@
 @section('styles')
     <link href="{{ asset('css/table.css') }}" rel="stylesheet" />
 @endsection
-
+<form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+    <div class="input-group">
+        <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+        <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+    </div>
+</form>
 @section('content')
     <div class="container-fluid px-4">
         <h1 class="mt-4">Table admin view</h1>
@@ -16,6 +21,22 @@
                 <div class="col-md-1">
                     <i class="fa-solid fa-table"></i>
                     {{ $tableData['name'] }}
+                </div>
+                <div class="col-md-3 d-flex justify-content-end">
+                    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" method="GET" action="{{ route('admin-table.index') }}">
+                        <div class="input-group">
+                            <input
+                                class="form-control"
+                                type="text"
+                                placeholder="Search for orders"
+                                aria-label="Search for orders"
+                                aria-describedby="btnNavbarSearch"
+                                name="search"
+                                value="{{ $search }}"
+                            />
+                            <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="card-body">

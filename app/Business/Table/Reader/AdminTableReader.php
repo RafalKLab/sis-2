@@ -10,9 +10,9 @@ use App\Models\Table\TableField;
 
 class AdminTableReader implements TableReaderInterface
 {
-    protected const PAGINATION_ITEMS_PER_PAGE = 20;
+    protected const PAGINATION_ITEMS_PER_PAGE = 15;
 
-    public function readTableData(): array
+    public function readTableData(?string $search): array
     {
         $mainTable = $this->findMainTable();
         if (!$mainTable) {
@@ -20,7 +20,7 @@ class AdminTableReader implements TableReaderInterface
         }
 
         $fieldData = $this->readTableFields($mainTable);
-        $orders = $this->findOrders($mainTable);
+        $orders = $this->findOrders($mainTable, $search);
 
         return [
             'name' => $mainTable->name,
@@ -54,32 +54,23 @@ class AdminTableReader implements TableReaderInterface
         return TableField::find($id);
     }
 
-
-
     private function findMainTable(): ?Table
     {
         return Table::where('name', TableConfig::MAIN_TABLE_NAME)->first();
     }
 
-    public function findTableFields(Table $mainTable): array
+    private function findOrders(Table $mainTable, ?string $search = null): array
     {
-        $fieldData =[];
-        foreach ($mainTable->fields as $field) {
-            $fieldData[] = [
-                'id' => $field->id,
-                'name' => $field->name,
-                'type' => $field->type,
-                'color' => $field->color,
-            ];
+        $searchedOrderIds = $this->findSearchedOrders($search);
+        if ($searchedOrderIds) {
+            $orders = Order::whereIn('id', $searchedOrderIds)
+                ->orderBy('updated_at', 'desc')
+                ->paginate(self::PAGINATION_ITEMS_PER_PAGE);
+        } else {
+            $orders = Order::orderBy('updated_at', 'desc')->paginate(self::PAGINATION_ITEMS_PER_PAGE);
         }
 
-        return $fieldData;
-    }
-
-    private function findOrders(Table $mainTable): array
-    {
         $ordersData = [];
-        $orders = Order::paginate(self::PAGINATION_ITEMS_PER_PAGE);
 
         foreach ($orders as $order) {
             $data = [];
@@ -96,5 +87,19 @@ class AdminTableReader implements TableReaderInterface
             'data' => $ordersData,
             'links' => $orders->links()
         ];
+    }
+
+    private function findSearchedOrders(?string $search): array
+    {
+        $foundIds = OrderData::where('value', 'like', '%' . $search . '%')
+            ->pluck('order_id')
+            ->toArray();
+
+        if (!$foundIds) {
+            return [];
+        }
+
+        // Remove duplicate IDs from the array
+        return  array_unique($foundIds);
     }
 }

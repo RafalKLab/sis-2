@@ -29,16 +29,15 @@ class TableManager
         $this->createTableFields($table);
     }
 
-    public function retrieveTableData(): array
+    public function retrieveTableData(?string $search = null): array
     {
-        return $this->reader->readTableData();
+        return $this->reader->readTableData($search);
     }
 
     public function retrieveTableFields(): array
     {
         return $this->reader->readTableFields();
     }
-
 
     public function getField(int $id): ?TableField
     {

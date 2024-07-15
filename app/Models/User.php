@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Business\ActivityLog\Config\ActivityLogConstants;
 use App\Business\BusinessFactory;
+use App\Models\Table\TableField;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -42,6 +43,12 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function fields()
+    {
+        return $this->belongsToMany(TableField::class, 'field_user', 'user_id', 'field_id')
+            ->orderBy('order');
+    }
 
     /**
      * Get the attributes that should be cast.

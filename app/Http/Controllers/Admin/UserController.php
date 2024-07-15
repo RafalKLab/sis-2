@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Business\ActivityLog\Config\ActivityLogConstants;
 use App\Http\Controllers\MainController;
+use App\Models\MainTable;
+use App\Models\Table\Table;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -99,6 +101,60 @@ class UserController extends MainController
             ConfigDefaultInterface::FLASH_SUCCESS,
             sprintf('User %s successfully updated', $user->name)
         );
+    }
+
+    public function assignFields(int $userId)
+    {
+        $user = User::find($userId);
+        if (!$user) {
+            return redirect()->route('user.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User not found');
+        }
+
+        $mainTable = $this->factory()->createTableManagerAdmin()->getMainTable();
+        if (!$mainTable) {
+            return redirect()->route('user.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Table not found');
+        }
+
+        $assignedFields = [];
+        $notAssignedFields = [];
+
+
+        foreach ($user->fields as $field) {
+            $assignedFields[$field->id] = $field->name;
+        }
+
+        foreach ($mainTable->fields as $field) {
+            if (!array_key_exists($field->id, $assignedFields)) {
+                $notAssignedFields[$field->id] = $field->name;
+            }
+        }
+
+        return view('main.admin.user.fields', compact('user', 'assignedFields', 'notAssignedFields'));
+    }
+
+    public function saveFields(Request $request)
+    {
+        $userId = $request->input('userId');
+        $user = User::find($userId);
+        if (!$user) {
+            return redirect()->route('user.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User not found');
+        }
+
+        $assignedIdsString = $request->input('assignedIds');
+        if ($assignedIdsString) {
+            $assignedIdsArray = explode(',', $assignedIdsString);
+            $assignedIdsArray = array_filter($assignedIdsArray, 'is_numeric');
+            $assignedIdsArray = array_map('intval', $assignedIdsArray);
+
+            // Sync the fields with the user
+            $user->fields()->sync($assignedIdsArray);
+        } else {
+            // If the string is null or empty, detach all fields
+            $user->fields()->detach();
+        }
+
+        // Redirect back with a success message
+        return redirect()->back()->with(ConfigDefaultInterface::FLASH_SUCCESS, 'User fields have been successfully updated.');
     }
 
     private function updateRoleToAdmin($user): void

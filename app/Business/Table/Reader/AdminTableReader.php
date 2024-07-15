@@ -56,7 +56,7 @@ class AdminTableReader implements TableReaderInterface
         return TableField::find($id);
     }
 
-    private function findMainTable(): ?Table
+    public function findMainTable(): ?Table
     {
         return Table::where('name', TableConfig::MAIN_TABLE_NAME)->first();
     }

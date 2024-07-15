@@ -12,4 +12,6 @@ interface TableReaderInterface
     public function readTableFields(?Table $mainTable = null): array;
 
     public function getTableField(int $id): ?TableField;
+
+    public function findMainTable(): ?Table;
 }

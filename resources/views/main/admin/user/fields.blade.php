@@ -16,7 +16,7 @@
                                     @csrf
                                     <input type="hidden" name="assignedIds" id="assignedIds">
                                     <input type="hidden" name="userId" value="{{$user->id}}">
-                                    <button class="btn btn-outline-primary" type="submit">Save</button>
+                                    <button class="btn btn-primary" type="submit">Save</button>
                                 </form>
                             </div>
                         </div>

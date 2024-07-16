@@ -9,6 +9,7 @@ use App\Business\Table\Config\TableConfig;
 use App\Business\Table\Manager\TableManager;
 use App\Business\Table\Reader\AdminTableReader;
 use App\Business\Table\Reader\TableReaderInterface;
+use App\Business\Table\Reader\UserTableReader;
 
 class BusinessFactory
 {
@@ -31,13 +32,13 @@ class BusinessFactory
 
     public function createTableManager(): TableManager
     {
-        //TODO: Implement for user with different fields
-//        return new TableManager(
-//            $this->createTableConfig()
-//        );
+        return new TableManager(
+            $this->createTableConfig(),
+            $this->createUserTableReader(),
+        );
     }
 
-    public function createTableManagerAdmin()
+    public function createTableManagerAdmin(): TableManager
     {
         return new TableManager(
             $this->createTableConfig(),
@@ -50,8 +51,13 @@ class BusinessFactory
         return new TableConfig();
     }
 
-    private function createAdminTableReader(): TableReaderInterface
+    private function createAdminTableReader(): AdminTableReader
     {
         return new AdminTableReader();
+    }
+
+    private function createUserTableReader(): UserTableReader
+    {
+        return new UserTableReader();
     }
 }

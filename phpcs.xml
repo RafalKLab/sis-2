@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="CustomRuleset">
+    <description>The custom coding standard.</description>
+
+    <!-- Path to the source files -->
+    <file>app</file>
+
+    <!-- Define the coding standard to use -->
+    <rule ref="PSR12"/>
+
+    <!-- Ignore specific folders or files -->
+    <exclude-pattern>*/database/*</exclude-pattern>
+</ruleset>

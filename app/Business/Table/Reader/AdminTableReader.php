@@ -7,12 +7,14 @@ use App\Models\Order\Order;
 use App\Models\Order\OrderData;
 use App\Models\Table\Table;
 use App\Models\Table\TableField;
+use Illuminate\Support\Facades\Auth;
 
 class AdminTableReader implements TableReaderInterface
 {
-    protected const PAGINATION_ITEMS_PER_PAGE = 15;
+    protected const PAGINATION_ITEMS_PER_PAGE = 10;
 
     protected bool $failedSearch = false;
+    protected ?int $exactMatch = null;
 
     public function readTableData(?string $search): array
     {
@@ -28,6 +30,7 @@ class AdminTableReader implements TableReaderInterface
             'name' => $mainTable->name,
             'fields' => $fieldData,
             'orders' => $orders,
+            'exact_match' => $this->exactMatch
         ];
     }
 
@@ -66,7 +69,7 @@ class AdminTableReader implements TableReaderInterface
         $searchedOrderIds = $this->findSearchedOrders($search);
         if ($searchedOrderIds) {
             $orders = Order::whereIn('id', $searchedOrderIds)
-                ->orderBy('updated_at', 'desc')
+                ->orderBy('updated_at', 'asc')
                 ->paginate(self::PAGINATION_ITEMS_PER_PAGE);
         } else {
             if ($this->failedSearch) {
@@ -98,9 +101,45 @@ class AdminTableReader implements TableReaderInterface
         ];
     }
 
+    /**
+     * not used anymore for admin tab
+     *
+     * @param string|null $search
+     *
+     * @return array
+     */
     protected function findSearchedOrders(?string $search): array
     {
+        $orderKeyFieldId = null;
+
+        $userFields = Auth::user()
+            ->getAssignedFields()
+            ->pluck('id', 'type')
+            ->toArray();
+
+        // Check if user can see order key field
+        if (array_key_exists('id', $userFields)) {
+            $orderKeyFieldId = $userFields['id'];
+        }
+
+        if ($orderKeyFieldId) {
+            // First, attempt to find an exact match for the order ID
+            $exactMatch = OrderData::where('field_id', $orderKeyFieldId)
+                ->where('value', $search)
+                ->pluck('order_id')
+                ->toArray();
+
+            // If an exact match is found, return it
+            if (!empty($exactMatch)) {
+                $this->exactMatch = $exactMatch[0];
+
+                return $exactMatch;
+            }
+        }
+
+        // Perform the broader search if no exact match was found
         $foundIds = OrderData::where('value', 'like', '%' . $search . '%')
+            ->whereIn('field_id', $userFields)
             ->pluck('order_id')
             ->toArray();
 

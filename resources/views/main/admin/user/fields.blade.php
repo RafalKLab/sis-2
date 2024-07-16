@@ -10,7 +10,11 @@
                 <div class="card mb-2">
                     <div class="card-body">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <div class="col-md-5">Assign fields for user {{ $user->email }}</div>
+                            <div class="col-md-5">Assign fields for user <b>{{ $user->email }}</b>
+                                @if($user->hasRole('admin'))
+                                    <br><span class="text-decoration-underline">This user has admin role and access to all fields</span>
+                                @endif
+                            </div>
                             <div class="col-md-5 d-flex justify-content-end">
                                 <form id="rolesForm" method="POST" action="{{ route('user.save-fields') }}">
                                     @csrf

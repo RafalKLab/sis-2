@@ -5,6 +5,8 @@ namespace App\Business;
 use App\Business\ActivityLog\Manager\ActivityLogManager;
 use App\Business\ActivityLog\Transfer\ActivityLogTransferObject;
 use App\Business\ActivityLog\Writer\ActivityLogMysqlWriter;
+use App\Business\Order\Manager\OrderManager;
+use App\Business\Order\Reader\OrderReader;
 use App\Business\Table\Config\TableConfig;
 use App\Business\Table\Manager\TableManager;
 use App\Business\Table\Reader\AdminTableReader;
@@ -44,6 +46,11 @@ class BusinessFactory
             $this->createTableConfig(),
             $this->createAdminTableReader(),
         );
+    }
+
+    public function createOrderManager(): OrderManager
+    {
+        return new OrderManager();
     }
 
     private function createTableConfig(): TableConfig

@@ -6,3 +6,18 @@
 #orders-table-admin th {
     background-color: #f2f2f2;
 }
+
+.order-view-link {
+    text-decoration: none;
+    color: inherit;
+
+}
+
+.order-view-link:hover {
+    text-decoration: underline;
+
+}
+
+.order-view-link:visited {
+    color: inherit;
+}

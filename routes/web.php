@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
 
     /* User orders table */
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{id}', [OrderController::class, 'view'])->name('orders.view');
 
     /* Admin-only Routes */
     Route::middleware(['role:admin'])->group(function () {

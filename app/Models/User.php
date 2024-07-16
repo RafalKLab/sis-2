@@ -5,11 +5,14 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Business\ActivityLog\Config\ActivityLogConstants;
 use App\Business\BusinessFactory;
+use App\Business\Table\Config\TableConfig;
+use App\Models\Table\Table;
 use App\Models\Table\TableField;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use shared\ConfigDefaultInterface;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -48,6 +51,15 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(TableField::class, 'field_user', 'user_id', 'field_id')
             ->orderBy('order');
+    }
+
+    public function getAssignedFields()
+    {
+        if ($this->hasRole(ConfigDefaultInterface::ROLE_ADMIN)) {
+            return Table::where('name', TableConfig::MAIN_TABLE_NAME)->first()->fields;
+        } else {
+            return $this->fields;
+        }
     }
 
     /**

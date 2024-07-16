@@ -9,17 +9,29 @@ window.addEventListener('DOMContentLoaded', event => {
 
     const infoLogsTable = document.getElementById('infoLogsTable');
     if (infoLogsTable) {
-        new simpleDatatables.DataTable(infoLogsTable);
+        new simpleDatatables.DataTable(infoLogsTable, {
+            columns: [
+                { select: 2, sort: 'desc' } // Assuming 'Date' is in the first column (index 0)
+            ]
+        });
     }
 
     const warningLogsTable = document.getElementById('warningLogsTable');
     if (warningLogsTable) {
-        new simpleDatatables.DataTable(warningLogsTable);
+        new simpleDatatables.DataTable(warningLogsTable, {
+            columns: [
+                { select: 2, sort: 'desc' } // Adjust the index if 'Date' is in a different column
+            ]
+        });
     }
 
     const dangerLogsTable = document.getElementById('dangerLogsTable');
     if (dangerLogsTable) {
-        new simpleDatatables.DataTable(dangerLogsTable);
+        new simpleDatatables.DataTable(dangerLogsTable, {
+            columns: [
+                { select: 2, sort: 'desc' } // Modify accordingly
+            ]
+        });
     }
 
     const adminFieldsTable = document.getElementById('adminFieldsTable');

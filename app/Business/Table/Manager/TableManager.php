@@ -44,6 +44,11 @@ class TableManager
         return $this->reader->getTableField($id);
     }
 
+    public function getMainTable(): ?Table
+    {
+        return $this->reader->findMainTable();
+    }
+
     private function getOrCreateTable(): Table
     {
         $params = [

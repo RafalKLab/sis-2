@@ -15,6 +15,11 @@ class BasicHttpAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $authIsEnabled = env('BASIC_AUTH_ENABLED');
+        if (!$authIsEnabled){
+            return $next($request);
+        }
+
         $ENV_USERNAME = env('BASIC_AUTH_USERNAME');
         $ENV_PASSWORD = env('BASIC_AUTH_PASSWORD');
 

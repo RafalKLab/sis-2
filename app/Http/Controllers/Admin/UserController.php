@@ -6,7 +6,9 @@ use App\Business\ActivityLog\Config\ActivityLogConstants;
 use App\Http\Controllers\MainController;
 use App\Models\MainTable;
 use App\Models\Table\Table;
+use App\Models\Table\TableField;
 use App\Models\User;
+use App\Service\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -48,6 +50,9 @@ class UserController extends MainController
         $request->input('is_admin')
             ? $user->assignRole(ConfigDefaultInterface::ROLE_ADMIN)
             : $user->assignRole(ConfigDefaultInterface::ROLE_USER);
+
+        $keyField = OrderService::getKeyField();
+        $user->fields()->sync($keyField);
 
         return redirect()->route('user.index')->with(
             ConfigDefaultInterface::FLASH_SUCCESS,
@@ -120,12 +125,18 @@ class UserController extends MainController
 
 
         foreach ($user->fields as $field) {
-            $assignedFields[$field->id] = $field->name;
+            $assignedFields[$field->id] = [
+                'name' => $field->name,
+                'type' => $field->type,
+            ];
         }
 
         foreach ($mainTable->fields as $field) {
             if (!array_key_exists($field->id, $assignedFields)) {
-                $notAssignedFields[$field->id] = $field->name;
+                $notAssignedFields[$field->id] = [
+                    'name' => $field->name,
+                    'type' => $field->type,
+                ];
             }
         }
 
@@ -146,11 +157,17 @@ class UserController extends MainController
             $assignedIdsArray = array_filter($assignedIdsArray, 'is_numeric');
             $assignedIdsArray = array_map('intval', $assignedIdsArray);
 
+
+            if (!in_array(OrderService::getKeyField()->id, $assignedIdsArray)) {
+                return redirect()->route('user.assign-fields', ['id'=>$user->id])->with(ConfigDefaultInterface::FLASH_ERROR, 'Key field can not be unassigned');
+            }
+
+
             // Sync the fields with the user
             $user->fields()->sync($assignedIdsArray);
         } else {
-            // If the string is null or empty, detach all fields
-            $user->fields()->detach();
+            // key field should always be assigned
+            return redirect()->route('user.assign-fields', ['id'=>$user->id])->with(ConfigDefaultInterface::FLASH_ERROR, 'Key field can not be unassigned');
         }
 
         // Redirect back with a success message

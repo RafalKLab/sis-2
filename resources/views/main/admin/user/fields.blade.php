@@ -40,11 +40,19 @@
                                                 </thead>
                                                 <tbody id="assignedFields">
                                                 @foreach($assignedFields as $id => $field)
-                                                    <tr>
-                                                        <td>
-                                                            <button title="Unassign field" class="btn btn-outline-secondary move-btn w-100" data-id="{{ $id }}" data-direction="right">{{$field}} <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                                                        </td>
-                                                    </tr>
+                                                    @if($field['type'] === 'id')
+                                                        <tr>
+                                                            <td>
+                                                                <button title="This field can not be unassigned" class="disabled btn btn-outline-secondary w-100 move-btn" data-id="{{ $id }}" data-direction="right">{{$field['name']}} </button>
+                                                            </td>
+                                                        </tr>
+                                                    @else
+                                                        <tr>
+                                                            <td>
+                                                                <button title="Unassign field" class="btn btn-outline-secondary move-btn w-100" data-id="{{ $id }}" data-direction="right">{{$field['name']}} <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
                                                 @endforeach
                                                 </tbody>
                                             </table>
@@ -70,7 +78,7 @@
                                                 @foreach($notAssignedFields as $id => $field)
                                                     <tr>
                                                         <td>
-                                                            <button title="Assign field" class="btn btn-outline-primary move-btn w-100" data-id="{{ $id }}" data-direction="left"><i class="fa fa-arrow-left" aria-hidden="true"></i> {{$field}} </button>
+                                                            <button title="Assign field" class="btn btn-outline-primary move-btn w-100" data-id="{{ $id }}" data-direction="left"><i class="fa fa-arrow-left" aria-hidden="true"></i> {{$field['name']}} </button>
                                                         </td>
                                                     </tr>
                                                 @endforeach

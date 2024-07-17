@@ -37,16 +37,21 @@ class testorders extends Command
     {
         $mainTable = Table::where('name', 'Orders')->first();
 
-        for ($i = 0; $i < 5; $i++) {
-            $oder = Order::create();
-            foreach ($mainTable->fields as $field) {
-                $data = [
-                    'value' => $this->getRandomWord(),
-                    'field_id' => $field->id,
-                ];
-                $oder->data()->create($data);
-            }
-        }
+//        $oder = Order::find(31);
+        $oder = Order::create();
+
+        $oder->children()->create();
+
+//        for ($i = 0; $i < 5; $i++) {
+//            $oder = Order::create();
+//            foreach ($mainTable->fields as $field) {
+//                $data = [
+//                    'value' => $this->getRandomWord(),
+//                    'field_id' => $field->id,
+//                ];
+//                $oder->data()->create($data);
+//            }
+//        }
     }
 
     private function getRandomWord() {

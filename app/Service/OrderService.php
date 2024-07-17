@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Models\Order\Order;
 use App\Models\Order\OrderData;
 use App\Models\Table\TableField;
 
@@ -26,5 +27,22 @@ class OrderService
         }
 
         return $targetOrderKeyField;
+    }
+
+    public static function generateKeyField(int $orderId): string
+    {
+        $orderId = (string) $orderId;
+
+        return 'KP-' . str_pad($orderId, 6, '0', STR_PAD_LEFT);
+    }
+
+    public static function generateKeyFieldForChild(int $orderId): string
+    {
+        $currentOrder = Order::find($orderId);
+        $parentOrder =  $currentOrder->parent;
+        $parentKeyFieldValue = OrderService::getKeyFieldFrom($parentOrder->id)->value;
+        $childrenCount = $parentOrder->children()->count();
+
+        return sprintf('%s-%s', $parentKeyFieldValue, $childrenCount);
     }
 }

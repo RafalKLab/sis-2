@@ -25,6 +25,9 @@ Route::middleware('auth')->group(function () {
     /* User orders table */
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [OrderController::class, 'view'])->name('orders.view');
+    Route::get('/orders/edit/{id}', [OrderController::class, 'edit'])->name('orders.edit');
+    Route::get('/orders/edit/{orderId}/field/{fieldId}', [OrderController::class, 'editField'])->name('orders.edit-field');
+    Route::post('/orders/edit/{id}', [OrderController::class, 'update'])->name('orders.update');
 
     /* Admin-only Routes */
     Route::middleware(['role:admin'])->group(function () {

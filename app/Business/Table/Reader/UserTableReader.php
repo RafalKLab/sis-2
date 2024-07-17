@@ -80,7 +80,7 @@ class UserTableReader implements TableReaderInterface
         $searchedOrderIds = $this->findSearchedOrders($search);
         if ($searchedOrderIds) {
             $orders = Order::whereIn('id', $searchedOrderIds)
-                ->orderBy('updated_at', 'asc')
+                ->orderBy('updated_at', 'desc')
                 ->paginate(self::PAGINATION_ITEMS_PER_PAGE);
         } else {
             if ($this->failedSearch) {

@@ -22,6 +22,7 @@ class User extends Authenticatable
     public const DO_NOT_LOG = [
         'is_blocked',
         'remember_token',
+        'password',
     ];
 
     /**

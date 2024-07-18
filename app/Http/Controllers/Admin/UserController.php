@@ -268,7 +268,7 @@ class UserController extends MainController
             ->setUser(auth()->user()->email)
             ->setTitle(ActivityLogConstants::WARNING_LOG)
             ->setAction($action)
-            ->setNewData(sprintf('user %s (is:%s) to %s', $user->email, $user->id, $permission));
+            ->setNewData(sprintf('user %s (id:%s) to %s', $user->email, $user->id, $permission));
 
         $this->factory()->createActivityLogManager()->log($transfer);
     }

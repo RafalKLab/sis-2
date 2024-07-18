@@ -18,6 +18,8 @@ class ActivityLogTransferObject
         ActivityLogConstants::ACTION_BLOCKED,
         ActivityLogConstants::ACTION_UNBLOCKED,
         ActivityLogConstants::ACTION_DELETE,
+        ActivityLogConstants::ACTION_GIVE_PERMISSION,
+        ActivityLogConstants::ACTION_REMOVE_PERMISSION,
     ];
 
     private string $action;

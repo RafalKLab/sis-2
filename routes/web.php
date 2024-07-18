@@ -39,6 +39,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/admin/users/edit/{id}', [UserController::class, 'update'])->name('user.update');
         Route::get('/admin/users/assign-fields/{id}', [UserController::class, 'assignFields'])->name('user.assign-fields');
         Route::post('/admin/users/save-fields', [UserController::class, 'saveFields'])->name('user.save-fields');
+        Route::get('/admin/users/{userId}/give-permission/{permission}', [UserController::class, 'givePermission'])->name('user.give-permission');
+        Route::get('/admin/users/{userId}/remove-permission/{permission}', [UserController::class, 'removePermission'])->name('user.remove-permission');
 
         /* Blocked users */
         Route::get('/admin/blocked-users', [BlockedUserController::class, 'index'])->name('user-blocked.index');

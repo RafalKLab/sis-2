@@ -168,4 +168,34 @@ class OrderController extends MainController
 
         return redirect()->route('orders.view', ['id' => $newOrder->id])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Order registered');
     }
+
+    /* Api call for select2 in register order page */
+    public function orders(Request $request)
+    {
+        $search = $request->input('q');
+        $page = $request->input('page');
+        $orderKeyFieldId = OrderService::getKeyField()->id; // Get the specific key field id
+
+        // Query to fetch related orders based on the field_id and filtering by search term if provided
+        $query = OrderData::where('field_id', $orderKeyFieldId);
+
+        if ($search) {
+            $query->where('value', 'like', '%' . $search . '%'); // Assuming 'value' is the searchable field that contains the order name or similar
+        }
+
+        $orders = $query->orderBy('value', 'desc')
+            ->paginate(10, ['order_id', 'value'], 'page', $page);
+
+        // Format results for Select2
+        $results = $orders->map(function ($order) {
+            return ['id' => $order->order_id, 'text' => $order->value];
+        });
+
+        return response()->json([
+            'results' => $results,
+            'pagination' => [
+                'more' => $orders->hasMorePages()
+            ]
+        ]);
+    }
 }

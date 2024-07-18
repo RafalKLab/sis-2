@@ -2,6 +2,11 @@
 @section('title')
     Register new order
 @endsection
+
+@section('styles')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+@endsection
+
 @section('content')
 <div class="container-fluid px-4">
     <h1 class="mt-4">Register new order</h1>
@@ -11,12 +16,9 @@
                 @csrf
                 <div class="form-group mb-2">
                     <label for="related_order">Select related order</label>
-                    <select name="related_order" id="related_order" class="form-control {{ $errors->has('related_order') ? 'is-invalid' : '' }}">
-                        <option selected value="0">-</option>
-                        <!-- Add more options here -->
-                        @foreach($relatedOrders as $id => $orderKey)
-                            <option value="{{ $id }}">{{ $orderKey }}</option>
-                        @endforeach
+                    <select class="form-control {{ $errors->has('related_order') ? 'is-invalid' : '' }} select2" id="related_order" name="related_order">
+                        <option value="0" selected>-</option>
+                        <!-- Options will be loaded via AJAX -->
                     </select>
                     <small id="related_order_help" class="form-text text-muted">
                         If this order is related to a previous order, please select it from the list.
@@ -36,17 +38,37 @@
 @endsection
 
 @section('script')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const newOrderCheckbox = document.getElementById('newOrderCheckbox');
-            const relatedOrderCheckbox = document.getElementById('relatedOrderCheckbox');
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "Select related order",
+                allowClear: true,
+                ajax: {
+                    url: '{{ route('api.orders') }}', // Use the route name you defined
+                    dataType: 'json',
+                    delay: 250, // Wait 250ms after typing stops to send the request
+                    data: function (params) {
+                        return {
+                            q: params.term, // Search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, params) {
+                        // Parse the results into the format expected by Select2
+                        params.page = params.page || 1;
 
-            newOrderCheckbox.addEventListener('change', function() {
-                relatedOrderCheckbox.checked = !this.checked;
-            });
-
-            relatedOrderCheckbox.addEventListener('change', function() {
-                newOrderCheckbox.checked = !this.checked;
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 1 // User must type at least 1 character to start the search
             });
         });
     </script>

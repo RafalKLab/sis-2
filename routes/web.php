@@ -31,6 +31,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/edit/{orderId}/field/{fieldId}', [OrderController::class, 'editField'])->name('orders.edit-field');
     Route::post('/orders/edit/{id}', [OrderController::class, 'update'])->name('orders.update');
 
+    /* Api route for order select creation */
+    Route::get('/api/orders', [OrderController::class, 'orders'])->name('api.orders');
+
     /* Admin-only Routes */
     Route::middleware(['role:admin'])->group(function () {
         /* User management */

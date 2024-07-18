@@ -9,7 +9,7 @@
 
 @section('content')
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Orders view</h1>
+        <h4 class="mt-4">Orders view</h4>
         @if($tableData)
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">

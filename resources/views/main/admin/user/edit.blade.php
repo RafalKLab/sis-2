@@ -4,7 +4,7 @@
 @endsection
 @section('content')
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Edit user: {{ $user->email }} (id:{{ $user->id }})</h1>
+        <h4 class="mt-4">Edit user: {{ $user->email }} (id:{{ $user->id }})</h4>
         <div class="row">
             <div class="col-md-6">
                 <div class="card mb-4">

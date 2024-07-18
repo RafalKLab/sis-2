@@ -4,7 +4,7 @@
 @endsection
 @section('content')
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Create new user</h1>
+        <h4 class="mt-4">Create new user</h4>
         <div class="card mb-4">
             <div class="card-body">
                 <form method="POST" action="{{ route('user.store') }}">

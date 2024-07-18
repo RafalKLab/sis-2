@@ -4,7 +4,7 @@
 @endsection
 @section('content')
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Assign fields</h1>
+        <h4 class="mt-4">Assign fields</h4>
         <div class="row mt-3">
             <div class="col-md-12">
                 <div class="card mb-2">

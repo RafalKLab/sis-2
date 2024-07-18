@@ -9,7 +9,7 @@
 
 @section('content')
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Fields</h1>
+        <h4 class="mt-4">Fields</h4>
         @if($tableFields)
             <div class="row">
                 @include('main.admin.field.partials._fields_table')

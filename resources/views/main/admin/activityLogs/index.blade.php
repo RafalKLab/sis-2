@@ -4,8 +4,8 @@
 @endsection
 @section('content')
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Activity logs</h1>
-        <h5>{{ $dateRange }}</h5>
+        <h4 class="mt-4">Activity logs</h4>
+        <h6>{{ $dateRange }}</h6>
         <div class="row">
             <div class="col-md-12">
                 <div class="card mb-3">

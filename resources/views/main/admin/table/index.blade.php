@@ -12,7 +12,7 @@
         This section is for viewing table layouts and fields only. For order actions, please use the <a class="order-view-link" href="{{ route('orders.index') }}">Orders tab</a>.
     </div>
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Table admin view</h1>
+        <h4 class="mt-4">Table admin view</h4>
         @if($tableData)
             <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">

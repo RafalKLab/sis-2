@@ -4,7 +4,7 @@
 @endsection
 @section('content')
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Active users</h1>
+        <h4 class="mt-4">Active users</h4>
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div class="col-md-1"><i class="fa-solid fa-user-check"></i></div>

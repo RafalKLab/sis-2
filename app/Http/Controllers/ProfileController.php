@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use shared\ConfigDefaultInterface;
 
 class ProfileController extends Controller
 {
@@ -16,9 +17,7 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        return view('main.user.profile.index');
     }
 
     /**
@@ -34,7 +33,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit')->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Profile updated');
     }
 
     /**

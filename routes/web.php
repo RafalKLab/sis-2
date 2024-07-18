@@ -24,6 +24,8 @@ Route::middleware('auth')->group(function () {
 
     /* User orders table */
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/register', [OrderController::class, 'register'])->name('orders.register');
+    Route::post('/orders/register', [OrderController::class, 'registerConfirm'])->name('orders.register-confirm');
     Route::get('/orders/{id}', [OrderController::class, 'view'])->name('orders.view');
     Route::get('/orders/edit/{id}', [OrderController::class, 'edit'])->name('orders.edit');
     Route::get('/orders/edit/{orderId}/field/{fieldId}', [OrderController::class, 'editField'])->name('orders.edit-field');

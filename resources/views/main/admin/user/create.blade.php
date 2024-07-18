@@ -1,4 +1,4 @@
-`@extends('main.templates.main')
+@extends('main.templates.main')
 @section('title')
     Create new user
 @endsection
@@ -58,4 +58,4 @@
         </div>
     </div>
 @endsection
-`
+

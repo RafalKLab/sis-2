@@ -5,7 +5,9 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\MainController;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
+use App\Service\OrderService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use shared\ConfigDefaultInterface;
 
 class OrderController extends MainController
@@ -131,5 +133,39 @@ class OrderController extends MainController
         } else {
             return redirect()->route('orders.view', ['id'=>$orderId]);
         }
+    }
+
+    public function register()
+    {
+        $user = auth()->user();
+        if (!($user->hasRole(ConfigDefaultInterface::ROLE_ADMIN) || $user->hasPermissionTo(ConfigDefaultInterface::PERMISSION_REGISTER_ORDER))) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission to register new order');
+        }
+
+        $orderKeyFieldId = OrderService::getKeyField()->id;
+        $relatedOrders = OrderData::where('field_id', $orderKeyFieldId)->orderBy('value', 'desc')->pluck('value', 'order_id')->toArray();
+
+        return view('main.user.order.register', compact('relatedOrders'));
+    }
+
+    public function registerConfirm(Request $request)
+    {
+        $validated = $request->validate([
+            'related_order' => [
+                'required',
+                'numeric',
+                Rule::when($request->related_order != 0, [
+                    'exists:orders,id'
+                ]),
+            ],
+        ]);
+
+        $parentOrder = Order::find($validated['related_order']);
+
+        $newOrder = Order::create([
+            'parent_id' => $parentOrder?->id,
+        ]);
+
+        return redirect()->route('orders.view', ['id' => $newOrder->id])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Order registered');
     }
 }

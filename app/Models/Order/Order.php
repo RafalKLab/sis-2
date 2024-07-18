@@ -11,6 +11,10 @@ class Order extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'parent_id',
+    ];
+
     /**
      * Get the parent order if any
      */
@@ -55,24 +59,6 @@ class Order extends Model
             }
 
             $model->data()->create($keyFieldData);
-
-
-
-            //TODO: Implement logging
-//            $orderKey = OrderService::getKeyFieldFrom($model->order_id)->value;
-//
-//            $factory = new BusinessFactory();
-//            $author = Auth::user();
-//            $authorEmail = $author ? $author->email : 'System';
-//
-//            $transfer = $factory
-//                ->getActivityLogTransferObject()
-//                ->setUser($authorEmail)
-//                ->setTitle(ActivityLogConstants::INFO_LOG)
-//                ->setAction(ActivityLogConstants::ACTION_ADD)
-//                ->setNewData(sprintf(sprintf('order %s field %s: %s', $orderKey, $model->field->name, $model->value)));
-//
-//            $factory->createActivityLogManager()->log($transfer);
         });
     }
 }

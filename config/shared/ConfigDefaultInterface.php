@@ -8,9 +8,15 @@ interface ConfigDefaultInterface
     public const ROLE_ADMIN = 'admin';
     public const ROLE_USER = 'user';
 
+    public const PERMISSION_REGISTER_ORDER = 'Register order';
+
     public const AVAILABLE_ROLES = [
         self::ROLE_USER,
         self::ROLE_ADMIN,
+    ];
+
+    public const AVAILABLE_PERMISSIONS = [
+        self::PERMISSION_REGISTER_ORDER
     ];
 
     /* Flash messages */

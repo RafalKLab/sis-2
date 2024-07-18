@@ -6,11 +6,14 @@ use App\Business\ActivityLog\Config\ActivityLogConstants;
 use App\Http\Controllers\MainController;
 use App\Models\MainTable;
 use App\Models\Table\Table;
+use App\Models\Table\TableField;
 use App\Models\User;
+use App\Service\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use shared\ConfigDefaultInterface;
+use Spatie\Permission\Models\Permission;
 
 class UserController extends MainController
 {
@@ -49,6 +52,9 @@ class UserController extends MainController
             ? $user->assignRole(ConfigDefaultInterface::ROLE_ADMIN)
             : $user->assignRole(ConfigDefaultInterface::ROLE_USER);
 
+        $keyField = OrderService::getKeyField();
+        $user->fields()->sync($keyField);
+
         return redirect()->route('user.index')->with(
             ConfigDefaultInterface::FLASH_SUCCESS,
             sprintf('User %s created successfully', $user->name)
@@ -67,7 +73,9 @@ class UserController extends MainController
             return redirect()->route('user.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Admin root can not be edited');
         }
 
-        return view('main.admin.user.edit', compact('user'));
+        $permissions = Permission::all();
+
+        return view('main.admin.user.edit', compact('user', 'permissions'));
     }
 
     public function update(Request $request, int $userId)
@@ -120,12 +128,18 @@ class UserController extends MainController
 
 
         foreach ($user->fields as $field) {
-            $assignedFields[$field->id] = $field->name;
+            $assignedFields[$field->id] = [
+                'name' => $field->name,
+                'type' => $field->type,
+            ];
         }
 
         foreach ($mainTable->fields as $field) {
             if (!array_key_exists($field->id, $assignedFields)) {
-                $notAssignedFields[$field->id] = $field->name;
+                $notAssignedFields[$field->id] = [
+                    'name' => $field->name,
+                    'type' => $field->type,
+                ];
             }
         }
 
@@ -146,18 +160,62 @@ class UserController extends MainController
             $assignedIdsArray = array_filter($assignedIdsArray, 'is_numeric');
             $assignedIdsArray = array_map('intval', $assignedIdsArray);
 
+
+            if (!in_array(OrderService::getKeyField()->id, $assignedIdsArray)) {
+                return redirect()->route('user.assign-fields', ['id'=>$user->id])->with(ConfigDefaultInterface::FLASH_ERROR, 'Key field can not be unassigned');
+            }
+
+
             // Sync the fields with the user
             $user->fields()->sync($assignedIdsArray);
         } else {
-            // If the string is null or empty, detach all fields
-            $user->fields()->detach();
+            // key field should always be assigned
+            return redirect()->route('user.assign-fields', ['id'=>$user->id])->with(ConfigDefaultInterface::FLASH_ERROR, 'Key field can not be unassigned');
         }
 
         // Redirect back with a success message
         return redirect()->back()->with(ConfigDefaultInterface::FLASH_SUCCESS, 'User fields have been successfully updated.');
     }
 
-    private function updateRoleToAdmin($user): void
+    public function givePermission(int $userId, string $permission) {
+        $user = User::find($userId);
+        if (!$user) {
+            return redirect()->route('user.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User not found');
+        }
+
+        try {
+            Permission::findByName($permission);
+        } catch (\Exception) {
+            return redirect()->route('user.edit', ['id' => $userId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Unknown permission');
+        }
+
+        $user->givePermissionTo($permission);
+        $this->logPermissionChanged($user, ActivityLogConstants::ACTION_GIVE_PERMISSION, $permission);
+
+        return redirect()->route('user.edit', ['id' => $userId])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'User permissions updated');
+    }
+
+    public function removePermission(int $userId, string $permission) {
+        $user = User::find($userId);
+        if (!$user) {
+            return redirect()->route('user.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User not found');
+        }
+
+        try {
+            Permission::findByName($permission);
+        } catch (\Exception) {
+            return redirect()->route('user.edit', ['id' => $userId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Unknown permission');
+        }
+
+        $user->revokePermissionTo($permission);
+        $this->logPermissionChanged($user, ActivityLogConstants::ACTION_REMOVE_PERMISSION, $permission);
+
+        return redirect()->route('user.edit', ['id' => $userId])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'User permissions updated');
+    }
+
+
+
+    private function updateRoleToAdmin(User $user): void
     {
         if (!$user->hasRole(ConfigDefaultInterface::ROLE_ADMIN)) {
             $user->removeRole(ConfigDefaultInterface::ROLE_USER);
@@ -167,7 +225,7 @@ class UserController extends MainController
         }
     }
 
-    private function updateRoleToUser($user): void
+    private function updateRoleToUser(User $user): void
     {
         if (!$user->hasRole(ConfigDefaultInterface::ROLE_USER)) {
             $user->removeRole(ConfigDefaultInterface::ROLE_ADMIN);
@@ -177,7 +235,7 @@ class UserController extends MainController
         }
     }
 
-    private function logUserRoleUpdatedToAdmin($user): void
+    private function logUserRoleUpdatedToAdmin(User $user): void
     {
         $transfer = $this->factory()
             ->getActivityLogTransferObject()
@@ -190,7 +248,7 @@ class UserController extends MainController
         $this->factory()->createActivityLogManager()->log($transfer);
     }
 
-    private function logAdminRoleUpdatedToUser($user): void
+    private function logAdminRoleUpdatedToUser(User $user): void
     {
         $transfer = $this->factory()
             ->getActivityLogTransferObject()
@@ -199,6 +257,18 @@ class UserController extends MainController
             ->setAction(ActivityLogConstants::ACTION_UPDATE)
             ->setOldData(sprintf('User admin %s (id:%s) role',$user->email, $user->id))
             ->setNewData('user');
+
+        $this->factory()->createActivityLogManager()->log($transfer);
+    }
+
+    private function logPermissionChanged(User $user, string $action, string $permission): void
+    {
+        $transfer = $this->factory()
+            ->getActivityLogTransferObject()
+            ->setUser(auth()->user()->email)
+            ->setTitle(ActivityLogConstants::WARNING_LOG)
+            ->setAction($action)
+            ->setNewData(sprintf('user %s (id:%s) to %s', $user->email, $user->id, $permission));
 
         $this->factory()->createActivityLogManager()->log($transfer);
     }

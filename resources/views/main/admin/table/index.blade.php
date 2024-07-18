@@ -6,13 +6,11 @@
 @section('styles')
     <link href="{{ asset('css/table.css') }}" rel="stylesheet" />
 @endsection
-<form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-    <div class="input-group">
-        <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-        <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
-    </div>
-</form>
+
 @section('content')
+    <div class="alert alert-warning">
+        This section is for viewing table layouts and fields only. For order actions, please use the <a class="order-view-link" href="{{ route('orders.index') }}">Orders tab</a>.
+    </div>
     <div class="container-fluid px-4">
         <h1 class="mt-4">Table admin view</h1>
         @if($tableData)
@@ -23,20 +21,21 @@
                     {{ $tableData['name'] }}
                 </div>
                 <div class="col-md-3 d-flex justify-content-end">
-                    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" method="GET" action="{{ route('admin-table.index') }}">
-                        <div class="input-group">
-                            <input
-                                class="form-control"
-                                type="text"
-                                placeholder="Search for orders"
-                                aria-label="Search for orders"
-                                aria-describedby="btnNavbarSearch"
-                                name="search"
-                                value="{{ $search }}"
-                            />
-                            <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>
-                        </div>
-                    </form>
+{{--                    Turned off because it is only for table display--}}
+{{--                    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" method="GET" action="{{ route('admin-table.index') }}">--}}
+{{--                        <div class="input-group">--}}
+{{--                            <input--}}
+{{--                                class="form-control"--}}
+{{--                                type="text"--}}
+{{--                                placeholder="Search for orders"--}}
+{{--                                aria-label="Search for orders"--}}
+{{--                                aria-describedby="btnNavbarSearch"--}}
+{{--                                name="search"--}}
+{{--                                value="{{ $search }}"--}}
+{{--                            />--}}
+{{--                            <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>--}}
+{{--                        </div>--}}
+{{--                    </form>--}}
                 </div>
             </div>
             <div class="card-body">
@@ -47,7 +46,6 @@
                             @foreach($tableData['fields'] as $field)
                                 <th style="background-color: {{$field['color']}};">{{$field['name']}}</th>
                             @endforeach
-                            <th>files</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -60,15 +58,15 @@
                                         <td></td>
                                     @endif
                                 @endforeach
-                                <td>files</td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
                 </div>
-                <div class="d-flex justify-content-center mt-3">
-                    {!! $tableData['orders']['links'] !!}
-                </div>
+{{--                Turned off because it is only for table display--}}
+{{--                <div class="d-flex justify-content-center mt-3">--}}
+{{--                    {!! $tableData['orders']['links'] !!}--}}
+{{--                </div>--}}
                 </div>
             </div>
         </div>

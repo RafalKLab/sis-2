@@ -9,9 +9,9 @@ use App\Models\Table\Table;
 use App\Models\Table\TableField;
 use Illuminate\Support\Facades\Auth;
 
-class AdminTableReader implements TableReaderInterface
+class UserTableReader implements TableReaderInterface
 {
-    protected const PAGINATION_ITEMS_PER_PAGE = 10;
+    protected const PAGINATION_ITEMS_PER_PAGE = 15;
 
     protected bool $failedSearch = false;
     protected ?int $exactMatch = null;
@@ -34,14 +34,17 @@ class AdminTableReader implements TableReaderInterface
         ];
     }
 
+    /**
+     * override show only assigned fields
+     *
+     * @param Table|null $mainTable
+     *
+     * @return array
+     */
     public function readTableFields(?Table $mainTable = null): array
     {
-        if (!$mainTable) {
-            $mainTable = $this->findMainTable();
-        }
-
         $fieldData = [];
-        foreach ($mainTable->fields as $field) {
+        foreach (Auth::user()->getAssignedFields() as $field) {
             $fieldData[] = [
                 'id' => $field->id,
                 'name' => $field->name,
@@ -64,12 +67,20 @@ class AdminTableReader implements TableReaderInterface
         return Table::where('name', TableConfig::MAIN_TABLE_NAME)->first();
     }
 
+    /**
+     * override show only assigned fields
+     *
+     * @param Table $mainTable
+     * @param string|null $search
+     *
+     * @return array
+     */
     protected function findOrders(Table $mainTable, ?string $search = null): array
     {
         $searchedOrderIds = $this->findSearchedOrders($search);
         if ($searchedOrderIds) {
             $orders = Order::whereIn('id', $searchedOrderIds)
-                ->orderBy('updated_at', 'asc')
+                ->orderBy('updated_at', 'desc')
                 ->paginate(self::PAGINATION_ITEMS_PER_PAGE);
         } else {
             if ($this->failedSearch) {
@@ -88,7 +99,7 @@ class AdminTableReader implements TableReaderInterface
             $data = [];
 
             $data['id'] = $order->id;
-            foreach ($mainTable->fields as $field) {
+            foreach (Auth::user()->getAssignedFields() as $field) {
                 $data[$field->name] = OrderData::where('order_id', $order->id)->where('field_id', $field->id)->first()?->value;
             }
 
@@ -101,13 +112,6 @@ class AdminTableReader implements TableReaderInterface
         ];
     }
 
-    /**
-     * not used anymore for admin tab
-     *
-     * @param string|null $search
-     *
-     * @return array
-     */
     protected function findSearchedOrders(?string $search): array
     {
         $orderKeyFieldId = null;

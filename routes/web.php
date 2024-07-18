@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\BlockedUserController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\User\OrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
@@ -21,6 +22,18 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    /* User orders table */
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/register', [OrderController::class, 'register'])->name('orders.register');
+    Route::post('/orders/register', [OrderController::class, 'registerConfirm'])->name('orders.register-confirm');
+    Route::get('/orders/{id}', [OrderController::class, 'view'])->name('orders.view');
+    Route::get('/orders/edit/{id}', [OrderController::class, 'edit'])->name('orders.edit');
+    Route::get('/orders/edit/{orderId}/field/{fieldId}', [OrderController::class, 'editField'])->name('orders.edit-field');
+    Route::post('/orders/edit/{id}', [OrderController::class, 'update'])->name('orders.update');
+
+    /* Api route for order select creation */
+    Route::get('/api/orders', [OrderController::class, 'orders'])->name('api.orders');
+
     /* Admin-only Routes */
     Route::middleware(['role:admin'])->group(function () {
         /* User management */
@@ -31,6 +44,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/admin/users/edit/{id}', [UserController::class, 'update'])->name('user.update');
         Route::get('/admin/users/assign-fields/{id}', [UserController::class, 'assignFields'])->name('user.assign-fields');
         Route::post('/admin/users/save-fields', [UserController::class, 'saveFields'])->name('user.save-fields');
+        Route::get('/admin/users/{userId}/give-permission/{permission}', [UserController::class, 'givePermission'])->name('user.give-permission');
+        Route::get('/admin/users/{userId}/remove-permission/{permission}', [UserController::class, 'removePermission'])->name('user.remove-permission');
 
         /* Blocked users */
         Route::get('/admin/blocked-users', [BlockedUserController::class, 'index'])->name('user-blocked.index');

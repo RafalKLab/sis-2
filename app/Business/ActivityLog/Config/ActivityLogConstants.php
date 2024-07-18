@@ -13,4 +13,6 @@ interface ActivityLogConstants
     public const ACTION_BLOCKED = 'Blocked';
     public const ACTION_UNBLOCKED = 'Unblocked';
     public const ACTION_DELETE = 'Deleted';
+    public const ACTION_GIVE_PERMISSION = 'Gave permission';
+    public const ACTION_REMOVE_PERMISSION = 'Removed permission';
 }

@@ -59,8 +59,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
                                 @foreach($permissions as $permission)
+                                    <tr>
                                     @if($user->hasPermissionTo($permission->name))
                                         <td>{{ $permission->name }} <a title="Remove permission" href="{{ route('user.remove-permission', ['userId' => $user->id, 'permission' => $permission->name]) }}" class="text-danger"><i class="fa-solid fa-minus"></i></a></td>
                                         <td></td>
@@ -68,8 +68,8 @@
                                         <td></td>
                                         <td>{{ $permission->name }} <a title="Give permission" href="{{ route('user.give-permission', ['userId' => $user->id, 'permission' => $permission->name]) }}" class="text-primary"><i class="fa-solid fa-plus"></i></a></td>
                                     @endif
+                                    </tr>
                                 @endforeach
-                            </tr>
                             </tbody>
                         </table>
                     </div>

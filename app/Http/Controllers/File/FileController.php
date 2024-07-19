@@ -15,6 +15,10 @@ class FileController extends MainController
 {
     public function index(int $orderId)
     {
+        if (!(Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_UPLOAD_FILE) || Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_UPLOADED_FILES))) {
+            return redirect()->back()->with(ConfigDefaultInterface::FLASH_ERROR, 'User do not has permission to see uploaded files');
+        }
+
         $order = Order::find($orderId);
         if (!$order) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
@@ -25,6 +29,10 @@ class FileController extends MainController
 
     public function upload(int $orderId)
     {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_UPLOAD_FILE)) {
+            return redirect()->back()->with(ConfigDefaultInterface::FLASH_ERROR, 'User do not has permission to upload files');
+        }
+
         $order = Order::find($orderId);
         if (!$order) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
@@ -138,6 +146,10 @@ class FileController extends MainController
     }
 
     public function delete(int $fileId) {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_DELETE_UPLOADED_FILES)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User do not has permission to upload files');
+        }
+
         $file = File::find($fileId);
         if (!$file) {
             return redirect()->back()->with(ConfigDefaultInterface::FLASH_ERROR, 'File not found');

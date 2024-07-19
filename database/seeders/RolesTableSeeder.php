@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use shared\ConfigDefaultInterface;
 use Spatie\Permission\Models\Role;
@@ -16,7 +15,10 @@ class RolesTableSeeder extends Seeder
     {
         // Create roles
         foreach (ConfigDefaultInterface::AVAILABLE_ROLES as $role) {
-            Role::create(['name' => $role]);
+            try {
+                Role::create(['name' => $role]);
+            } catch (\Exception) {
+            }
         }
     }
 }

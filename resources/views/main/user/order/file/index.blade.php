@@ -31,26 +31,55 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($order->files as $file)
-                                    <tr>
-                                        <td><i class="fa-regular fa-file"></i> {{$file->file_name}}</td>
-                                        <td>{{$file->user->email}} (id: {{$file->user->id}})</td>
-                                        <td>{{$file->created_at}}</td>
-                                        <td>
-                                            <!-- Hidden form for deletion -->
-                                            <form id="{{ $file->id }}" action="{{ route('order-files.delete', ['fileId' => $file->id]) }}" method="POST" style="display: none;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <input type="hidden" id="formFileId" name="fileId" value=""> <!-- Hidden input to dynamically set file ID -->
-                                            </form>
+                                @if(Auth::user()->hasPermissionTo('See uploaded files'))
+                                    @foreach($order->files as $file)
+                                        <tr>
+                                            <td><i class="fa-regular fa-file"></i> {{$file->file_name}}</td>
+                                            <td>{{$file->user->email}} (id: {{$file->user->id}})</td>
+                                            <td>{{$file->created_at}}</td>
+                                            <td>
+                                                <!-- Hidden form for deletion -->
+                                                <form id="{{ $file->id }}" action="{{ route('order-files.delete', ['fileId' => $file->id]) }}" method="POST" style="display: none;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" id="formFileId" name="fileId" value=""> <!-- Hidden input to dynamically set file ID -->
+                                                </form>
 
-                                            <div class="btn-group" style="display: flex; width: 100%;">
-                                                <a href="#" title="View" class="btn btn-outline-info" onclick="openFilePreview({{ $file->id }});"><i class="fa-solid fa-magnifying-glass"></i></a>
-                                                <button type="submit" class="btn btn-outline-danger" onclick="submitDeleteForm({{ $file->id }});" title="Remove"><i class="fa-solid fa-trash"></i></button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                                <div class="btn-group" style="display: flex; width: 100%;">
+                                                    <a href="#" title="View" class="btn btn-outline-info" onclick="openFilePreview({{ $file->id }});"><i class="fa-solid fa-magnifying-glass"></i></a>
+                                                    @if(Auth::user()->hasPermissionTo('Delete uploaded files'))
+                                                        <button type="submit" class="btn btn-outline-danger" onclick="submitDeleteForm({{ $file->id }});" title="Remove"><i class="fa-solid fa-trash"></i></button>
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    @foreach($order->files as $file)
+                                        @if($file->user->id === Auth::user()->id)
+                                            <tr>
+                                                <td><i class="fa-regular fa-file"></i> {{$file->file_name}}</td>
+                                                <td>{{$file->user->email}} (id: {{$file->user->id}})</td>
+                                                <td>{{$file->created_at}}</td>
+                                                <td>
+                                                    <!-- Hidden form for deletion -->
+                                                    <form id="{{ $file->id }}" action="{{ route('order-files.delete', ['fileId' => $file->id]) }}" method="POST" style="display: none;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <input type="hidden" id="formFileId" name="fileId" value=""> <!-- Hidden input to dynamically set file ID -->
+                                                    </form>
+
+                                                    <div class="btn-group" style="display: flex; width: 100%;">
+                                                        <a href="#" title="View" class="btn btn-outline-info" onclick="openFilePreview({{ $file->id }});"><i class="fa-solid fa-magnifying-glass"></i></a>
+                                                        @if(Auth::user()->hasPermissionTo('Delete uploaded files'))
+                                                            <button type="submit" class="btn btn-outline-danger" onclick="submitDeleteForm({{ $file->id }});" title="Remove"><i class="fa-solid fa-trash"></i></button>
+                                                        @endif
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                @endif
                                 </tbody>
                             </table>
                         </div>

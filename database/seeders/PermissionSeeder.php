@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use shared\ConfigDefaultInterface;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class PermissionSeeder extends Seeder
 {
@@ -17,7 +15,10 @@ class PermissionSeeder extends Seeder
     {
         // Create permissions
         foreach (ConfigDefaultInterface::AVAILABLE_PERMISSIONS as $permission) {
-            Permission::create(['name' => $permission]);
+            try {
+                Permission::create(['name' => $permission]);
+            } catch (\Exception) {
+            }
         }
     }
 }

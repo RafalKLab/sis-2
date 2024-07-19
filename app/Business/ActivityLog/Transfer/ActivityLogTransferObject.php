@@ -20,6 +20,7 @@ class ActivityLogTransferObject
         ActivityLogConstants::ACTION_DELETE,
         ActivityLogConstants::ACTION_GIVE_PERMISSION,
         ActivityLogConstants::ACTION_REMOVE_PERMISSION,
+        ActivityLogConstants::ACTION_UPLOAD,
     ];
 
     private string $action;

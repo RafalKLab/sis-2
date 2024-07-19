@@ -31,9 +31,19 @@ class Order extends Model
         return $this->hasMany(Order::class, 'parent_id');
     }
 
+    public function files()
+    {
+        return $this->hasMany(File::class, 'order_id');
+    }
+
     public function data()
     {
         return $this->hasMany(OrderData::class, 'order_id');
+    }
+
+    public function getKeyField(): string
+    {
+        return OrderService::getKeyFieldFrom($this->id)->value;
     }
 
     /**

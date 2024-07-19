@@ -26,52 +26,52 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Užsakymo būsena',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 3,
             ],
             [
                 'name' => 'Pardavėjas',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 4,
             ],
             [
                 'name' => 'Importuotojas',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 5,
             ],
             [
                 'name' => 'Pirkėjas',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 6,
             ],
             [
                 'name' => 'Gavėjas',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 7,
             ],
             [
                 'name' => 'Prekės',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 8,
             ],
             [
                 'name' => 'Išmatavimai',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 9,
             ],
             [
                 'name' => 'Kokybė',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 10,
             ],
             [
                 'name' => 'Pardavėjas',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 11,
             ],
             [
                 'name' => 'MR/WPB',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 12,
             ],
             [
@@ -81,47 +81,47 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Mat.vnt.',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 14,
             ],
             [
                 'name' => 'FSC/PEFC',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 15,
             ],
             [
                 'name' => 'Pask. Šalis',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 16,
             ],
             [
                 'name' => 'Išskr. Šalis',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 17,
             ],
             [
                 'name' => 'Vežėjas',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 18,
             ],
             [
                 'name' => 'Trans. nr.',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 19,
             ],
             [
                 'name' => 'Trans. tipas',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 20,
             ],
             [
                 'name' => 'Muitinė',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 21,
             ],
             [
                 'name' => 'Sandėlis',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 22,
             ],
             [
@@ -156,67 +156,67 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Muitas 7%',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 29,
             ],
             [
                 'name' => 'Antidem 15,8%',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 30,
             ],
             [
                 'name' => 'Brokeris',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 31,
             ],
             [
                 'name' => 'Sandėliai',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 32,
             ],
             [
                 'name' => 'Bank',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 33,
             ],
             [
                 'name' => 'Kitos išlaidos',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 34,
             ],
             [
                 'name' => 'Brokas',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 35,
             ],
             [
                 'name' => 'Agentas',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 36,
             ],
             [
                 'name' => 'Faktoringas',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 37,
             ],
             [
                 'name' => 'Savikaina',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 38,
             ],
             [
                 'name' => 'Pard - 1 m3 kaina',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 39,
             ],
             [
                 'name' => 'Pard. Suma',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 40,
             ],
             [
                 'name' => 'Pelnas',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 41,
             ],
             [
@@ -226,7 +226,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'SF. Pirk.',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 43,
             ],
             [
@@ -236,7 +236,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'SF. BG',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 45,
             ],
             [
@@ -246,7 +246,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'SF. Trans',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 47,
             ],
             [
@@ -256,7 +256,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'SF. EE',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 49,
             ],
             [
@@ -266,7 +266,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'SF. Brok',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 51,
             ],
             [
@@ -276,7 +276,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'SF. Sand',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 53,
             ],
             [
@@ -286,7 +286,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'SF. Agent',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 55,
             ],
             [
@@ -296,7 +296,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'SF. Factor',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 57,
             ],
             [
@@ -306,8 +306,13 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'SF. Pard.',
-                'type' => 'string',
+                'type' => 'Text',
                 'order' => 59,
+            ],
+            [
+                'name' => 'Dokumentai',
+                'type' => 'file',
+                'order' => 60,
             ],
         ];
     }

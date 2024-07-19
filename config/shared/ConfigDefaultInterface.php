@@ -8,6 +8,8 @@ interface ConfigDefaultInterface
     public const ROLE_ADMIN = 'admin';
     public const ROLE_USER = 'user';
 
+    public const FILE_SYSTEM_PRIVATE = 'private';
+
     public const PERMISSION_REGISTER_ORDER = 'Register order';
 
     public const AVAILABLE_ROLES = [

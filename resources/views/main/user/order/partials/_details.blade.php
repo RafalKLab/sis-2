@@ -12,11 +12,19 @@
             <table class="table">
                 <tbody>
                 @foreach($orderData['details'] as $data)
-                    <tr>
-                        <th scope="row">{{ $data['field_name'] }}</th>
-                        <td>{{ $data['value'] }} </td>
-                        <td><a href="{{ route('orders.edit-field', ['orderId'=>$orderData['id'], 'fieldId'=>$data['field_id']]) }}" title="Edit {{ $data['field_name'] }}" class="text-primary"><i class="fa-solid fa-pen"></i></a></td>
-                    </tr>
+                    @if($data['field_type'] === 'file')
+                        <tr>
+                            <th scope="row">{{ $data['field_name'] }}</th>
+                            <td>{{ $data['value'] }} </td>
+                            <td><a href="{{ route('order-files.index', ['orderId'=>$orderData['id']]) }}" title="Edit files" class="text-primary"><i class="fa-solid fa-file"></i></a></td>
+                        </tr>
+                    @else
+                        <tr>
+                            <th scope="row">{{ $data['field_name'] }}</th>
+                            <td>{{ $data['value'] }} </td>
+                            <td><a href="{{ route('orders.edit-field', ['orderId'=>$orderData['id'], 'fieldId'=>$data['field_id']]) }}" title="Edit {{ $data['field_name'] }}" class="text-primary"><i class="fa-solid fa-pen"></i></a></td>
+                        </tr>
+                    @endif
                 @endforeach
                 <!-- Row 1 -->
                 <tr>

@@ -15,7 +15,7 @@
                     @if($data['field_type'] === 'file')
                         <tr>
                             <th scope="row">{{ $data['field_name'] }}</th>
-                            <td>{{ $data['value'] }} </td>
+                            <td><i class="fa-regular fa-file"></i> {{$orderData['uploaded_files']}}</td>
                             <td><a href="{{ route('order-files.index', ['orderId'=>$orderData['id']]) }}" title="Edit files" class="text-primary"><i class="fa-solid fa-file"></i></a></td>
                         </tr>
                     @else

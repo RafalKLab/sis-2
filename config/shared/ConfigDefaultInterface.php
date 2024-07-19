@@ -8,7 +8,12 @@ interface ConfigDefaultInterface
     public const ROLE_ADMIN = 'admin';
     public const ROLE_USER = 'user';
 
+    public const FILE_SYSTEM_PRIVATE = 'private';
+
     public const PERMISSION_REGISTER_ORDER = 'Register order';
+    public const PERMISSION_UPLOAD_FILE = 'Upload file';
+    public const PERMISSION_SEE_UPLOADED_FILES = 'See uploaded files';
+    public const PERMISSION_DELETE_UPLOADED_FILES = 'Delete uploaded files';
 
     public const AVAILABLE_ROLES = [
         self::ROLE_USER,
@@ -16,7 +21,10 @@ interface ConfigDefaultInterface
     ];
 
     public const AVAILABLE_PERMISSIONS = [
-        self::PERMISSION_REGISTER_ORDER
+        self::PERMISSION_REGISTER_ORDER,
+        self::PERMISSION_UPLOAD_FILE,
+        self::PERMISSION_SEE_UPLOADED_FILES,
+        self::PERMISSION_DELETE_UPLOADED_FILES
     ];
 
     /* Flash messages */

@@ -6,8 +6,9 @@ use App\Http\Controllers\Admin\AdminTableController;
 use App\Http\Controllers\Admin\BlockedUserController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\File\FileController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\User\OrderController;
+use App\Http\Controllers\Order\OrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
@@ -33,6 +34,13 @@ Route::middleware('auth')->group(function () {
 
     /* Api route for order select creation */
     Route::get('/api/orders', [OrderController::class, 'orders'])->name('api.orders');
+
+    /* Order file upload */
+    Route::get('/order/{orderId}/files', [FileController::class, 'index'])->name('order-files.index');
+    Route::get('/order/{orderId}/upload', [FileController::class, 'upload'])->name('order-files.upload');
+    Route::post('/order/upload', [FileController::class, 'store'])->name('order-files.store');
+    Route::get('/order/file/{fileId}/show', [FileController::class, 'show'])->name('order-files.show');
+    Route::delete('/order/file/{fileId}/delete', [FileController::class, 'delete'])->name('order-files.delete');
 
     /* Admin-only Routes */
     Route::middleware(['role:admin'])->group(function () {

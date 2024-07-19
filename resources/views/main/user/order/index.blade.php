@@ -56,6 +56,8 @@
                                                         {{ $order[$field['name']] }}
                                                     </a>
                                                 </td>
+                                            @elseif ($field['type'] === 'file')
+                                                <td><a href="{{ route('order-files.index', ['orderId' => $order['id']]) }}" class="order-view-link" title="View files"><i class="fa-regular fa-file"></i> {{$order['uploaded_files']}}</a></td>
                                             @else
                                                 <td>{{ $order[$field['name']] }}</td>
                                             @endif

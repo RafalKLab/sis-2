@@ -101,6 +101,7 @@ class UserTableReader implements TableReaderInterface
             $data['id'] = $order->id;
             foreach (Auth::user()->getAssignedFields() as $field) {
                 $data[$field->name] = OrderData::where('order_id', $order->id)->where('field_id', $field->id)->first()?->value;
+                $data['uploaded_files'] = $order->files()->count();
             }
 
             $ordersData[] = $data;

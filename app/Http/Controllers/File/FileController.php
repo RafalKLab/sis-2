@@ -108,4 +108,32 @@ class FileController extends MainController
 
         return response()->json($response);
     }
+
+    public function show(int $fileId)
+    {
+        $file = File::find($fileId);
+        if (!$file) {
+            return response()->json(['success' => false, 'message' => 'File not found.'], 404);
+        }
+
+        $storageDisk = ConfigDefaultInterface::FILE_SYSTEM_PRIVATE;
+        $filePath = 'uploads/' . $file->order->getKeyField() . '/' . $file->file_name;
+
+        if (Storage::disk($storageDisk)->exists($filePath)) {
+            $fileContent = Storage::disk($storageDisk)->get($filePath);
+            $fileType = Storage::disk($storageDisk)->mimeType($filePath);
+
+            // Encode the content in base64 for inline display
+            $base64Content = base64_encode($fileContent);
+            $src = 'data:' . $fileType . ';base64,' . $base64Content;
+
+            return response()->json([
+                'success' => true,
+                'src' => $src,
+                'fileType' => $fileType,
+            ]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'File not found.'], 404);
+        }
+    }
 }

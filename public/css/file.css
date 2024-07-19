@@ -1,0 +1,24 @@
+.large-modal {
+    width: 90vw;   /* 90% of the viewport width */
+    height: 90vh;  /* 90% of the viewport height */
+    max-width: 100%;
+}
+
+.large-modal .modal-content {
+    height: 100%;  /* Ensure modal content takes up the entire modal */
+}
+
+.large-modal .modal-body {
+    height: calc(100% - 60px); /* Adjust for header/footer */
+    overflow-y: auto; /* Allow scrolling if content is larger than the screen */
+}
+
+.medium-modal {
+    width: 50vw;   /* 50% of the viewport width */
+    max-width: 100%;
+}
+
+.medium-modal .modal-content,
+.medium-modal .modal-body {
+    height: 100%;  /* Modal content adjusts to modal size */
+}

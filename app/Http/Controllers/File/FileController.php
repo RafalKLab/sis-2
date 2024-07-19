@@ -136,4 +136,21 @@ class FileController extends MainController
             return response()->json(['success' => false, 'message' => 'File not found.'], 404);
         }
     }
+
+    public function delete(int $fileId) {
+        $file = File::find($fileId);
+        if (!$file) {
+            return redirect()->back()->with(ConfigDefaultInterface::FLASH_ERROR, 'File not found');
+        }
+
+        // Delete the file from storage and database
+        $deleted = Storage::disk(ConfigDefaultInterface::FILE_SYSTEM_PRIVATE)->delete('uploads/' . $file->order->getKeyField() . '/' . $file->file_name);
+        if ($deleted) {
+            $file->delete();
+
+            return redirect()->back()->with(ConfigDefaultInterface::FLASH_SUCCESS, 'File successfully deleted');
+        } else {
+            return redirect()->back()->with(ConfigDefaultInterface::FLASH_ERROR, 'Failed to delete the file');
+        }
+    }
 }

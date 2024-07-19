@@ -37,9 +37,16 @@
                                         <td>{{$file->user->email}} (id: {{$file->user->id}})</td>
                                         <td>{{$file->created_at}}</td>
                                         <td>
+                                            <!-- Hidden form for deletion -->
+                                            <form id="{{ $file->id }}" action="{{ route('order-files.delete', ['fileId' => $file->id]) }}" method="POST" style="display: none;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="hidden" id="formFileId" name="fileId" value=""> <!-- Hidden input to dynamically set file ID -->
+                                            </form>
+
                                             <div class="btn-group" style="display: flex; width: 100%;">
                                                 <a href="#" title="View" class="btn btn-outline-info" onclick="openFilePreview({{ $file->id }});"><i class="fa-solid fa-magnifying-glass"></i></a>
-                                                <a href="" title="Remove" class="disabled btn btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
+                                                <button type="submit" class="btn btn-outline-danger" onclick="submitDeleteForm({{ $file->id }});" title="Remove"><i class="fa-solid fa-trash"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -105,6 +112,14 @@
                             console.error(error);
                         }
                     });
+                }
+            </script>
+            <script>
+                function submitDeleteForm(fileId) {
+                    if (confirm('Are you sure you want to delete this file?')) {
+                        var form = document.getElementById(fileId);
+                        form.submit();
+                    }
                 }
             </script>
 @endsection

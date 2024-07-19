@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/order/{orderId}/upload', [FileController::class, 'upload'])->name('order-files.upload');
     Route::post('/order/upload', [FileController::class, 'store'])->name('order-files.store');
     Route::get('/order/file/{fileId}/show', [FileController::class, 'show'])->name('order-files.show');
+    Route::delete('/order/file/{fileId}/delete', [FileController::class, 'delete'])->name('order-files.delete');
 
     /* Admin-only Routes */
     Route::middleware(['role:admin'])->group(function () {

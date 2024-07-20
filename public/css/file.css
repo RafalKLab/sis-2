@@ -22,3 +22,12 @@
 .medium-modal .modal-body {
     height: 100%;  /* Modal content adjusts to modal size */
 }
+
+
+.link-order {
+    color: #000;
+}
+
+.link-order:visited {
+    color: #000;
+}

@@ -4,12 +4,13 @@
 @endsection
 
 @section('styles')
+    <link href="{{ asset('css/file.css') }}" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.css" rel="stylesheet">
 @endsection
 
 @section('content')
     <div class="container-fluid px-4">
-        <h4 class="mt-4">Order {{$order->getKeyField()}}</h4>
+        <h4 class="mt-4">Order <a class="link-order" href="{{ route('orders.view', ['id'=>$order->id]) }}"> {{ $order->getKeyField() }}  </a></h4>
         <div class="row mb-3">
             <div class="col-md-12">
                 <div class="card">

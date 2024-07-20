@@ -9,7 +9,7 @@
 
 @section('content')
     <div class="container-fluid px-4">
-        <h4 class="mt-4">Order {{ $order->getKeyField() }} files</h4>
+        <h4 class="mt-4">Order <a class="link-order" href="{{ route('orders.view', ['id'=>$order->id]) }}"> {{ $order->getKeyField() }}  </a> files</h4>
         <div class="row mb-3">
             <div class="col-md-12">
                 <div class="card">

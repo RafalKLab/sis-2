@@ -31,6 +31,21 @@ class TableField extends Model
     {
         parent::boot();
 
+        static::created(function ($model) {
+            $factory = new BusinessFactory();
+            $author = Auth::user();
+            $authorEmail = $author ? $author->email : 'System';
+
+            $transfer = $factory
+                ->getActivityLogTransferObject()
+                ->setUser($authorEmail)
+                ->setTitle(ActivityLogConstants::WARNING_LOG)
+                ->setAction(ActivityLogConstants::ACTION_ADD)
+                ->setNewData(sprintf('new field %s (id:%s)', $model->name, $model->id));
+
+            $factory->createActivityLogManager()->log($transfer);
+        });
+
         static::updating(function ($model) {
             $factory = new BusinessFactory();
             $author = Auth::user();

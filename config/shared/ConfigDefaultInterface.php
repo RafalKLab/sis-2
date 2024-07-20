@@ -8,8 +8,6 @@ interface ConfigDefaultInterface
     public const ROLE_ADMIN = 'admin';
     public const ROLE_USER = 'user';
 
-    public const FILE_SYSTEM_PRIVATE = 'private';
-
     public const PERMISSION_REGISTER_ORDER = 'Register order';
     public const PERMISSION_UPLOAD_FILE = 'Upload file';
     public const PERMISSION_SEE_UPLOADED_FILES = 'See uploaded files';
@@ -27,7 +25,19 @@ interface ConfigDefaultInterface
         self::PERMISSION_DELETE_UPLOADED_FILES
     ];
 
+    /* Filesystem */
+    public const FILE_SYSTEM_PRIVATE = 'private';
+
     /* Flash messages */
     public const FLASH_SUCCESS = 'success';
     public const FLASH_ERROR = 'error';
+
+    /* Field settings */
+    public const FIELD_TYPE_TEXT = 'text';
+    public const FIELD_TYPE_DATE = 'date';
+
+    public const AVAILABLE_FIELD_TYPES = [
+        self::FIELD_TYPE_TEXT,
+        self::FIELD_TYPE_DATE
+    ];
 }

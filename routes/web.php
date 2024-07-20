@@ -68,6 +68,8 @@ Route::middleware('auth')->group(function () {
 
         /* Admin table fields */
         Route::get('/admin/fields', [AdminFieldController::class, 'index'])->name('admin-fields.index');
+        Route::get('/admin/fields/create', [AdminFieldController::class, 'create'])->name('admin-fields.create');
+        Route::post('/admin/fields/create', [AdminFieldController::class, 'store'])->name('admin-fields.store');
         Route::get('/admin/fields/{id}', [AdminFieldController::class, 'show'])->name('admin-fields.show');
         Route::get('/admin/fields/edit/{id}', [AdminFieldController::class, 'edit'])->name('admin-fields.edit');
         Route::put('/admin/fields/edit/{id}', [AdminFieldController::class, 'update'])->name('admin-fields.update');

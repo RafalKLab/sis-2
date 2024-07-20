@@ -20,7 +20,7 @@
                     <td>{{ $targetField->type }}</td>
                 </tr>
                 <tr>
-                    <th>Filed order in table</th>
+                    <th>Field order in table</th>
                     <td>{{ $targetField->order }}</td>
                 </tr>
                 <tr>

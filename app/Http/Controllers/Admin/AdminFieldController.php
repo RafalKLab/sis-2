@@ -100,4 +100,37 @@ class AdminFieldController extends MainController
 
         return redirect()->route('admin-fields.index')->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Field %s moved down', $targetField->name));
     }
+
+    public function create() {
+        $tableFields = $this->factory()->createTableManagerAdmin()->retrieveTableFields();
+        $fieldTypes = ConfigDefaultInterface::AVAILABLE_FIELD_TYPES;
+
+        return view('main.admin.field.create', compact('tableFields', 'fieldTypes'));
+    }
+
+    public function store(Request $request) {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => [
+                'required',
+                'string',
+                'in:' . implode(',', ConfigDefaultInterface::AVAILABLE_FIELD_TYPES)
+            ],
+            'color' => 'required'
+        ]);
+
+        $tableId = $this->factory()->createTableManagerAdmin()->getMainTable()->id;
+        $order = TableField::all()->count() + 1;
+
+        $field = TableField::create([
+            'order' => $order,
+            'table_id' => $tableId,
+            'color' => $validated['color'],
+            'name' => $validated['name'],
+            'type' => $validated['type'],
+        ]);
+
+        return redirect()->route('admin-fields.edit', ['id' => $field->id])
+            ->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Field created');
+    }
 }

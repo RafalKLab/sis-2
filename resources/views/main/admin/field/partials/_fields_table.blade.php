@@ -3,7 +3,7 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <div class="col-md-1"><i class="fa-solid fa-table"></i></div>
             <div class="col-md-1 d-flex justify-content-end">
-                <a href="" class="disabled btn btn-outline-primary" title="Add new field"><i class="fa-solid fa-plus"></i></a>
+                <a href="{{ route('admin-fields.create') }}" class="btn btn-outline-primary" title="Add new field"><i class="fa-solid fa-plus"></i></a>
             </div>
         </div>
         <div class="card-body">

@@ -39,7 +39,7 @@
                         <table class="table" id="orders-table-admin">
                             <thead>
                             <tr>
-                                <th>Užregistruotas</th>
+                                <th>Užregistravo</th>
                                 @foreach($tableData['fields'] as $field)
                                     <th style="background-color: {{$field['color']}};">{{$field['name']}}</th>
                                 @endforeach

@@ -132,7 +132,8 @@ class OrderController extends MainController
                 $value = (string) $value;
                 if ($orderData->value !== $value) {
                     $orderData->update([
-                        'value' => $value
+                        'value' => $value,
+                        'last_updated_by_user_id' => Auth::user()->id,
                     ]);
 
                     $updatedFields++;

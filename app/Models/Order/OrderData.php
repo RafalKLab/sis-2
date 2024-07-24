@@ -5,6 +5,7 @@ namespace App\Models\Order;
 use App\Business\ActivityLog\Config\ActivityLogConstants;
 use App\Business\BusinessFactory;
 use App\Models\Table\TableField;
+use App\Models\User;
 use App\Service\OrderService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ class OrderData extends Model
 
     protected $table = 'order_data';
 
-    protected $fillable = ['value', 'field_id'];
+    protected $fillable = ['value', 'field_id', 'last_updated_by_user_id'];
 
     public function field()
     {
@@ -26,6 +27,11 @@ class OrderData extends Model
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function lastUpdatedBy()
+    {
+        return $this->belongsTo(User::class, 'last_updated_by_user_id');
     }
 
     /**

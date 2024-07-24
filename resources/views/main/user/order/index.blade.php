@@ -52,18 +52,29 @@
                                     <td>{{ $order['user'] }}</td>
                                     @foreach($tableData['fields'] as $field)
                                         @if(array_key_exists($field['name'], $order))
-                                            @if($field['type'] === 'id')
-                                                <td>
-                                                    <a class="order-view-link" href="{{ route('orders.view', ['id'=>$order['id']]) }}">
-                                                        {{ $order[$field['name']] }}
-                                                    </a>
-                                                </td>
-                                            @elseif ($field['type'] === 'file')
-                                                <td><a href="{{ route('order-files.index', ['orderId' => $order['id']]) }}" class="order-view-link" title="View files"><i class="fa-regular fa-file"></i> {{$order['uploaded_files']}}</a></td>
-                                            @else
-                                                <td>{{ $order[$field['name']] }}</td>
-                                            @endif
-
+                                            @switch($field['type'])
+                                                @case('id')
+                                                    <td>
+                                                        <a class="order-view-link" href="{{ route('orders.view', ['id'=>$order['id']]) }}">
+                                                            {{ $order[$field['name']] }}
+                                                        </a>
+                                                    </td>
+                                                    @break
+                                                @case('file')
+                                                    <td><a href="{{ route('order-files.index', ['orderId' => $order['id']]) }}" class="order-view-link" title="View files"><i class="fa-regular fa-file"></i> {{$order['uploaded_files']}}</a></td>
+                                                    @break
+                                                @case('select status')
+                                                    <td>
+                                                        @if($order[$field['name']])
+                                                            <div class="order-field-status-{{$order['config'][$field['name']]['status_color_class']}}">
+                                                                {{ $order[$field['name']] }}
+                                                            </div>
+                                                        @endif
+                                                    </td>
+                                                    @break
+                                                @default
+                                                    <td>{{ $order[$field['name']] }}</td>
+                                            @endswitch
                                         @else
                                             <td></td>
                                         @endif

@@ -37,9 +37,26 @@ interface ConfigDefaultInterface
     /* Field settings */
     public const FIELD_TYPE_TEXT = 'text';
     public const FIELD_TYPE_DATE = 'date';
+    public const FIELD_TYPE_SELECT_STATUS = 'select status';
 
     public const AVAILABLE_FIELD_TYPES = [
         self::FIELD_TYPE_TEXT,
-        self::FIELD_TYPE_DATE
+        self::FIELD_TYPE_DATE,
+        self::FIELD_TYPE_SELECT_STATUS
     ];
+
+    /* Order status select color map */
+    public const ORDER_STATUS_MAP = [
+        'Užsakyta' => '',
+        'Apmokėta' => 'pink',
+        'Paruošta' => 'yellow',
+        'Užsk. Trans' => 'blue',
+        'Važiuoja' => 'green',
+        'Muitinėje' => 'gray',
+        'Išmuitinta' => 'brown',
+        'Sandėlyje' => 'orange',
+        'Pristatyta' => 'purple',
+        'Atšaukta' => 'red'
+    ];
+
 }

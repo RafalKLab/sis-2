@@ -1,0 +1,86 @@
+.order-field-status- {
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}
+
+.order-field-status-pink {
+    background-color: #F30B7E;
+    color: white;
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}
+
+.order-field-status-yellow {
+    background-color: #F4EC00;
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}
+
+.order-field-status-blue {
+    background-color: #518EF8;
+    color: white;
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}
+
+.order-field-status-green {
+    background-color: #00D800;
+    color: white;
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}
+
+.order-field-status-gray {
+    background-color: #DEDFE1;
+    color: black;
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}
+
+.order-field-status-brown {
+    background-color: #947557;
+    color: white;
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}
+
+.order-field-status-orange {
+    background-color: #F48013;
+    color: white;
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}
+
+.order-field-status-purple {
+    background-color: #9C2FEA;
+    color: white;
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}
+
+.order-field-status-red {
+    background-color: #E90018;
+    color: white;
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}

@@ -162,14 +162,31 @@ class UserTableReader implements TableReaderInterface
 
             $data['id'] = $order->id;
             foreach (Auth::user()->getAssignedFields() as $field) {
-                $data[$field->name] = OrderData::where('order_id', $order->id)->where('field_id', $field->id)->first()?->value;
+                $orderDataEntity = OrderData::where('order_id', $order->id)->where('field_id', $field->id)->first();
+                $data[$field->name] = $orderDataEntity?->value;
                 $data['uploaded_files'] = $order->files()->count();
                 $data['user'] = $order->user?->name;
+                $data['config'][$field->name] = [
+                    'status_color_class' => $this->getStatusColorClass($orderDataEntity?->value),
+                ];
             }
 
             $ordersData[] = $data;
         }
 
         return $ordersData;
+    }
+
+    protected function getStatusColorClass(?string $status): string
+    {
+        if (!$status) {
+            return '';
+        }
+
+        if (!array_key_exists($status, ConfigDefaultInterface::ORDER_STATUS_MAP)) {
+            return '';
+        }
+
+        return ConfigDefaultInterface::ORDER_STATUS_MAP[$status];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Business\Order\Manager;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
 use Illuminate\Support\Facades\Auth;
+use shared\ConfigDefaultInterface;
 
 class OrderManager
 {
@@ -36,6 +37,7 @@ class OrderManager
                     'field_order' => $field->order,
                     'updated_by' => $orderDataEntity->lastUpdatedBy?->name,
                     'updated_at' => $orderDataEntity->updated_at,
+                    'input_select' => $this->getInputSelectByFieldType($field->type)
                 ];
             } else {
                 $orderData['details'][] = [
@@ -47,10 +49,21 @@ class OrderManager
                     'field_order' => $field->order,
                     'updated_by' => null,
                     'updated_at' => null,
+                    'input_select' => $this->getInputSelectByFieldType($field->type),
                 ];
             }
         }
 
         return $orderData;
+    }
+
+    protected function getInputSelectByFieldType(string $type): array
+    {
+        $inputSelect = match($type) {
+            ConfigDefaultInterface::FIELD_TYPE_SELECT_STATUS => ConfigDefaultInterface::ORDER_STATUS_MAP,
+            default => [],
+        };
+
+        return $inputSelect;
     }
 }

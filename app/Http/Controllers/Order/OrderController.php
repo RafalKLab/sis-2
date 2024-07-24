@@ -164,6 +164,7 @@ class OrderController extends MainController
 
         $newOrder = Order::create([
             'parent_id' => $parentOrder?->id,
+            'user_id' => auth()->user()->id,
         ]);
 
         return redirect()->route('orders.view', ['id' => $newOrder->id])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Order registered');

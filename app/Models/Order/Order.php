@@ -2,6 +2,7 @@
 
 namespace App\Models\Order;
 
+use App\Models\User;
 use App\Service\OrderService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,7 @@ class Order extends Model
 
     protected $fillable = [
         'parent_id',
+        'user_id',
     ];
 
     /**
@@ -39,6 +41,11 @@ class Order extends Model
     public function data()
     {
         return $this->hasMany(OrderData::class, 'order_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function getKeyField(): string

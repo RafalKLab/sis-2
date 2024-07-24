@@ -39,6 +39,7 @@
                         <table class="table" id="orders-table-admin">
                             <thead>
                             <tr>
+                                <th>Užregistruotas</th>
                                 @foreach($tableData['fields'] as $field)
                                     <th style="background-color: {{$field['color']}};">{{$field['name']}}</th>
                                 @endforeach
@@ -48,6 +49,7 @@
                             <tbody>
                             @foreach($tableData['orders']['data'] as $order)
                                 <tr>
+                                    <td>{{ $order['user'] }}</td>
                                     @foreach($tableData['fields'] as $field)
                                         @if(array_key_exists($field['name'], $order))
                                             @if($field['type'] === 'id')

@@ -26,7 +26,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Užsakymo būsena',
-                'type' => 'text',
+                'type' => 'select status',
                 'order' => 3,
             ],
             [

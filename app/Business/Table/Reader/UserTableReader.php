@@ -8,6 +8,7 @@ use App\Models\Order\OrderData;
 use App\Models\Table\Table;
 use App\Models\Table\TableField;
 use Illuminate\Support\Facades\Auth;
+use shared\ConfigDefaultInterface;
 
 class UserTableReader implements TableReaderInterface
 {
@@ -79,9 +80,16 @@ class UserTableReader implements TableReaderInterface
     {
         $searchedOrderIds = $this->findSearchedOrders($search);
         if ($searchedOrderIds) {
-            $orders = Order::whereIn('id', $searchedOrderIds)
-                ->orderBy('updated_at', 'desc')
-                ->paginate(self::PAGINATION_ITEMS_PER_PAGE);
+            if (Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+                $orders = Order::whereIn('id', $searchedOrderIds)
+                    ->orderBy('updated_at', 'desc')
+                    ->paginate(self::PAGINATION_ITEMS_PER_PAGE);
+            } else {
+                $orders = Order::where('user_id', Auth::user()->id)
+                    ->whereIn('id', $searchedOrderIds)
+                    ->orderBy('updated_at', 'desc')
+                    ->paginate(self::PAGINATION_ITEMS_PER_PAGE);
+            }
         } else {
             if ($this->failedSearch) {
                 return [
@@ -89,24 +97,9 @@ class UserTableReader implements TableReaderInterface
                     'links' => '',
                 ];
             }
-
-            $orders = Order::orderBy('updated_at', 'desc')->paginate(self::PAGINATION_ITEMS_PER_PAGE);
         }
 
-        $ordersData = [];
-
-        foreach ($orders as $order) {
-            $data = [];
-
-            $data['id'] = $order->id;
-            foreach (Auth::user()->getAssignedFields() as $field) {
-                $data[$field->name] = OrderData::where('order_id', $order->id)->where('field_id', $field->id)->first()?->value;
-                $data['uploaded_files'] = $order->files()->count();
-                $data['user'] = $order->user?->name;
-            }
-
-            $ordersData[] = $data;
-        }
+        $ordersData = $this->formatOrdersData($orders);
 
         return [
             'data' => $ordersData,
@@ -123,25 +116,26 @@ class UserTableReader implements TableReaderInterface
             ->pluck('id', 'type')
             ->toArray();
 
-        // Check if user can see order key field
-        if (array_key_exists('id', $userFields)) {
-            $orderKeyFieldId = $userFields['id'];
-        }
-
-        if ($orderKeyFieldId) {
-            // First, attempt to find an exact match for the order ID
-            $exactMatch = OrderData::where('field_id', $orderKeyFieldId)
-                ->where('value', $search)
-                ->pluck('order_id')
-                ->toArray();
-
-            // If an exact match is found, return it
-            if (!empty($exactMatch)) {
-                $this->exactMatch = $exactMatch[0];
-
-                return $exactMatch;
-            }
-        }
+        //TODO: Rework, tmp exact match is turned off
+//        // Check if user can see order key field
+//        if (array_key_exists('id', $userFields)) {
+//            $orderKeyFieldId = $userFields['id'];
+//        }
+//
+//        if ($orderKeyFieldId) {
+//            // First, attempt to find an exact match for the order ID
+//            $exactMatch = OrderData::where('field_id', $orderKeyFieldId)
+//                ->where('value', $search)
+//                ->pluck('order_id')
+//                ->toArray();
+//
+//            // If an exact match is found, return it
+//            if (!empty($exactMatch)) {
+//                $this->exactMatch = $exactMatch[0];
+//
+//                return $exactMatch;
+//            }
+//        }
 
         // Perform the broader search if no exact match was found
         $foundIds = OrderData::where('value', 'like', '%' . $search . '%')
@@ -157,5 +151,25 @@ class UserTableReader implements TableReaderInterface
 
         // Remove duplicate IDs from the array
         return  array_unique($foundIds);
+    }
+
+    protected function formatOrdersData($orders): array
+    {
+        $ordersData = [];
+
+        foreach ($orders as $order) {
+            $data = [];
+
+            $data['id'] = $order->id;
+            foreach (Auth::user()->getAssignedFields() as $field) {
+                $data[$field->name] = OrderData::where('order_id', $order->id)->where('field_id', $field->id)->first()?->value;
+                $data['uploaded_files'] = $order->files()->count();
+                $data['user'] = $order->user?->name;
+            }
+
+            $ordersData[] = $data;
+        }
+
+        return $ordersData;
     }
 }

@@ -12,6 +12,7 @@ interface ConfigDefaultInterface
     public const PERMISSION_UPLOAD_FILE = 'Upload file';
     public const PERMISSION_SEE_UPLOADED_FILES = 'See uploaded files';
     public const PERMISSION_DELETE_UPLOADED_FILES = 'Delete uploaded files';
+    public const PERMISSION_SEE_ALL_ORDERS = 'See all orders';
 
     public const AVAILABLE_ROLES = [
         self::ROLE_USER,
@@ -22,7 +23,8 @@ interface ConfigDefaultInterface
         self::PERMISSION_REGISTER_ORDER,
         self::PERMISSION_UPLOAD_FILE,
         self::PERMISSION_SEE_UPLOADED_FILES,
-        self::PERMISSION_DELETE_UPLOADED_FILES
+        self::PERMISSION_DELETE_UPLOADED_FILES,
+        self::PERMISSION_SEE_ALL_ORDERS
     ];
 
     /* Filesystem */

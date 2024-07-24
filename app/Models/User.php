@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Business\ActivityLog\Config\ActivityLogConstants;
 use App\Business\BusinessFactory;
 use App\Business\Table\Config\TableConfig;
+use App\Models\Order\Order;
 use App\Models\Table\Table;
 use App\Models\Table\TableField;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -52,6 +53,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(TableField::class, 'field_user', 'user_id', 'field_id')
             ->orderBy('order');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 
     public function getAssignedFields()

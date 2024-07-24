@@ -23,6 +23,11 @@ class OrderData extends Model
         return $this->belongsTo(TableField::class);
     }
 
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
     /**
      * The "booting" method of the model.
      */

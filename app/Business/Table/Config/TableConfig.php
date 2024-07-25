@@ -91,7 +91,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Pask. Šalis',
-                'type' => 'text',
+                'type' => 'select country',
                 'order' => 16,
             ],
             [

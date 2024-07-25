@@ -72,6 +72,15 @@
                                                         @endif
                                                     </td>
                                                     @break
+                                                @case('load date')
+                                                    <td>
+                                                        @if($order[$field['name']])
+                                                            <div class="order-field-status-yellow">
+                                                                {{ $order[$field['name']] }}
+                                                            </div>
+                                                        @endif
+                                                    </td>
+                                                    @break
                                                 @default
                                                     <td>{{ $order[$field['name']] }}</td>
                                             @endswitch

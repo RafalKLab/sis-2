@@ -126,7 +126,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Pasikrovimo data',
-                'type' => 'date',
+                'type' => 'load date',
                 'order' => 23,
             ],
             [

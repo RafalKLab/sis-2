@@ -115,6 +115,6 @@
     </div>
     @else
         Table does not exist
-    @endif</div>
+    @endif
     @endsection
 

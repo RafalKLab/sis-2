@@ -65,6 +65,27 @@
                             </tr>
                             @break
 
+                        @case('delivery date')
+                            <tr>
+                                <th scope="row">{{ $data['field_name'] }}</th>
+                                <td>
+                                    @if($data['value'])
+                                        <div class="order-field-status-green">
+                                            {{ $data['value'] }}
+                                        </div>
+                                    @endif
+                                </td>
+                                @if($data['updated_by'])
+                                    <td><i>Atnaujino:</i> {{ $data['updated_by'] }}</td>
+                                    <td>{{ $data['updated_at'] }}</td>
+                                @else
+                                    <td></td>
+                                    <td></td>
+                                @endif
+                                <td><a href="{{ route('orders.edit-field', ['orderId'=>$orderData['id'], 'fieldId'=>$data['field_id']]) }}" title="Edit {{ $data['field_name'] }}" class="text-primary"><i class="fa-solid fa-pen"></i></a></td>
+                            </tr>
+                            @break
+
                         @default
                             <tr>
                                 <th scope="row">{{ $data['field_name'] }}</th>

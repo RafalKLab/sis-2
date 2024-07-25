@@ -81,6 +81,15 @@
                                                         @endif
                                                     </td>
                                                     @break
+                                                @case('delivery date')
+                                                    <td>
+                                                        @if($order[$field['name']])
+                                                            <div class="order-field-status-green">
+                                                                {{ $order[$field['name']] }}
+                                                            </div>
+                                                        @endif
+                                                    </td>
+                                                    @break
                                                 @default
                                                     <td>{{ $order[$field['name']] }}</td>
                                             @endswitch

@@ -131,7 +131,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Pristatymo data',
-                'type' => 'date',
+                'type' => 'delivery date',
                 'order' => 24,
             ],
             [

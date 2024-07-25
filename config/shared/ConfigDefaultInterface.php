@@ -39,6 +39,7 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_DATE = 'date';
     public const FIELD_TYPE_SELECT_STATUS = 'select status';
     public const FIELD_TYPE_SELECT_GLUE = 'select glue';
+    public const FIELD_TYPE_SELECT_MEASUREMENT = 'select measurement';
 
     public const AVAILABLE_FIELD_TYPES = [
         self::FIELD_TYPE_TEXT,
@@ -65,4 +66,10 @@ interface ConfigDefaultInterface
         'WPB',
     ];
 
+    public const ORDER_MEASUREMENT_MAP = [
+        'm3',
+        'm2',
+        'm',
+        'kg',
+    ];
 }

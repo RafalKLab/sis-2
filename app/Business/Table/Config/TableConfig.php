@@ -81,7 +81,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Mat.vnt.',
-                'type' => 'text',
+                'type' => 'select measurement',
                 'order' => 14,
             ],
             [

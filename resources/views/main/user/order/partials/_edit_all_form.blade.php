@@ -40,6 +40,13 @@
                                         @endforeach
                                     </select>
                                     @break
+                                @case('select measurement')
+                                    <select class="form-control" id="{{ $data['field_id'] }}" name="field_{{$data['field_id'] }}">
+                                        @foreach($data['input_select'] as $option)
+                                            <option value="{{ $option }}" {{ $data['value'] == $option ? ' selected' : '' }}> {{ $option }}</option>
+                                        @endforeach
+                                    </select>
+                                    @break
                                 @default
                                     <input name="field_{{$data['field_id'] }}" type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
                             @endswitch

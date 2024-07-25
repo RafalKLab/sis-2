@@ -40,6 +40,7 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_SELECT_STATUS = 'select status';
     public const FIELD_TYPE_SELECT_GLUE = 'select glue';
     public const FIELD_TYPE_SELECT_MEASUREMENT = 'select measurement';
+    public const FIELD_TYPE_SELECT_CERTIFICATION = 'select certification';
 
     public const AVAILABLE_FIELD_TYPES = [
         self::FIELD_TYPE_TEXT,
@@ -71,5 +72,10 @@ interface ConfigDefaultInterface
         'm2',
         'm',
         'kg',
+    ];
+
+    public const ORDER_CERTIFICATION_MAP = [
+        'FSC',
+        'PEFC',
     ];
 }

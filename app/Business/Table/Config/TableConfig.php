@@ -86,7 +86,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'FSC/PEFC',
-                'type' => 'text',
+                'type' => 'select certification',
                 'order' => 15,
             ],
             [

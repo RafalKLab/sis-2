@@ -70,8 +70,8 @@ class TableConfig implements TableConfigInterface
                 'order' => 11,
             ],
             [
-                'name' => 'MR/WPB',
-                'type' => 'text',
+                'name' => 'Klijai',
+                'type' => 'select glue',
                 'order' => 12,
             ],
             [

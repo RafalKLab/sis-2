@@ -38,6 +38,7 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_TEXT = 'text';
     public const FIELD_TYPE_DATE = 'date';
     public const FIELD_TYPE_SELECT_STATUS = 'select status';
+    public const FIELD_TYPE_SELECT_GLUE = 'select glue';
 
     public const AVAILABLE_FIELD_TYPES = [
         self::FIELD_TYPE_TEXT,
@@ -57,6 +58,11 @@ interface ConfigDefaultInterface
         'Sandėlyje' => 'orange',
         'Pristatyta' => 'purple',
         'Atšaukta' => 'red'
+    ];
+
+    public const ORDER_GLUE_MAP = [
+        'MR',
+        'WPB',
     ];
 
 }

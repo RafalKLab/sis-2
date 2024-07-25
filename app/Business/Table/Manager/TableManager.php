@@ -60,7 +60,9 @@ class TableManager
 
     private function createTableFields(Table $table): void
     {
-        foreach ($this->config->getTableFields() as $fieldData) {
+        foreach ($this->config->getTableFields() as $index => $fieldData) {
+            $fieldData['order'] = $index + 1;
+
             $table->fields()->create($fieldData);
         }
     }

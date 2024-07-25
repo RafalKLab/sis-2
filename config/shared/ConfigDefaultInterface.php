@@ -42,6 +42,7 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_SELECT_MEASUREMENT = 'select measurement';
     public const FIELD_TYPE_SELECT_CERTIFICATION = 'select certification';
     public const FIELD_TYPE_SELECT_COUNTRY = 'select country';
+    public const FIELD_TYPE_SELECT_TRANSPORT = 'select transport';
 
     public const AVAILABLE_FIELD_TYPES = [
         self::FIELD_TYPE_TEXT,
@@ -277,4 +278,11 @@ interface ConfigDefaultInterface
         "Zambia",
         "Zimbabwe",
     ];
+
+    public const ORDER_TRANSPORT_MAP = [
+        'Road',
+        'Sea',
+        'Rail',
+    ];
 }
+

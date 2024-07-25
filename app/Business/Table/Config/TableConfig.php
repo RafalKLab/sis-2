@@ -111,7 +111,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Trans. tipas',
-                'type' => 'text',
+                'type' => 'select transport',
                 'order' => 20,
             ],
             [

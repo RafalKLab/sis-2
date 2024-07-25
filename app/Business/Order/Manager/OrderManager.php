@@ -65,6 +65,7 @@ class OrderManager
             ConfigDefaultInterface::FIELD_TYPE_SELECT_MEASUREMENT => ConfigDefaultInterface::ORDER_MEASUREMENT_MAP,
             ConfigDefaultInterface::FIELD_TYPE_SELECT_CERTIFICATION => ConfigDefaultInterface::ORDER_CERTIFICATION_MAP,
             ConfigDefaultInterface::FIELD_TYPE_SELECT_COUNTRY => ConfigDefaultInterface::ORDER_COUNTRY_MAP,
+            ConfigDefaultInterface::FIELD_TYPE_SELECT_TRANSPORT => ConfigDefaultInterface::ORDER_TRANSPORT_MAP,
             default => [],
         };
 

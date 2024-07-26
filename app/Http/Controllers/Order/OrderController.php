@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Order;
 use App\Http\Controllers\MainController;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
+use App\Models\Table\TableField;
 use App\Service\OrderService;
+use App\Service\TableService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -154,6 +156,7 @@ class OrderController extends MainController
         // Mark order as updated
         if ($updatedFields) {
             $order->touch();
+            $this->calculatePurchaseSum($order);
 
             return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Successfully updated %s fields', $updatedFields));
         } else {
@@ -224,5 +227,47 @@ class OrderController extends MainController
                 'more' => $orders->hasMorePages()
             ]
         ]);
+    }
+
+    protected function calculatePurchaseSum(Order $order): void
+    {
+        // 1 collect needed fields purchase number and amount
+        $purchaseNumber = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_NUMBER)?->value;
+        if (!$purchaseNumber) {
+            return;
+        }
+
+        $amount = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_AMOUNT)?->value;
+        if (!$amount) {
+            return;
+        }
+
+        // Convert strings to floats
+        $firstNumber = (float) $purchaseNumber;
+        $secondNumber = (float) $amount;
+
+        $result = ($firstNumber * $secondNumber);
+        $formattedResult = number_format($result, 2, '.', '');
+
+        $orderFieldData = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM);
+        if ($orderFieldData) {
+            $orderFieldData->update([
+                'value' => $formattedResult,
+            ]);
+        } else {
+            $data = [
+                'value' => $formattedResult,
+                'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM)->id,
+            ];
+
+            $order->data()->create($data);
+        }
+    }
+
+    protected function getOrderFieldData(Order $order, string $targetField): ?OrderData
+    {
+        $targetFieldId = TableField::where('type', $targetField)->first()?->id;
+
+        return OrderData::where('order_id', $order->id)->where('field_id', $targetFieldId)->first();
     }
 }

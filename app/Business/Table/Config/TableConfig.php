@@ -76,7 +76,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Kiekis',
-                'type' => 'number',
+                'type' => 'amount',
                 'order' => 13,
             ],
             [
@@ -136,12 +136,12 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Pirk 1 m3/m2 kaina',
-                'type' => 'number',
+                'type' => 'purchase number',
                 'order' => 25,
             ],
             [
                 'name' => 'Pirkimo suma',
-                'type' => 'number',
+                'type' => 'purchase sum',
                 'order' => 26,
             ],
             [

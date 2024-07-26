@@ -44,6 +44,10 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_SELECT_COUNTRY = 'select country';
     public const FIELD_TYPE_SELECT_TRANSPORT = 'select transport';
 
+    public const FIELD_TYPE_PURCHASE_SUM = 'purchase sum';
+    public const FIELD_TYPE_AMOUNT = 'amount';
+    public const FIELD_TYPE_PURCHASE_NUMBER = 'purchase number';
+
     public const AVAILABLE_FIELD_TYPES = [
         self::FIELD_TYPE_TEXT,
         self::FIELD_TYPE_DATE,

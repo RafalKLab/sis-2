@@ -146,7 +146,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Trans. kaina 1',
-                'type' => 'number',
+                'type' => 'transport price 1',
                 'order' => 27,
             ],
             [
@@ -156,12 +156,12 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Muitas 7%',
-                'type' => 'text',
+                'type' => 'duty 7',
                 'order' => 29,
             ],
             [
                 'name' => 'Antidem 15,8%',
-                'type' => 'text',
+                'type' => 'duty 15',
                 'order' => 30,
             ],
             [

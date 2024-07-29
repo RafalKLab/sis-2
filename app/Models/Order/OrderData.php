@@ -80,7 +80,7 @@ class OrderData extends Model
                 ->setUser($authorEmail)
                 ->setTitle(ActivityLogConstants::INFO_LOG)
                 ->setAction(ActivityLogConstants::ACTION_ADD)
-                ->setNewData(sprintf(sprintf('order %s field %s: %s', $orderKey, $model->field->name, $model->value)));
+                ->setNewData((sprintf('order %s field %s: %s', $orderKey, $model->field->name, $model->value)));
 
             $factory->createActivityLogManager()->log($transfer);
         });

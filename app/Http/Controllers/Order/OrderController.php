@@ -157,6 +157,8 @@ class OrderController extends MainController
         if ($updatedFields) {
             $order->touch();
             $this->calculatePurchaseSum($order);
+            $this->calculateDuty7($order);
+            $this->calculateDuty15($order);
 
             return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Successfully updated %s fields', $updatedFields));
         } else {
@@ -258,6 +260,76 @@ class OrderController extends MainController
             $data = [
                 'value' => $formattedResult,
                 'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM)->id,
+            ];
+
+            $order->data()->create($data);
+        }
+    }
+
+    protected function calculateDuty7(Order $order): void
+    {
+        // 1 collect needed fields purchase number and amount
+        $purchaseSum = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM)?->value;
+        if (!$purchaseSum) {
+            return;
+        }
+
+        $transportPrice1 = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1)?->value;
+        if (!$transportPrice1) {
+            return;
+        }
+
+        // Convert strings to floats
+        $firstNumber = (float) $purchaseSum;
+        $secondNumber = (float) $transportPrice1;
+
+        $result = ($firstNumber + $secondNumber) * 0.07;
+        $formattedResult = number_format($result, 2, '.', '');
+
+        $orderFieldData = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_DUTY_7);
+        if ($orderFieldData) {
+            $orderFieldData->update([
+                'value' => $formattedResult,
+            ]);
+        } else {
+            $data = [
+                'value' => $formattedResult,
+                'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_DUTY_7)->id,
+            ];
+
+            $order->data()->create($data);
+        }
+    }
+
+    protected function calculateDuty15(Order $order): void
+    {
+        // 1 collect needed fields purchase number and amount
+        $purchaseSum = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM)?->value;
+        if (!$purchaseSum) {
+            return;
+        }
+
+        $transportPrice1 = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1)?->value;
+        if (!$transportPrice1) {
+            return;
+        }
+
+        // Convert strings to floats
+        $firstNumber = (float) $purchaseSum;
+        $secondNumber = (float) $transportPrice1;
+
+        $result = ($firstNumber + $secondNumber) * 0.158;
+        $formattedResult = number_format($result, 2, '.', '');
+
+        $orderFieldData = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_DUTY_15);
+        if ($orderFieldData) {
+            $orderFieldData->update([
+                'value' => $formattedResult,
+            ]);
+        } else {
+            $data = [
+                'value' => $formattedResult,
+                'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_DUTY_15)->id,
             ];
 
             $order->data()->create($data);

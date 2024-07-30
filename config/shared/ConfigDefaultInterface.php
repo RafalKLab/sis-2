@@ -50,6 +50,17 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_DUTY_7 = 'duty 7';
     public const FIELD_TYPE_DUTY_15 = 'duty 15';
     public const FIELD_TYPE_TRANSPORT_PRICE_1 = 'transport price 1';
+    public const FIELD_TYPE_TRANSPORT_PRICE_2 = 'transport price 2';
+    public const FIELD_TYPE_PRIME_COST = 'prime cost';
+    public const FIELD_TYPE_BROKER = 'broker';
+    public const FIELD_TYPE_WAREHOUSES = 'warehouses';
+    public const FIELD_TYPE_BANK = 'bank';
+    public const FIELD_TYPE_OTHER_COSTS = 'other costs';
+    public const FIELD_TYPE_FLAW = 'flaw';
+    public const FIELD_TYPE_AGENT = 'agent';
+    public const FIELD_TYPE_FACTORING = 'factoring';
+
+
 
     public const AVAILABLE_FIELD_TYPES = [
         self::FIELD_TYPE_TEXT,

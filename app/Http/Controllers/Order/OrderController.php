@@ -159,6 +159,7 @@ class OrderController extends MainController
             $this->calculatePurchaseSum($order);
             $this->calculateDuty7($order);
             $this->calculateDuty15($order);
+            $this->calculatePrimeCost($order);
 
             return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Successfully updated %s fields', $updatedFields));
         } else {
@@ -330,6 +331,50 @@ class OrderController extends MainController
             $data = [
                 'value' => $formattedResult,
                 'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_DUTY_15)->id,
+            ];
+
+            $order->data()->create($data);
+        }
+    }
+
+    protected function calculatePrimeCost(Order $order): void
+    {
+        $primeCostComponents = [
+            ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM,
+            ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1,
+            ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_2,
+            ConfigDefaultInterface::FIELD_TYPE_DUTY_7,
+            ConfigDefaultInterface::FIELD_TYPE_DUTY_15,
+            ConfigDefaultInterface::FIELD_TYPE_BROKER,
+            ConfigDefaultInterface::FIELD_TYPE_WAREHOUSES,
+            ConfigDefaultInterface::FIELD_TYPE_BANK,
+            ConfigDefaultInterface::FIELD_TYPE_OTHER_COSTS,
+            ConfigDefaultInterface::FIELD_TYPE_FLAW,
+            ConfigDefaultInterface::FIELD_TYPE_AGENT,
+            ConfigDefaultInterface::FIELD_TYPE_FACTORING,
+        ];
+        $primeCost = 0.00;
+
+        foreach ($primeCostComponents as $costField) {
+            $value = $this->getOrderFieldData($order, $costField)?->value;
+            if (!$value) {
+                continue;
+            }
+
+            $primeCost += (float) $value;
+        }
+
+        $primeCostFormatted = number_format($primeCost, 2, '.', '');
+
+        $orderFieldData = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PRIME_COST);
+        if ($orderFieldData) {
+            $orderFieldData->update([
+                'value' => $primeCostFormatted,
+            ]);
+        } else {
+            $data = [
+                'value' => $primeCostFormatted,
+                'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_PRIME_COST)->id,
             ];
 
             $order->data()->create($data);

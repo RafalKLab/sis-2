@@ -151,7 +151,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Trans. kaina 2',
-                'type' => 'number',
+                'type' => 'transport price 2',
                 'order' => 28,
             ],
             [
@@ -166,42 +166,42 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Brokeris',
-                'type' => 'text',
+                'type' => 'broker',
                 'order' => 31,
             ],
             [
                 'name' => 'Sandėliai',
-                'type' => 'text',
+                'type' => 'warehouses',
                 'order' => 32,
             ],
             [
                 'name' => 'Bank',
-                'type' => 'text',
+                'type' => 'bank',
                 'order' => 33,
             ],
             [
                 'name' => 'Kitos išlaidos',
-                'type' => 'text',
+                'type' => 'other costs',
                 'order' => 34,
             ],
             [
                 'name' => 'Brokas',
-                'type' => 'text',
+                'type' => 'flaw',
                 'order' => 35,
             ],
             [
                 'name' => 'Agentas',
-                'type' => 'text',
+                'type' => 'agent',
                 'order' => 36,
             ],
             [
                 'name' => 'Faktoringas',
-                'type' => 'text',
+                'type' => 'factoring',
                 'order' => 37,
             ],
             [
                 'name' => 'Savikaina',
-                'type' => 'text',
+                'type' => 'prime cost',
                 'order' => 38,
             ],
             [

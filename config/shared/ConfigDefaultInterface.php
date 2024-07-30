@@ -45,8 +45,10 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_SELECT_TRANSPORT = 'select transport';
 
     public const FIELD_TYPE_PURCHASE_SUM = 'purchase sum';
+    public const FIELD_TYPE_SALES_SUM = 'sales sum';
     public const FIELD_TYPE_AMOUNT = 'amount';
     public const FIELD_TYPE_PURCHASE_NUMBER = 'purchase number';
+    public const FIELD_TYPE_SALES_NUMBER = 'sales number';
     public const FIELD_TYPE_DUTY_7 = 'duty 7';
     public const FIELD_TYPE_DUTY_15 = 'duty 15';
     public const FIELD_TYPE_TRANSPORT_PRICE_1 = 'transport price 1';

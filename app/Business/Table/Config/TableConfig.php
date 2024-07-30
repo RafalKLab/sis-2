@@ -205,13 +205,13 @@ class TableConfig implements TableConfigInterface
                 'order' => 38,
             ],
             [
-                'name' => 'Pard - 1 m3 kaina',
-                'type' => 'text',
+                'name' => 'Pardavimo kaina m3/m2',
+                'type' => 'sales number',
                 'order' => 39,
             ],
             [
-                'name' => 'Pard. Suma',
-                'type' => 'text',
+                'name' => 'Pardavimo suma',
+                'type' => 'sales sum',
                 'order' => 40,
             ],
             [

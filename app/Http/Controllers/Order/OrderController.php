@@ -160,6 +160,7 @@ class OrderController extends MainController
             $this->calculateDuty7($order);
             $this->calculateDuty15($order);
             $this->calculatePrimeCost($order);
+            $this->calculateSalesSum($order);
 
             return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Successfully updated %s fields', $updatedFields));
         } else {
@@ -234,7 +235,6 @@ class OrderController extends MainController
 
     protected function calculatePurchaseSum(Order $order): void
     {
-        // 1 collect needed fields purchase number and amount
         $purchaseNumber = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_NUMBER)?->value;
         if (!$purchaseNumber) {
             return;
@@ -375,6 +375,39 @@ class OrderController extends MainController
             $data = [
                 'value' => $primeCostFormatted,
                 'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_PRIME_COST)->id,
+            ];
+
+            $order->data()->create($data);
+        }
+    }
+
+    protected function calculateSalesSum(Order $order): void {
+        $salesNumber = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_SALES_NUMBER)?->value;
+        if (!$salesNumber) {
+            return;
+        }
+
+        $amount = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_AMOUNT)?->value;
+        if (!$amount) {
+            return;
+        }
+
+        // Convert strings to floats
+        $firstNumber = (float) $salesNumber;
+        $secondNumber = (float) $amount;
+
+        $result = ($firstNumber * $secondNumber);
+        $formattedResult = number_format($result, 2, '.', '');
+
+        $orderFieldData = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_SALES_SUM);
+        if ($orderFieldData) {
+            $orderFieldData->update([
+                'value' => $formattedResult,
+            ]);
+        } else {
+            $data = [
+                'value' => $formattedResult,
+                'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_SALES_SUM)->id,
             ];
 
             $order->data()->create($data);

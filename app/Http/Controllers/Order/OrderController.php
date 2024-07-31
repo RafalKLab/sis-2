@@ -17,7 +17,6 @@ class OrderController extends MainController
     {
         $search = $request->search;
         $tableData = $this->factory()->createTableManager()->retrieveTableData($search);
-//        dd($tableData);
         if ($tableData['exact_match']) {
             return redirect()->route('orders.view', ['id'=>$tableData['exact_match']]);
         }
@@ -38,7 +37,7 @@ class OrderController extends MainController
             }
         }
 
-        $orderData = $this->factory()->createOrderManager()->getOrderDetails($order);
+        $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
 
         return view('main.user.order.show', compact('orderData'));
     }
@@ -56,8 +55,8 @@ class OrderController extends MainController
             }
         }
 
-        $orderData = $this->factory()->createOrderManager()->getOrderDetails($order);
-        $orderFormData = $orderData;
+        $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
+        $orderFormData = $this->factory()->createOrderManager()->getOrderDetails($order);;
 
         return view('main.user.order.edit', compact('orderData', 'orderFormData'));
     }
@@ -74,8 +73,8 @@ class OrderController extends MainController
             }
         }
 
-        $orderData = $this->factory()->createOrderManager()->getOrderDetails($order);
-        $orderFormData = $orderData;
+        $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
+        $orderFormData = $this->factory()->createOrderManager()->getOrderDetails($order);
 
         $targetField = null;
         foreach ($orderFormData['details'] as $fieldData) {

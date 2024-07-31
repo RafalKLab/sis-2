@@ -35,8 +35,9 @@ class AdminFieldController extends MainController
         }
 
         $tableFields = $this->factory()->createTableManagerAdmin()->retrieveTableFields();
+        $fieldGroups = ConfigDefaultInterface::AVAILABLE_FIELD_GROUPS;
 
-        return view('main.admin.field.edit', compact('tableFields', 'targetField'));
+        return view('main.admin.field.edit', compact('tableFields', 'targetField', 'fieldGroups'));
     }
 
     public function update(Request $request, int $id) {
@@ -53,6 +54,11 @@ class AdminFieldController extends MainController
                 'min:2',
                 'max:255',
                 Rule::unique('table_fields')->ignore($id),
+            ],
+            'group' => [
+                'required',
+                'string',
+                'in:' . implode(',', ConfigDefaultInterface::AVAILABLE_FIELD_GROUPS)
             ],
         ]);
 
@@ -104,8 +110,9 @@ class AdminFieldController extends MainController
     public function create() {
         $tableFields = $this->factory()->createTableManagerAdmin()->retrieveTableFields();
         $fieldTypes = ConfigDefaultInterface::AVAILABLE_FIELD_TYPES;
+        $fieldGroups = ConfigDefaultInterface::AVAILABLE_FIELD_GROUPS;
 
-        return view('main.admin.field.create', compact('tableFields', 'fieldTypes'));
+        return view('main.admin.field.create', compact('tableFields', 'fieldTypes', 'fieldGroups'));
     }
 
     public function store(Request $request) {
@@ -115,6 +122,11 @@ class AdminFieldController extends MainController
                 'required',
                 'string',
                 'in:' . implode(',', ConfigDefaultInterface::AVAILABLE_FIELD_TYPES)
+            ],
+            'group' => [
+                'required',
+                'string',
+                'in:' . implode(',', ConfigDefaultInterface::AVAILABLE_FIELD_GROUPS)
             ],
             'color' => 'required'
         ]);
@@ -128,6 +140,7 @@ class AdminFieldController extends MainController
             'color' => $validated['color'],
             'name' => $validated['name'],
             'type' => $validated['type'],
+            'group' => $validated['group']
         ]);
 
         return redirect()->route('admin-fields.edit', ['id' => $field->id])

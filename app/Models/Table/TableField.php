@@ -19,6 +19,7 @@ class TableField extends Model
     protected $fillable = [
         'name',
         'type',
+        'group',
         'order',
         'table_id',
         'color'

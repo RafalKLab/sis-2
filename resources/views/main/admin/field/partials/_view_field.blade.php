@@ -20,6 +20,10 @@
                     <td>{{ $targetField->type }}</td>
                 </tr>
                 <tr>
+                    <th>Group</th>
+                    <td>{{ $targetField->group }}</td>
+                </tr>
+                <tr>
                     <th>Field order in table</th>
                     <td>{{ $targetField->order }}</td>
                 </tr>

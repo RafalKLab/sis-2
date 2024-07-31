@@ -68,6 +68,12 @@ interface ConfigDefaultInterface
         self::FIELD_TYPE_DYNAMIC_SELECT
     ];
 
+    public const AVAILABLE_FIELD_GROUPS = [
+        'PREKĖS IR LOGISTIKA',
+        'APSKAITA',
+        'SĄSKAITOS FAKTŪROS',
+    ];
+
     /* Order status select color map */
     public const ORDER_STATUS_MAP = [
         'Užsakyta' => '',

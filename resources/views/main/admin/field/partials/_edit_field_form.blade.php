@@ -21,6 +21,19 @@
                         </div>
                     @endif
                 </div>
+                <div class="form-group">
+                    <label for="fieldGroup">Field group</label>
+                    <select name="group" id="fieldGroup" class="form-control {{ $errors->has('group') ? 'is-invalid' : '' }}">
+                        @foreach($fieldGroups as $group)
+                            <option value="{{$group}}" {{ $targetField->group == $group ? ' selected' : '' }}>{{$group}}</option>
+                        @endforeach
+                    </select>
+                    @if ($errors->has('group'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('group') }}
+                        </div>
+                    @endif
+                </div>
                 <div class="form-group mt-1">
                     <div class="row">
                         <label for="fieldColor">Color</label>

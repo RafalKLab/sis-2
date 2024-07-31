@@ -56,7 +56,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Išmatavimai',
-                'type' => 'text',
+                'type' => 'dynamic select',
                 'order' => 9,
             ],
             [

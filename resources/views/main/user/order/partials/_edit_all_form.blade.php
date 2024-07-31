@@ -1,3 +1,7 @@
+@section('styles')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+@endsection
+
 <div class="col-md-6">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -94,6 +98,14 @@
                                         @endforeach
                                     </select>
                                     @break
+                                @case('dynamic select')
+                                    <select class="form-control select-with-search" id="{{ $data['field_id'] }}" name="field_{{$data['field_id'] }}">
+                                        <option>-</option>
+                                        @foreach($data['input_select'] as $option)
+                                            <option value="{{ $option }}" {{ $data['value'] == $option ? ' selected' : '' }}> {{ $option }}</option>
+                                        @endforeach
+                                    </select>
+                                    @break
                                 @default
                                     <input name="field_{{$data['field_id'] }}" type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
                             @endswitch
@@ -111,5 +123,28 @@
             // Ensure the ID here matches your form's ID
             document.getElementById('edit-order-form').submit();
         }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select-with-search').each(function() {
+                $(this).select2({
+                    placeholder: "Select an option",
+                    tags: true, // Allows the creation of new entries
+                    createTag: function (params) {
+                        var term = $.trim(params.term);
+                        if (term === '') {
+                            return null;
+                        }
+                        return {
+                            id: term,
+                            text: term,
+                            newTag: true // Distinguishes between new and existing tags
+                        };
+                    }
+                });
+            });
+        });
     </script>
 @endsection

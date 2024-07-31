@@ -43,7 +43,7 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_SELECT_CERTIFICATION = 'select certification';
     public const FIELD_TYPE_SELECT_COUNTRY = 'select country';
     public const FIELD_TYPE_SELECT_TRANSPORT = 'select transport';
-
+    public const FIELD_TYPE_DYNAMIC_SELECT = 'dynamic select';
     public const FIELD_TYPE_PURCHASE_SUM = 'purchase sum';
     public const FIELD_TYPE_SALES_SUM = 'sales sum';
     public const FIELD_TYPE_AMOUNT = 'amount';
@@ -62,11 +62,10 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_AGENT = 'agent';
     public const FIELD_TYPE_FACTORING = 'factoring';
 
-
-
     public const AVAILABLE_FIELD_TYPES = [
         self::FIELD_TYPE_TEXT,
-        self::FIELD_TYPE_DATE
+        self::FIELD_TYPE_DATE,
+        self::FIELD_TYPE_DYNAMIC_SELECT
     ];
 
     /* Order status select color map */

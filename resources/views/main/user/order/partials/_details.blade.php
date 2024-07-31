@@ -11,6 +11,13 @@
         <div class="card-body">
             <table class="table">
                 <tbody>
+                <tr>
+                    <th scope="row">Užregistravo:</th>
+                    <td>{{ $orderData['user'] }}</td>
+                    <td>{{ $orderData['created_at'] }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
                 @foreach($orderData['details'] as $data)
 
                     @switch($data['field_type'])
@@ -101,14 +108,6 @@
                             </tr>
                     @endswitch
                 @endforeach
-                <!-- Row 1 -->
-                <tr>
-                    <th scope="row">Užregistravo:</th>
-                    <td>{{ $orderData['user'] }}</td>
-                    <td>{{ $orderData['created_at'] }}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
                 </tbody>
             </table>
         </div>

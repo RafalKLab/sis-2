@@ -17,7 +17,7 @@ class OrderController extends MainController
     {
         $search = $request->search;
         $tableData = $this->factory()->createTableManager()->retrieveTableData($search);
-
+//        dd($tableData);
         if ($tableData['exact_match']) {
             return redirect()->route('orders.view', ['id'=>$tableData['exact_match']]);
         }

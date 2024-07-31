@@ -31,23 +31,28 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Pardavėjas',
-                'type' => 'text',
+                'type' => 'dynamic select',
                 'order' => 4,
             ],
             [
-                'name' => 'Importuotojas',
-                'type' => 'text',
+                'name' => 'Pirkėjas 1',
+                'type' => 'dynamic select',
+                'order' => 5,
+            ],
+            [
+                'name' => 'Pirkėjas 2',
+                'type' => 'dynamic select',
+                'order' => 5,
+            ],
+            [
+                'name' => 'Pirkėjas 3',
+                'type' => 'dynamic select',
                 'order' => 5,
             ],
             [
                 'name' => 'Pirkėjas',
                 'type' => 'text',
                 'order' => 6,
-            ],
-            [
-                'name' => 'Gavėjas',
-                'type' => 'text',
-                'order' => 7,
             ],
             [
                 'name' => 'Prekės',
@@ -63,11 +68,6 @@ class TableConfig implements TableConfigInterface
                 'name' => 'Kokybė',
                 'type' => 'text',
                 'order' => 10,
-            ],
-            [
-                'name' => 'Pardavėjas',
-                'type' => 'text',
-                'order' => 11,
             ],
             [
                 'name' => 'Klijai',
@@ -100,6 +100,11 @@ class TableConfig implements TableConfigInterface
                 'order' => 17,
             ],
             [
+                'name' => 'Trans. tipas',
+                'type' => 'select transport',
+                'order' => 20,
+            ],
+            [
                 'name' => 'Vežėjas',
                 'type' => 'text',
                 'order' => 18,
@@ -108,11 +113,6 @@ class TableConfig implements TableConfigInterface
                 'name' => 'Trans. nr.',
                 'type' => 'text',
                 'order' => 19,
-            ],
-            [
-                'name' => 'Trans. tipas',
-                'type' => 'select transport',
-                'order' => 20,
             ],
             [
                 'name' => 'Muitinė',

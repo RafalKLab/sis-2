@@ -37,7 +37,7 @@ class OrderManager
                     'field_order' => $field->order,
                     'updated_by' => $orderDataEntity->lastUpdatedBy?->name,
                     'updated_at' => $orderDataEntity->updated_at,
-                    'input_select' => $this->getInputSelectByFieldType($field->type)
+                    'input_select' => $this->getInputSelectByFieldType($field->type, $field->id)
                 ];
             } else {
                 $orderData['details'][] = [
@@ -49,7 +49,7 @@ class OrderManager
                     'field_order' => $field->order,
                     'updated_by' => null,
                     'updated_at' => null,
-                    'input_select' => $this->getInputSelectByFieldType($field->type),
+                    'input_select' => $this->getInputSelectByFieldType($field->type, $field->id),
                 ];
             }
         }
@@ -57,7 +57,7 @@ class OrderManager
         return $orderData;
     }
 
-    protected function getInputSelectByFieldType(string $type): array
+    protected function getInputSelectByFieldType(string $type, int $fieldId): array
     {
         $inputSelect = match($type) {
             ConfigDefaultInterface::FIELD_TYPE_SELECT_STATUS => ConfigDefaultInterface::ORDER_STATUS_MAP,
@@ -66,9 +66,19 @@ class OrderManager
             ConfigDefaultInterface::FIELD_TYPE_SELECT_CERTIFICATION => ConfigDefaultInterface::ORDER_CERTIFICATION_MAP,
             ConfigDefaultInterface::FIELD_TYPE_SELECT_COUNTRY => ConfigDefaultInterface::ORDER_COUNTRY_MAP,
             ConfigDefaultInterface::FIELD_TYPE_SELECT_TRANSPORT => ConfigDefaultInterface::ORDER_TRANSPORT_MAP,
+            ConfigDefaultInterface::FIELD_TYPE_DYNAMIC_SELECT => $this->getDynamicSelectOptionsByField($fieldId),
             default => [],
         };
 
         return $inputSelect;
+    }
+
+    protected function getDynamicSelectOptionsByField(int $fieldId): array
+    {
+        return OrderData::where('field_id', $fieldId)
+            ->orderBy('value')
+            ->distinct()
+            ->pluck('value')
+            ->all();
     }
 }

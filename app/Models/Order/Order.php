@@ -38,6 +38,11 @@ class Order extends Model
         return $this->hasMany(File::class, 'order_id');
     }
 
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class, 'order_id');
+    }
+
     public function data()
     {
         return $this->hasMany(OrderData::class, 'order_id');

@@ -13,6 +13,9 @@ interface ConfigDefaultInterface
     public const PERMISSION_SEE_UPLOADED_FILES = 'See uploaded files';
     public const PERMISSION_DELETE_UPLOADED_FILES = 'Delete uploaded files';
     public const PERMISSION_SEE_ALL_ORDERS = 'See all orders';
+    public const PERMISSION_ADD_ORDER_PRODUCTS = 'Add order products';
+    public const PERMISSION_EDIT_ORDER_PRODUCTS = 'Edit order products';
+    public const PERMISSION_REMOVE_ORDER_PRODUCTS = 'Remove order products';
 
     public const AVAILABLE_ROLES = [
         self::ROLE_USER,
@@ -24,7 +27,10 @@ interface ConfigDefaultInterface
         self::PERMISSION_UPLOAD_FILE,
         self::PERMISSION_SEE_UPLOADED_FILES,
         self::PERMISSION_DELETE_UPLOADED_FILES,
-        self::PERMISSION_SEE_ALL_ORDERS
+        self::PERMISSION_SEE_ALL_ORDERS,
+        self::PERMISSION_ADD_ORDER_PRODUCTS,
+        self::PERMISSION_EDIT_ORDER_PRODUCTS,
+        self::PERMISSION_REMOVE_ORDER_PRODUCTS,
     ];
 
     /* Filesystem */

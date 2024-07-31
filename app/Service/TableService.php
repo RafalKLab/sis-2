@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Business\Table\Config\ItemsTableConfig;
+use App\Models\Table\Table;
 use App\Models\Table\TableField;
 
 class TableService
@@ -15,5 +17,10 @@ class TableService
        }
 
        return $field;
+    }
+
+    public static function getItemsTable(): Table
+    {
+        return Table::where('name', ItemsTableConfig::TABLE_NAME)->first();
     }
 }

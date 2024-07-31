@@ -20,7 +20,7 @@ class CreateInitTable extends Command
      *
      * @var string
      */
-    protected $description = 'Create init orders table';
+    protected $description = 'Create init orders and items table';
 
     /**
      * Execute the console command.
@@ -28,6 +28,7 @@ class CreateInitTable extends Command
     public function handle()
     {
         (new BusinessFactory())->createTableManagerAdmin()->createInitTable();
+        (new BusinessFactory())->createItemsTableManagerAdmin()->createInitTable();
 
         $this->info(sprintf('Table %s with fields created', TableConfig::MAIN_TABLE_NAME));
     }

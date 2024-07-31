@@ -23,6 +23,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    /* Order item */
+    Route::get('/orders/{id}/add-item', [OrderController::class, 'addItem'])->name('orders.add-item');
+    Route::post('/orders/{id}/add-item', [OrderController::class, 'storeItem'])->name('orders.store-item');
+    Route::get('/orders/{orderId}/edit-item/{itemId}', [OrderController::class, 'editItem'])->name('orders.edit-item');
+
     /* User orders table */
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/register', [OrderController::class, 'register'])->name('orders.register');

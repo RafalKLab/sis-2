@@ -7,6 +7,7 @@ use App\Business\ActivityLog\Transfer\ActivityLogTransferObject;
 use App\Business\ActivityLog\Writer\ActivityLogMysqlWriter;
 use App\Business\Order\Calculator\OrderDataCalculator;
 use App\Business\Order\Manager\OrderManager;
+use App\Business\Table\Config\ItemsTableConfig;
 use App\Business\Table\Config\TableConfig;
 use App\Business\Table\Manager\TableManager;
 use App\Business\Table\Reader\AdminTableReader;
@@ -52,6 +53,14 @@ class BusinessFactory
         );
     }
 
+    public function createItemsTableManagerAdmin(): TableManager
+    {
+        return new TableManager(
+            $this->createItemsTableConfig(),
+            $this->createAdminTableReader(),
+        );
+    }
+
     public function createOrderManager(): OrderManager
     {
         return new OrderManager();
@@ -60,6 +69,11 @@ class BusinessFactory
     private function createTableConfig(): TableConfig
     {
         return new TableConfig();
+    }
+
+    private function createItemsTableConfig(): ItemsTableConfig
+    {
+        return new ItemsTableConfig();
     }
 
     private function createAdminTableReader(): AdminTableReader

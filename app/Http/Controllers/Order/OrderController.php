@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Order;
 use App\Http\Controllers\MainController;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
+use App\Models\Order\OrderItem;
 use App\Service\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,7 +57,7 @@ class OrderController extends MainController
         }
 
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
-        $orderFormData = $this->factory()->createOrderManager()->getOrderDetails($order);;
+        $orderFormData = $this->factory()->createOrderManager()->getOrderDetails($order);
 
         return view('main.user.order.edit', compact('orderData', 'orderFormData'));
     }
@@ -119,8 +120,7 @@ class OrderController extends MainController
 
 
         // Update each field accordingly
-        foreach ($fieldInputs as $key => $value)
-        {
+        foreach ($fieldInputs as $key => $value) {
             // Remove 'field_' to get just the numeric ID and find order data for that field
             $fieldId = preg_replace('/[^0-9]/', '', $key);
             $orderData = OrderData::where('order_id', $orderId)->where('field_id', $fieldId)->first();
@@ -230,5 +230,77 @@ class OrderController extends MainController
                 'more' => $orders->hasMorePages()
             ]
         ]);
+    }
+
+    public function addItem(int $orderId) {
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
+        $orderFormData = $this->factory()->createOrderManager()->getItemFormData();
+
+        return view('main.user.order.add-item', compact('orderData', 'orderFormData'));
+    }
+
+    public function storeItem(Request $request, int $orderId) {
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        // Get all input data
+        $allInputs = $request->all();
+
+        // Filter inputs that start with 'field_'
+        $fieldInputs = array_filter($allInputs, function($key) {
+            return strpos($key, 'field_') === 0;
+        }, ARRAY_FILTER_USE_KEY);
+
+        if (!empty($fieldInputs)) {
+            // create order item entity
+            $orderItem = OrderItem::create(['order_id' => $orderId]);
+        } else {
+            return redirect()->route('orders.view', ['id' => $orderId]);
+        }
+
+        foreach ($fieldInputs as $key => $value) {
+            // Remove 'field_' to get just the numeric ID and find order data for that field
+            $fieldId = preg_replace('/[^0-9]/', '', $key);
+            // If value in request is different from old value then update
+            // If null replace with empty
+            $value = (string) $value;
+
+            // Create new order data entity only if value is not null
+            if ($value) {
+                $data = [
+                    'value' => $value,
+                    'field_id' => $fieldId,
+                ];
+                $orderItem->data()->create($data);
+            }
+        }
+
+        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('New item was added to order! '));
+    }
+
+    public function editItem(int $orderId, int $itemId)
+    {
+        dump($orderId);
+        dump($itemId);
+        dd('TODO');
     }
 }

@@ -50,13 +50,8 @@ class TableConfig implements TableConfigInterface
                 'order' => 5,
             ],
             [
-                'name' => 'Pirkėjas',
-                'type' => 'text',
-                'order' => 6,
-            ],
-            [
                 'name' => 'Prekės',
-                'type' => 'text',
+                'type' => 'dynamic select',
                 'order' => 8,
             ],
             [
@@ -106,7 +101,7 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Vežėjas',
-                'type' => 'text',
+                'type' => 'dynamic select',
                 'order' => 18,
             ],
             [
@@ -116,12 +111,12 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Muitinė',
-                'type' => 'text',
+                'type' => 'dynamic select',
                 'order' => 21,
             ],
             [
                 'name' => 'Sandėlis',
-                'type' => 'text',
+                'type' => 'dynamic select',
                 'order' => 22,
             ],
             [

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Order;
 
+use App\Business\ActivityLog\Config\ActivityLogConstants;
 use App\Http\Controllers\MainController;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
@@ -303,6 +304,8 @@ class OrderController extends MainController
             }
         }
 
+        $this->logItemAdded($order, $orderItem);
+
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('New item was added to order'));
     }
 
@@ -411,6 +414,8 @@ class OrderController extends MainController
             }
         }
 
+        $this->logItemRemoved($order, $item);
+
         $item->delete();
 
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item was removed'));
@@ -425,5 +430,29 @@ class OrderController extends MainController
         }
 
         return [];
+    }
+
+    protected function logItemAdded(Order $order, OrderItem $orderItem): void
+    {
+        $transfer = $this->factory()
+            ->getActivityLogTransferObject()
+            ->setUser(Auth::user()->email)
+            ->setTitle(ActivityLogConstants::INFO_LOG)
+            ->setAction(ActivityLogConstants::ACTION_ADD)
+            ->setNewData(sprintf('item %s for order: %s', $orderItem->getNameField(), $order->getKeyField()));
+
+        $this->factory()->createActivityLogManager()->log($transfer);
+    }
+
+    protected function logItemRemoved(Order $order, OrderItem $orderItem): void
+    {
+        $transfer = $this->factory()
+            ->getActivityLogTransferObject()
+            ->setUser(Auth::user()->email)
+            ->setTitle(ActivityLogConstants::DANGER_LOG)
+            ->setAction(ActivityLogConstants::ACTION_DELETE)
+            ->setNewData(sprintf('item %s of order: %s', $orderItem->getNameField(), $order->getKeyField()));
+
+        $this->factory()->createActivityLogManager()->log($transfer);
     }
 }

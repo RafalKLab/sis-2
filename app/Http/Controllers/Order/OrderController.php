@@ -155,13 +155,7 @@ class OrderController extends MainController
         // Mark order as updated
         if ($updatedFields) {
             $order->touch();
-            $calculator = $this->factory()->createOrderDataCalculator();
-
-            $calculator->calculatePurchaseSum($order);
-            $calculator->calculateDuty7($order);
-            $calculator->calculateDuty15($order);
-            $calculator->calculatePrimeCost($order);
-            $calculator->calculateSalesSum($order);
+            $this->executeOrderCalculations($order);
 
             return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Successfully updated %s fields', $updatedFields));
         } else {
@@ -304,6 +298,8 @@ class OrderController extends MainController
             }
         }
 
+        $this->executeItemCalculations($orderItem);
+
         $this->logItemAdded($order, $orderItem);
 
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('New item was added to order'));
@@ -390,6 +386,8 @@ class OrderController extends MainController
             }
         }
 
+        $this->executeItemCalculations($item);
+
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item was updated '));
     }
 
@@ -417,6 +415,8 @@ class OrderController extends MainController
         $this->logItemRemoved($order, $item);
 
         $item->delete();
+
+        $this->executeItemCalculations($item);
 
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item was removed'));
     }
@@ -454,5 +454,27 @@ class OrderController extends MainController
             ->setNewData(sprintf('item %s of order: %s', $orderItem->getNameField(), $order->getKeyField()));
 
         $this->factory()->createActivityLogManager()->log($transfer);
+    }
+
+    protected function executeItemCalculations(OrderItem $orderItem): void
+    {
+        $calculator = $this->factory()->createOrderDataCalculator();
+
+        $calculator->calculatePurchaseSumForItem($orderItem);
+        $calculator->calculateSalesSumForItem($orderItem);
+
+        $this->executeOrderCalculations($orderItem->order);
+    }
+
+    protected function executeOrderCalculations(Order $order): void
+    {
+        $calculator = $this->factory()->createOrderDataCalculator();
+
+        $calculator->calculateTotalPurchaseSum($order);
+            $calculator->calculateDuty7($order);
+            $calculator->calculateDuty15($order);
+            $calculator->calculatePrimeCost($order);
+            $calculator->calculateTotalSalesSum($order);
+            $calculator->calculateTotalProfit($order);
     }
 }

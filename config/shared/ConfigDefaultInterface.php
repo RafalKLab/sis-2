@@ -51,7 +51,9 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_SELECT_TRANSPORT = 'select transport';
     public const FIELD_TYPE_DYNAMIC_SELECT = 'dynamic select';
     public const FIELD_TYPE_PURCHASE_SUM = 'purchase sum';
+    public const FIELD_TYPE_TOTAL_PURCHASE_SUM = 'total purchase sum';
     public const FIELD_TYPE_SALES_SUM = 'sales sum';
+    public const FIELD_TYPE_TOTAL_SALES_SUM = 'total sales sum';
     public const FIELD_TYPE_AMOUNT = 'amount';
     public const FIELD_TYPE_PURCHASE_NUMBER = 'purchase number';
     public const FIELD_TYPE_SALES_NUMBER = 'sales number';
@@ -67,6 +69,7 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_FLAW = 'flaw';
     public const FIELD_TYPE_AGENT = 'agent';
     public const FIELD_TYPE_FACTORING = 'factoring';
+    public const FIELD_TYPE_PROFIT = 'profit';
 
     public const AVAILABLE_FIELD_TYPES = [
         self::FIELD_TYPE_TEXT,

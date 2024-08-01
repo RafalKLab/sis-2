@@ -154,6 +154,8 @@
                                     <tr>
                                         <th scope="col"></th>
                                         <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -166,6 +168,12 @@
                                                 {{ $name }}
                                                 <i class="fa-solid fa-chevron-down"></i>
                                             </td>
+                                            <td>
+                                                {{$item['settings']['purchase_sum_field_name']}}: {{$item['settings']['purchase_sum']}}
+                                            </td>
+                                            <td>
+                                                {{$item['settings']['sales_sum_field_name']}}: {{$item['settings']['sales_sum']}}
+                                            </td>
                                             <td class="text-end">
                                                 @if(Auth::user()->hasPermissionTo('Edit order products'))
                                                     <a href="{{ route('orders.edit-item', ['orderId' => $orderData['id'], 'itemId' => $item['settings']['item_id']]) }}" title="Edit"><i class="fa-solid fa-pen"></i></a>
@@ -176,7 +184,7 @@
                                             </td>
                                         </tr>
                                         <tr id="collapseItem_{{$item['settings']['collapse_id']}}" class="collapse">
-                                            <td colspan="2">
+                                            <td colspan="4">
                                                 <table class="table">
                                                     @foreach($item['details'] as $data)
                                                         @switch($data['field_type'])

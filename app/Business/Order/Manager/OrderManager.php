@@ -203,6 +203,10 @@ class OrderManager
             }
             $itemData['settings']['collapse_id'] = preg_replace('/[\s.]+/', '', $prefixedName);
             $itemData['settings']['item_id'] = $item->id;
+            $itemData['settings']['purchase_sum'] = $item->getPurchaseSum();
+            $itemData['settings']['purchase_sum_field_name'] = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM)->name;
+            $itemData['settings']['sales_sum'] = $item->getSalesSum();
+            $itemData['settings']['sales_sum_field_name'] = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_SALES_SUM)->name;
 
             $data[$prefixedName] = $itemData;
         }

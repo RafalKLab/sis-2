@@ -114,6 +114,26 @@ class ItemsTableConfig implements TableConfigInterface
                 'type' => 'delivery date',
                 'group' => 'PREKĖS IR LOGISTIKA',
             ],
+            [
+                'name' => 'Pirk 1 m3/m2 kaina',
+                'type' => 'purchase number',
+                'group' => 'APSKAITA',
+            ],
+            [
+                'name' => 'Pirkimo suma',
+                'type' => 'purchase sum',
+                'group' => 'APSKAITA',
+            ],
+            [
+                'name' => 'Pardavimo kaina m3/m2',
+                'type' => 'sales number',
+                'group' => 'APSKAITA',
+            ],
+            [
+                'name' => 'Pardavimo suma',
+                'type' => 'sales sum',
+                'group' => 'APSKAITA',
+            ],
         ];
     }
 

@@ -4,32 +4,24 @@ namespace App\Business\Order\Calculator;
 
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
+use App\Models\Order\OrderItem;
+use App\Models\Order\OrderItemData;
 use App\Models\Table\TableField;
 use App\Service\TableService;
 use shared\ConfigDefaultInterface;
 
 class OrderDataCalculator
 {
-    public function calculatePurchaseSum(Order $order): void
+    public function calculateTotalPurchaseSum(Order $order): void
     {
-        $purchaseNumber = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_NUMBER)?->value;
-        if (!$purchaseNumber) {
-            return;
+        $sum = 0;
+        foreach ($order->items as $item) {
+            $sum += $item->getPurchaseSum();
         }
 
-        $amount = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_AMOUNT)?->value;
-        if (!$amount) {
-            return;
-        }
+        $formattedResult = number_format($sum, 2, '.', '');
 
-        // Convert strings to floats
-        $firstNumber = (float) $purchaseNumber;
-        $secondNumber = (float) $amount;
-
-        $result = ($firstNumber * $secondNumber);
-        $formattedResult = number_format($result, 2, '.', '');
-
-        $orderFieldData = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM);
+        $orderFieldData = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TOTAL_PURCHASE_SUM);
         if ($orderFieldData) {
             $orderFieldData->update([
                 'value' => $formattedResult,
@@ -37,7 +29,7 @@ class OrderDataCalculator
         } else {
             $data = [
                 'value' => $formattedResult,
-                'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM)->id,
+                'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_TOTAL_PURCHASE_SUM)->id,
             ];
 
             $order->data()->create($data);
@@ -47,7 +39,7 @@ class OrderDataCalculator
     public function calculateDuty7(Order $order): void
     {
         // 1 collect needed fields purchase number and amount
-        $purchaseSum = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM)?->value;
+        $purchaseSum = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TOTAL_PURCHASE_SUM)?->value;
         if (!$purchaseSum) {
             return;
         }
@@ -82,7 +74,7 @@ class OrderDataCalculator
     public function calculateDuty15(Order $order): void
     {
         // 1 collect needed fields purchase number and amount
-        $purchaseSum = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM)?->value;
+        $purchaseSum = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TOTAL_PURCHASE_SUM)?->value;
         if (!$purchaseSum) {
             return;
         }
@@ -117,7 +109,7 @@ class OrderDataCalculator
     public function calculatePrimeCost(Order $order): void
     {
         $primeCostComponents = [
-            ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM,
+            ConfigDefaultInterface::FIELD_TYPE_TOTAL_PURCHASE_SUM,
             ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1,
             ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_2,
             ConfigDefaultInterface::FIELD_TYPE_DUTY_7,
@@ -158,13 +150,102 @@ class OrderDataCalculator
         }
     }
 
-    public function calculateSalesSum(Order $order): void {
-        $salesNumber = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_SALES_NUMBER)?->value;
+    public function calculateTotalSalesSum(Order $order): void {
+        $sum = 0;
+        foreach ($order->items as $item) {
+            $sum += $item->getSalesSum();
+        }
+
+        $formattedResult = number_format($sum, 2, '.', '');
+
+        $orderFieldData = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_SUM);
+        if ($orderFieldData) {
+            $orderFieldData->update([
+                'value' => $formattedResult,
+            ]);
+        } else {
+            $data = [
+                'value' => $formattedResult,
+                'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_SUM)->id,
+            ];
+
+            $order->data()->create($data);
+        }
+    }
+
+    public function calculateTotalProfit(Order $order): void
+    {
+        // 1 collect needed fields purchase number and amount
+        $totalSalesSum = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_SUM)?->value;
+        if (!$totalSalesSum) {
+            $purchaseSum = 0.0;
+        }
+
+        $primeCost = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PRIME_COST)?->value;
+        if (!$primeCost) {
+            $primeCost = 0.0;
+        }
+
+        $profit = $totalSalesSum - $primeCost;
+        $formattedResult = number_format($profit, 2, '.', '');
+
+        $orderFieldData = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PROFIT);
+        if ($orderFieldData) {
+            $orderFieldData->update([
+                'value' => $formattedResult,
+            ]);
+        } else {
+            $data = [
+                'value' => $formattedResult,
+                'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_PROFIT)->id,
+            ];
+
+            $order->data()->create($data);
+        }
+    }
+
+    public function calculatePurchaseSumForItem(OrderItem $orderItem): void
+    {
+        $purchaseNumber = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_NUMBER)?->value;
+        if (!$purchaseNumber) {
+            return;
+        }
+
+        $amount = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_AMOUNT)?->value;
+        if (!$amount) {
+            return;
+        }
+
+        // Convert strings to floats
+        $firstNumber = (float) $purchaseNumber;
+        $secondNumber = (float) $amount;
+
+        $result = ($firstNumber * $secondNumber);
+        $formattedResult = number_format($result, 2, '.', '');
+
+        $orderFieldData = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM);
+        if ($orderFieldData) {
+            $orderFieldData->update([
+                'value' => $formattedResult,
+            ]);
+        } else {
+            $data = [
+                'value' => $formattedResult,
+                'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM)->id,
+            ];
+
+            $orderItem->data()->create($data);
+        }
+    }
+
+    public function calculateSalesSumForItem(OrderItem $orderItem): void
+    {
+        $salesNumber = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_SALES_NUMBER)?->value;
         if (!$salesNumber) {
             return;
         }
 
-        $amount = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_AMOUNT)?->value;
+        $amount = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_AMOUNT)?->value;
         if (!$amount) {
             return;
         }
@@ -176,7 +257,7 @@ class OrderDataCalculator
         $result = ($firstNumber * $secondNumber);
         $formattedResult = number_format($result, 2, '.', '');
 
-        $orderFieldData = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_SALES_SUM);
+        $orderFieldData = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_SALES_SUM);
         if ($orderFieldData) {
             $orderFieldData->update([
                 'value' => $formattedResult,
@@ -187,7 +268,7 @@ class OrderDataCalculator
                 'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_SALES_SUM)->id,
             ];
 
-            $order->data()->create($data);
+            $orderItem->data()->create($data);
         }
     }
 
@@ -196,5 +277,12 @@ class OrderDataCalculator
         $targetFieldId = TableField::where('type', $targetField)->first()?->id;
 
         return OrderData::where('order_id', $order->id)->where('field_id', $targetFieldId)->first();
+    }
+
+    protected function getItemFieldData(OrderItem $orderItem, string $targetField): ?OrderItemData
+    {
+        $targetFieldId = TableField::where('type', $targetField)->first()?->id;
+
+        return OrderItemData::where('order_item_id', $orderItem->id)->where('field_id', $targetFieldId)->first();
     }
 }

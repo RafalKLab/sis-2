@@ -28,6 +28,18 @@
                                     <input disabled type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
                                     <small id="{{ $data['field_id'] }}" class="form-text text-muted">This field is automatically calculated and can not be edited</small>
                                     @break
+                                @case('total purchase sum')
+                                    <input disabled type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
+                                    <small id="{{ $data['field_id'] }}" class="form-text text-muted">This field is automatically calculated and can not be edited</small>
+                                    @break
+                                @case('total sales sum')
+                                    <input disabled type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
+                                    <small id="{{ $data['field_id'] }}" class="form-text text-muted">This field is automatically calculated and can not be edited</small>
+                                    @break
+                                @case('profit')
+                                    <input disabled type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
+                                    <small id="{{ $data['field_id'] }}" class="form-text text-muted">This field is automatically calculated and can not be edited</small>
+                                    @break
                                 @case('duty 7')
                                     <input disabled type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
                                     <small id="{{ $data['field_id'] }}" class="form-text text-muted">This field is automatically calculated and can not be edited</small>

@@ -129,14 +129,19 @@ class TableConfig implements TableConfigInterface
 //                'type' => 'delivery date',
 //                'group' => 'PREKĖS IR LOGISTIKA',
 //            ],
+//            [
+//                'name' => 'Pirk 1 m3/m2 kaina',
+//                'type' => 'purchase number',
+//                'group' => 'APSKAITA',
+//            ],
+//            [
+//                'name' => 'Pirkimo suma',
+//                'type' => 'purchase sum',
+//                'group' => 'APSKAITA',
+//            ],
             [
-                'name' => 'Pirk 1 m3/m2 kaina',
-                'type' => 'purchase number',
-                'group' => 'APSKAITA',
-            ],
-            [
-                'name' => 'Pirkimo suma',
-                'type' => 'purchase sum',
+                'name' => 'Bendra pirkimo suma',
+                'type' => 'total purchase sum',
                 'group' => 'APSKAITA',
             ],
             [
@@ -199,19 +204,19 @@ class TableConfig implements TableConfigInterface
                 'type' => 'prime cost',
                 'group' => 'APSKAITA',
             ],
+//            [
+//                'name' => 'Pardavimo kaina m3/m2',
+//                'type' => 'sales number',
+//                'group' => 'APSKAITA',
+//            ],
             [
-                'name' => 'Pardavimo kaina m3/m2',
-                'type' => 'sales number',
-                'group' => 'APSKAITA',
-            ],
-            [
-                'name' => 'Pardavimo suma',
-                'type' => 'sales sum',
+                'name' => 'Bendra pardavimo suma',
+                'type' => 'total sales sum',
                 'group' => 'APSKAITA',
             ],
             [
                 'name' => 'Pelnas',
-                'type' => 'text',
+                'type' => 'profit',
                 'group' => 'APSKAITA',
             ],
             [

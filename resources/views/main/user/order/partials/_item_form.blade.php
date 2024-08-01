@@ -13,7 +13,13 @@
             </div>
         </div>
         <div class="card-body">
-            <form id="edit-order-form" method="POST" action="{{ route('orders.store-item', ['id' => $orderData['id']]) }}">
+
+            @if(isset($isEdit))
+                <form id="edit-order-form" method="POST" action="{{ route('orders.update-item', ['orderId' => $orderData['id'], 'itemId' => $itemId]) }}">
+                    @method('PUT')
+            @else
+                 <form id="edit-order-form" method="POST" action="{{ route('orders.store-item', ['id' => $orderData['id']]) }}">
+            @endif
                 @csrf
                 @foreach($orderFormData as $data)
                     <div class="form-group row mb-3">

@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('order_data', function (Blueprint $table) {
+        Schema::table('order_items_data', function (Blueprint $table) {
             // Add a nullable foreign key column
             $table->unsignedBigInteger('last_updated_by_user_id')->nullable()->after('updated_at');
 
             // Add the foreign key constraint
-            $table->foreign('last_updated_by_user_id', 'order_data_last_updated_by_user_id_foreign')
+            $table->foreign('last_updated_by_user_id', 'order_item_data_last_updated_by_user_id_foreign')
                 ->references('id')->on('users')
                 ->onDelete('set null');
         });
@@ -27,7 +27,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('order_data', function (Blueprint $table) {
+        Schema::table('order_items_data', function (Blueprint $table) {
             // Drop the foreign key constraint
             $table->dropForeign('order_data_last_updated_by_user_id_foreign');
 

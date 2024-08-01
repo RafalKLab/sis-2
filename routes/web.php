@@ -27,6 +27,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{id}/add-item', [OrderController::class, 'addItem'])->name('orders.add-item');
     Route::post('/orders/{id}/add-item', [OrderController::class, 'storeItem'])->name('orders.store-item');
     Route::get('/orders/{orderId}/edit-item/{itemId}', [OrderController::class, 'editItem'])->name('orders.edit-item');
+    Route::put('/orders/{orderId}/edit-item/{itemId}', [OrderController::class, 'updateItem'])->name('orders.update-item');
+    Route::get('/orders/{orderId}/remove-item/{itemId}', [OrderController::class, 'removeItem'])->name('orders.remove-item');
 
     /* User orders table */
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');

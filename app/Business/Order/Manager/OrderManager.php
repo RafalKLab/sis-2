@@ -184,7 +184,7 @@ class OrderManager
                         'field_type' => $field->type,
                         'field_order' => $field->order,
                         'updated_at' => $orderItemDataEntity->updated_at,
-                        'updated_by' => null,
+                        'updated_by' => $orderItemDataEntity->lastUpdatedBy?->name,
                         'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, ItemsTableConfig::TABLE_NAME)
                     ];
                 } else {

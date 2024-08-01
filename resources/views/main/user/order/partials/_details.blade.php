@@ -37,12 +37,12 @@
                         Prekės ir logistika
                     </div>
                     <div class="col-md-1 d-flex justify-content-end">
-                        <button class="text-secondary" style="border: none; background-color: inherit" type="button" data-bs-toggle="collapse" data-bs-target="#collapseItems" aria-expanded="false" aria-controls="collapseContent">
+                        <button class="text-secondary" style="border: none; background-color: inherit" type="button" data-bs-toggle="collapse" data-bs-target="#collapseItems" aria-expanded="true" aria-controls="collapseContent">
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                     </div>
                 </div>
-                <div id="collapseItems" class="collapse" aria-labelledby="headingOne">
+                <div id="collapseItems" class="collapse show" aria-labelledby="headingOne">
                     <div class="card-body">
                         <table class="table">
                             <tbody>
@@ -143,7 +143,9 @@
                                     Prekių sąrašas
                                 </div>
                                 <div class="col-md-1 d-flex justify-content-end">
-                                    <a href="{{ route('orders.add-item', ['id' => $orderData['id']]) }}" class="text-primary" title="Add new product"><i class="fa-solid fa-plus"></i></a>
+                                    @if(Auth::user()->hasPermissionTo('Add order products'))
+                                        <a href="{{ route('orders.add-item', ['id' => $orderData['id']]) }}" class="text-primary" title="Add new product"><i class="fa-solid fa-plus"></i></a>
+                                    @endif
                                 </div>
                             </div>
                             <div class="card-body">
@@ -165,9 +167,12 @@
                                                 <i class="fa-solid fa-chevron-down"></i>
                                             </td>
                                             <td class="text-end">
-                                                <a href="{{ route('orders.edit-item', ['orderId' => $orderData['id'], 'itemId' => $item['settings']['item_id']]) }}" title="Edit"><i class="fa-solid fa-pen"></i></a>
-                                                &nbsp;&nbsp;&nbsp;
-                                                <a href="" class="text-danger" title="Remove"><i class="fa-solid fa-xmark"></i></a>
+                                                @if(Auth::user()->hasPermissionTo('Edit order products'))
+                                                    <a href="{{ route('orders.edit-item', ['orderId' => $orderData['id'], 'itemId' => $item['settings']['item_id']]) }}" title="Edit"><i class="fa-solid fa-pen"></i></a>
+                                                @endif
+                                                @if(Auth::user()->hasPermissionTo('Remove order products'))
+                                                    <a style="font-size: 20px; margin-left: 10px;" href="{{ route('orders.remove-item', ['orderId' =>$orderData['id'], 'itemId' => $item['settings']['item_id']]) }}" onclick="return confirmAction()" class="text-danger" title="Remove"><i class="fa-solid fa-xmark"></i></a>
+                                                @endif
                                             </td>
                                         </tr>
                                         <tr id="collapseItem_{{$item['settings']['collapse_id']}}" class="collapse">
@@ -175,7 +180,6 @@
                                                 <table class="table">
                                                     @foreach($item['details'] as $data)
                                                         @switch($data['field_type'])
-
                                                             @case('load date')
                                                                 <tr>
                                                                     <th scope="row">{{ $data['field_name'] }}</th>
@@ -470,3 +474,8 @@
         </div>
     </div>
 </div>
+<script>
+    function confirmAction() {
+        return confirm('Are you sure you want to remove item?');
+    }
+</script>

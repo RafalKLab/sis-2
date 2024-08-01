@@ -6,6 +6,7 @@ use App\Http\Controllers\MainController;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
 use App\Models\Order\OrderItem;
+use App\Models\Order\OrderItemData;
 use App\Service\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -233,6 +234,10 @@ class OrderController extends MainController
     }
 
     public function addItem(int $orderId) {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_ADD_ORDER_PRODUCTS)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
+        }
+
         $order = Order::find($orderId);
         if (!$order) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
@@ -251,6 +256,10 @@ class OrderController extends MainController
     }
 
     public function storeItem(Request $request, int $orderId) {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_ADD_ORDER_PRODUCTS)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
+        }
+
         $order = Order::find($orderId);
         if (!$order) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
@@ -294,13 +303,127 @@ class OrderController extends MainController
             }
         }
 
-        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('New item was added to order! '));
+        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('New item was added to order'));
     }
 
     public function editItem(int $orderId, int $itemId)
     {
-        dump($orderId);
-        dump($itemId);
-        dd('TODO');
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_EDIT_ORDER_PRODUCTS)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
+        }
+
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        $item = OrderItem::find($itemId);
+        if (!$item) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item not found');
+        }
+
+        $isEdit = true;
+        $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
+        $orderFormData = $this->extractTargetItem($orderData, $itemId);
+
+        return view('main.user.order.edit-item', compact('orderData', 'orderFormData', 'isEdit', 'itemId'));
+    }
+
+    public function updateItem(Request $request, int $orderId, int $itemId)
+    {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_EDIT_ORDER_PRODUCTS)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
+        }
+
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        $item = OrderItem::find($itemId);
+        if (!$item) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        // Get all input data
+        $allInputs = $request->all();
+
+        // Filter inputs that start with 'field_'
+        $fieldInputs = array_filter($allInputs, function($key) {
+            return strpos($key, 'field_') === 0;
+        }, ARRAY_FILTER_USE_KEY);
+
+        foreach ($fieldInputs as $key => $value) {
+            // Remove 'field_' to get just the numeric ID and find order data for that field
+            $fieldId = preg_replace('/[^0-9]/', '', $key);
+
+            $itemData = OrderItemData::where('field_id', $fieldId)->where('order_item_id', $itemId)->first();
+            if ($itemData) {
+                // If value in request is different from old value then update
+                // If null replace with empty
+                $value = (string) $value;
+                if ($itemData->value !== $value) {
+                    $itemData->update([
+                        'value' => $value,
+                        'last_updated_by_user_id' => Auth::user()->id,
+                    ]);
+
+                }
+            } else {
+                // Create new order data entity only if value is not null
+                if ($value) {
+                    $data = [
+                        'value' => $value,
+                        'field_id' => $fieldId,
+                    ];
+                    $item->data()->create($data);
+                }
+            }
+        }
+
+        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item was updated '));
+    }
+
+    public function removeItem(int $orderId, int $itemId) {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_REMOVE_ORDER_PRODUCTS)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
+        }
+
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        $item = OrderItem::find($itemId);
+        if (!$item) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        $item->delete();
+
+        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item was removed'));
+    }
+
+    protected function extractTargetItem(array $orderData, int $itemId): array
+    {
+        foreach ($orderData['items'] as $item) {
+            if ($item['settings']['item_id'] == $itemId) {
+                return $item['details'];
+            }
+        }
+
+        return [];
     }
 }

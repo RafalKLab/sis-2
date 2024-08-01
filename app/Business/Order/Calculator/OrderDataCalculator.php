@@ -178,7 +178,7 @@ class OrderDataCalculator
         // 1 collect needed fields purchase number and amount
         $totalSalesSum = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_SUM)?->value;
         if (!$totalSalesSum) {
-            $purchaseSum = 0.0;
+            $totalSalesSum = 0.0;
         }
 
         $primeCost = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PRIME_COST)?->value;

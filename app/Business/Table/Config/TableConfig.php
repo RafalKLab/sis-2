@@ -220,93 +220,48 @@ class TableConfig implements TableConfigInterface
                 'group' => 'APSKAITA',
             ],
             [
-                'name' => 'Data Pirk.',
-                'type' => 'date',
-                'group' => 'SĄSKAITOS FAKTŪROS',
-            ],
-            [
                 'name' => 'SF. Pirk.',
-                'type' => 'text',
-                'group' => 'SĄSKAITOS FAKTŪROS',
-            ],
-            [
-                'name' => 'Data BG',
-                'type' => 'date',
+                'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
             [
                 'name' => 'SF. BG',
-                'type' => 'text',
-                'group' => 'SĄSKAITOS FAKTŪROS',
-            ],
-            [
-                'name' => 'Data Trans',
-                'type' => 'date',
+                'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
             [
                 'name' => 'SF. Trans',
-                'type' => 'text',
-                'group' => 'SĄSKAITOS FAKTŪROS',
-            ],
-            [
-                'name' => 'Data EE',
-                'type' => 'date',
+                'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
             [
                 'name' => 'SF. EE',
-                'type' => 'text',
-                'group' => 'SĄSKAITOS FAKTŪROS',
-            ],
-            [
-                'name' => 'Data Brok',
-                'type' => 'date',
+                'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
             [
                 'name' => 'SF. Brok',
-                'type' => 'text',
-                'group' => 'SĄSKAITOS FAKTŪROS',
-            ],
-            [
-                'name' => 'Data Sand',
-                'type' => 'date',
+                'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
             [
                 'name' => 'SF. Sand',
-                'type' => 'text',
-                'group' => 'SĄSKAITOS FAKTŪROS',
-            ],
-            [
-                'name' => 'Data Agent',
-                'type' => 'date',
+                'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
             [
                 'name' => 'SF. Agent',
-                'type' => 'text',
-                'group' => 'SĄSKAITOS FAKTŪROS',
-            ],
-            [
-                'name' => 'Data Factor',
-                'type' => 'date',
+                'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
             [
                 'name' => 'SF. Factor',
-                'type' => 'text',
-                'group' => 'SĄSKAITOS FAKTŪROS',
-            ],
-            [
-                'name' => 'Data Pard.',
-                'type' => 'date',
+                'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
             [
                 'name' => 'SF. Pard.',
-                'type' => 'text',
+                'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
             [

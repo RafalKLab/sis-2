@@ -84,3 +84,7 @@
     border-radius: 5px;
     border: 1px solid #DEE2E6;
 }
+
+.invoice-alert {
+    color: red;
+}

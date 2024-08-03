@@ -4,11 +4,15 @@ namespace App\Business\Order\Manager;
 
 use App\Business\Table\Config\ItemsTableConfig;
 use App\Business\Table\Config\TableConfig;
+use App\Models\Order\Invoice;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
 use App\Models\Order\OrderItemData;
+use App\Models\Table\TableField;
+use App\Service\InvoiceService;
 use App\Service\OrderItemService;
 use App\Service\TableService;
+use DateTime;
 use Illuminate\Support\Facades\Auth;
 use shared\ConfigDefaultInterface;
 
@@ -42,7 +46,8 @@ class OrderManager
                     'field_order' => $field->order,
                     'updated_by' => $orderDataEntity->lastUpdatedBy?->name,
                     'updated_at' => $orderDataEntity->updated_at,
-                    'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, TableConfig::MAIN_TABLE_NAME)
+                    'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, TableConfig::MAIN_TABLE_NAME),
+                    'additional_data' => $this->getFieldAdditionalData($field, $orderDataEntity),
                 ];
             } else {
                 $orderData['details'][] = [
@@ -55,6 +60,7 @@ class OrderManager
                     'updated_by' => null,
                     'updated_at' => null,
                     'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, TableConfig::MAIN_TABLE_NAME),
+                    'additional_data' => $this->getFieldAdditionalData($field),
                 ];
             }
         }
@@ -90,7 +96,8 @@ class OrderManager
                     'field_order' => $field->order,
                     'updated_by' => $orderDataEntity->lastUpdatedBy?->name,
                     'updated_at' => $orderDataEntity->updated_at,
-                    'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, TableConfig::MAIN_TABLE_NAME)
+                    'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, TableConfig::MAIN_TABLE_NAME),
+                    'additional_data' => $this->getFieldAdditionalData($field, $orderDataEntity),
                 ];
             } else {
                 $orderData['details'][$field->group][] = [
@@ -103,6 +110,7 @@ class OrderManager
                     'updated_by' => null,
                     'updated_at' => null,
                     'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, TableConfig::MAIN_TABLE_NAME),
+                    'additional_data' => $this->getFieldAdditionalData($field),
                 ];
             }
         }
@@ -141,6 +149,7 @@ class OrderManager
             ConfigDefaultInterface::FIELD_TYPE_SELECT_COUNTRY => ConfigDefaultInterface::ORDER_COUNTRY_MAP,
             ConfigDefaultInterface::FIELD_TYPE_SELECT_TRANSPORT => ConfigDefaultInterface::ORDER_TRANSPORT_MAP,
             ConfigDefaultInterface::FIELD_TYPE_DYNAMIC_SELECT => $this->getDynamicSelectOptionsByField($fieldId, $tableScope),
+            ConfigDefaultInterface::FIELD_TYPE_INVOICE => ConfigDefaultInterface::AVAILABLE_INVOICE_STATUS_SELECT,
             default => [],
         };
 
@@ -185,7 +194,7 @@ class OrderManager
                         'field_order' => $field->order,
                         'updated_at' => $orderItemDataEntity->updated_at,
                         'updated_by' => $orderItemDataEntity->lastUpdatedBy?->name,
-                        'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, ItemsTableConfig::TABLE_NAME)
+                        'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, ItemsTableConfig::TABLE_NAME),
                     ];
                 } else {
                     $itemData['details'][] = [
@@ -210,6 +219,33 @@ class OrderManager
 
             $data[$prefixedName] = $itemData;
         }
+
+        return $data;
+    }
+
+    protected function getFieldAdditionalData(TableField $field, ?OrderData $orderDataEntity = null): array
+    {
+        return match ($field->type) {
+            ConfigDefaultInterface::FIELD_TYPE_INVOICE => $this->getInvoiceData($orderDataEntity?->value),
+            default => [],
+        };
+    }
+
+    protected function getInvoiceData(?string $invoiceNumber): array
+    {
+        // Retrieve the invoice by invoice number or return null if not found.
+        $invoice = Invoice::where('invoice_number', $invoiceNumber)->first();
+
+        // Use ternary operator to assign data or default values.
+        $data = $invoice ? $invoice->only(['id', 'invoice_number', 'issue_date', 'pay_until_date', 'status']) : [
+            'invoice_number' => null,
+            'issue_date' => null,
+            'pay_until_date' => null,
+            'status' => null,
+            'id' => null,
+        ];
+
+        $data['display_class'] = InvoiceService::getInvoiceDisplayColor($data['invoice_number']);
 
         return $data;
     }

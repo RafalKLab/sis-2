@@ -72,6 +72,22 @@
                                                         @endif
                                                     </td>
                                                     @break
+                                                @case('invoice')
+                                                    <td>
+                                                        @if($order[$field['name']])
+                                                            <div class="{{$order['config'][$field['name']]['status_color_class']}}">
+                                                                {{ $order[$field['name']] }}
+                                                                @if($order['config'][$field['name']]['status_color_class'] === 'order-field-status-red invoice-after-deadline')
+                                                                    <i title="Mokėjimo terminas yra pasibaigęs" class="fa-solid fa-triangle-exclamation"></i>
+                                                                @elseif($order['config'][$field['name']]['status_color_class'] === 'order-field-status-yellow')
+                                                                    <i title="Iki mokėjimo termino pabaigos liko mažiau nei 3 dienos" class="fa-solid fa-triangle-exclamation"></i>
+                                                                @elseif($order['config'][$field['name']]['status_color_class'] === 'order-field-status-green')
+                                                                    <i title="Apmokėta" class="fa-solid fa-circle-check"></i>
+                                                                @endif
+                                                            </div>
+                                                        @endif
+                                                    </td>
+                                                    @break
                                                 @case('load date')
                                                     <td>
                                                         @if($order[$field['name']])

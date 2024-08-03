@@ -370,8 +370,9 @@
 
             <div class="card mt-3">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <div class="col-md-5">
+                    <div class="col-md-8">
                         Sąskaitos faktūros
+                        <span id="invoice-alert-block" class="invoice-alert"></span>
                     </div>
                     <div class="col-md-1 d-flex justify-content-end">
                         <button class="text-secondary" style="border: none; background-color: inherit" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInvoice" aria-expanded="false" aria-controls="collapseContent">
@@ -457,7 +458,27 @@
                                             <td><a href="{{ route('orders.edit-field', ['orderId'=>$orderData['id'], 'fieldId'=>$data['field_id']]) }}" title="Edit {{ $data['field_name'] }}" class="text-primary"><i class="fa-solid fa-pen"></i></a></td>
                                         </tr>
                                         @break
-
+                                    @case('invoice')
+                                        <tr>
+                                            <th scope="row">{{ $data['field_name'] }}</th>
+                                            <td>{{ $data['value'] }} </td>
+                                            @if ($data['additional_data']['pay_until_date'])
+                                                <td>
+                                                    <div class="{{ $data['additional_data']['display_class']}}">
+                                                        @if($data['additional_data']['status'] === 'paid')
+                                                            Apmokėta
+                                                        @else
+                                                            Apmokėti iki {{ $data['additional_data']['pay_until_date'] }}
+                                                        @endif
+                                                    </div>
+                                                </td>
+                                            @else
+                                                <td></td>
+                                            @endif
+                                            <td></td>
+                                            <td><a href="{{ route('orders.edit-field', ['orderId'=>$orderData['id'], 'fieldId'=>$data['field_id']]) }}" title="Edit {{ $data['field_name'] }}" class="text-primary"><i class="fa-solid fa-pen"></i></a></td>
+                                        </tr>
+                                        @break
                                     @default
                                         <tr>
                                             <th scope="row">{{ $data['field_name'] }}</th>
@@ -486,4 +507,18 @@
     function confirmAction() {
         return confirm('Are you sure you want to remove item?');
     }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Count the divs with the class 'invoice-after-deadline'
+        var invoiceAfterDeadlineCount = document.querySelectorAll('.invoice-after-deadline').length;
+
+        // Select the span with the id 'invoice-alert-block'
+        var invoiceAlertBlock = document.getElementById('invoice-alert-block');
+
+        // Only update the HTML content of the span if the count is greater than 0
+        if (invoiceAfterDeadlineCount > 0 && invoiceAlertBlock) {
+            invoiceAlertBlock.innerHTML = 'Pasibaigęs mokėjimo terminas: ' + invoiceAfterDeadlineCount + ' <i class="fa-solid fa-triangle-exclamation"></i>';
+        }
+    });
 </script>

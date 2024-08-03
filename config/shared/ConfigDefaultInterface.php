@@ -70,6 +70,12 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_AGENT = 'agent';
     public const FIELD_TYPE_FACTORING = 'factoring';
     public const FIELD_TYPE_PROFIT = 'profit';
+    public const FIELD_TYPE_INVOICE = 'invoice';
+
+    public const AVAILABLE_INVOICE_STATUS_SELECT = [
+        'awaiting_payment' => 'Laukia apmokėjimo',
+        'paid' => 'Apmokėta'
+    ];
 
     public const AVAILABLE_FIELD_TYPES = [
         self::FIELD_TYPE_TEXT,

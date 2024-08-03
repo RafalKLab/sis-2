@@ -28,6 +28,9 @@
                                     <input disabled type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
                                     <small id="{{ $data['field_id'] }}" class="form-text text-muted">This field is automatically calculated and can not be edited</small>
                                     @break
+                                @case('invoice')
+                                    @include('main.user.order.partials._invoice_form')
+                                    @break
                                 @case('total purchase sum')
                                     <input disabled type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
                                     <small id="{{ $data['field_id'] }}" class="form-text text-muted">This field is automatically calculated and can not be edited</small>

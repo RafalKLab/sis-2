@@ -3,10 +3,12 @@
 namespace App\Business\Table\Reader;
 
 use App\Business\Table\Config\TableConfig;
+use App\Models\Order\Invoice;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
 use App\Models\Table\Table;
 use App\Models\Table\TableField;
+use App\Service\InvoiceService;
 use Illuminate\Support\Facades\Auth;
 use shared\ConfigDefaultInterface;
 
@@ -167,7 +169,8 @@ class UserTableReader implements TableReaderInterface
                 $data['uploaded_files'] = $order->files()->count();
                 $data['user'] = $order->user?->name;
                 $data['config'][$field->name] = [
-                    'status_color_class' => $this->getStatusColorClass($orderDataEntity?->value),
+                    'status_color_class' => $this->getStatusColorClass($field, $orderDataEntity),
+
                 ];
             }
 
@@ -177,8 +180,21 @@ class UserTableReader implements TableReaderInterface
         return $ordersData;
     }
 
-    protected function getStatusColorClass(?string $status): string
+    protected function getStatusColorClass(TableField $field, ?OrderData $orderDataEntity): string
     {
+        $colorClass = match ($field->type) {
+            'select status' => $this->getStatusColorClassForSelectStatusField($orderDataEntity),
+            'invoice' => InvoiceService::getInvoiceDisplayColor($orderDataEntity?->value),
+            default => '',
+        };
+
+        return $colorClass;
+    }
+
+    protected function getStatusColorClassForSelectStatusField(?OrderData $orderDataEntity): string
+    {
+        $status = $orderDataEntity?->value;
+
         if (!$status) {
             return '';
         }

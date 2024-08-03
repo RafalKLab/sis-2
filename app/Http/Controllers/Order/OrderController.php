@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Order;
 
 use App\Business\ActivityLog\Config\ActivityLogConstants;
 use App\Http\Controllers\MainController;
+use App\Models\Order\Invoice;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
 use App\Models\Order\OrderItem;
 use App\Models\Order\OrderItemData;
+use App\Models\Table\TableField;
 use App\Service\OrderService;
+use App\Service\TableService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -60,6 +63,14 @@ class OrderController extends MainController
 
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
         $orderFormData = $this->factory()->createOrderManager()->getOrderDetails($order);
+
+
+        // Remove invoice fields from form data
+        $filtered = array_filter($orderFormData['details'], function ($item) {
+            return $item['field_type'] !== ConfigDefaultInterface::FIELD_TYPE_INVOICE;
+        });
+
+        $orderFormData['details'] = $filtered;
 
         return view('main.user.order.edit', compact('orderData', 'orderFormData'));
     }
@@ -120,12 +131,16 @@ class OrderController extends MainController
             return strpos($key, 'field_') === 0;
         }, ARRAY_FILTER_USE_KEY);
 
-
         // Update each field accordingly
         foreach ($fieldInputs as $key => $value) {
             // Remove 'field_' to get just the numeric ID and find order data for that field
             $fieldId = preg_replace('/[^0-9]/', '', $key);
             $orderData = OrderData::where('order_id', $orderId)->where('field_id', $fieldId)->first();
+
+            // Create or update invoice entity
+            if (TableService::getFieldById($fieldId)->type === ConfigDefaultInterface::FIELD_TYPE_INVOICE) {
+                $updatedFields = $this->executeInvoiceUpdate($request, $fieldId, $updatedFields, $value);
+            }
 
             if ($orderData) {
                 // If value in request is different from old value then update
@@ -476,5 +491,77 @@ class OrderController extends MainController
             $calculator->calculatePrimeCost($order);
             $calculator->calculateTotalSalesSum($order);
             $calculator->calculateTotalProfit($order);
+    }
+
+    protected function executeInvoiceUpdate(Request $request, array|string|null $fieldId, int $updatedFields, ?string $value): int
+    {
+        $allInputs = $request->all();
+        $invoiceNumber = 'field_' . $fieldId;
+        $issueDate = 'invoice_issue_date';
+        $payUntilDate = 'invoice_pay_until_date';
+        $status = 'invoice_status';
+        $id = 'invoice_id';
+
+        $customMessages = [
+            'required' => 'Šis laukas yra privalomas.',
+            'date' => 'Šis laukas nėra galiojanti data.',
+            'in' => 'Pasirinkta reikšmė šiam laukui yra netinkama.',
+            'unique' => 'Toks sąskaitos faktūros numeris jau egzistuoja. Prašome pasirinkti kitą numerį.',
+        ];
+
+        // If invoice is provided then update
+        $invoiceEntity = $this->getInvoiceEntity($allInputs[$id]);
+        if ($value && $invoiceEntity) {
+            $validated = $request->validate([
+                $invoiceNumber => [
+                    'required',
+                    'string',
+                    Rule::unique('invoices', 'invoice_number')->ignore($invoiceEntity->id),
+                ],
+                $issueDate => 'date',
+                $payUntilDate => 'date',
+                $status => [
+                    'required',
+                    'string',
+                    'in:' . implode(',', array_keys(ConfigDefaultInterface::AVAILABLE_INVOICE_STATUS_SELECT))
+                ],
+            ], $customMessages);
+
+            $invoiceEntity->update([
+                'invoice_number' => $validated[$invoiceNumber],
+                'issue_date' => $validated[$issueDate],
+                'pay_until_date' => $validated[$payUntilDate],
+                'status' => $validated[$status],
+            ]);
+        } else {
+            $validated = $request->validate([
+                $invoiceNumber => 'required|string|unique:invoices,invoice_number',
+                $issueDate => 'date',
+                $payUntilDate => 'date',
+                $status => [
+                    'required',
+                    'string',
+                    'in:' . implode(',', array_keys(ConfigDefaultInterface::AVAILABLE_INVOICE_STATUS_SELECT))
+                ],
+            ], $customMessages);
+
+            Invoice::create([
+                'invoice_number' => $validated[$invoiceNumber],
+                'issue_date' => $validated[$issueDate],
+                'pay_until_date' => $validated[$payUntilDate],
+                'status' => $validated[$status],
+            ]);
+        }
+
+        return $updatedFields + 1;
+    }
+
+    protected function getInvoiceEntity(?string $id = null): ?Invoice
+    {
+        if (!$id) {
+            return null;
+        }
+
+        return Invoice::find($id);
     }
 }

@@ -23,4 +23,9 @@ class TableService
     {
         return Table::where('name', ItemsTableConfig::TABLE_NAME)->first();
     }
+
+    public static function getFieldById(int | string $id): TableField
+    {
+        return TableField::find($id);
+    }
 }

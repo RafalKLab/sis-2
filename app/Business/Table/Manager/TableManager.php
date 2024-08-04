@@ -34,9 +34,9 @@ class TableManager
         return $this->reader->readTableData($search);
     }
 
-    public function retrieveTableFields(): array
+    public function retrieveTableFields(?Table $table = null): array
     {
-        return $this->reader->readTableFields();
+        return $this->reader->readTableFields($table);
     }
 
     public function getField(int $id): ?TableField

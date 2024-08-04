@@ -3,41 +3,62 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\MainController;
+use App\Models\Table\Table;
 use App\Models\Table\TableField;
+use Dflydev\DotAccessData\Data;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use shared\ConfigDefaultInterface;
 
 class AdminFieldController extends MainController
 {
-    public function index()
-    {
-        $tableFields = $this->factory()->createTableManagerAdmin()->retrieveTableFields();
+    protected const TABLE_CONTEXT = 'TABLE_CONTEXT';
 
-        return view('main.admin.field.index', compact('tableFields'));
+    public function index(Request $request)
+    {
+        $tableContext = $request->input('table_context');
+        if ($tableContext) {
+            Session::put(self::TABLE_CONTEXT, $tableContext);
+        }
+
+        $table = $this->getTableFromContext();
+        $selectedTable = $table->name;
+        $availableTables = Table::all()->pluck('name')->toArray();
+        $tableFields = $this->factory()->createTableManagerAdmin()->retrieveTableFields($table);
+
+        return view('main.admin.field.index', compact('tableFields', 'availableTables', 'selectedTable'));
     }
 
     public function show(int $id) {
+        $availableTables = Table::all()->pluck('name')->toArray();
+        $table = $this->getTableFromContext();
+        $selectedTable = $table->name;
+
         $targetField = $this->factory()->createTableManagerAdmin()->getField($id);
         if (!$targetField) {
             return redirect()->route('admin-fields.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Field not found');
         }
 
-        $tableFields = $this->factory()->createTableManagerAdmin()->retrieveTableFields();
+        $tableFields = $this->factory()->createTableManagerAdmin()->retrieveTableFields($table);
 
-        return view('main.admin.field.show', compact('tableFields', 'targetField'));
+        return view('main.admin.field.show', compact('tableFields', 'targetField', 'availableTables', 'selectedTable'));
     }
 
     public function edit(int $id) {
+        $availableTables = Table::all()->pluck('name')->toArray();
+        $table = $this->getTableFromContext();
+        $selectedTable = $table->name;
+
         $targetField = $this->factory()->createTableManagerAdmin()->getField($id);
         if (!$targetField) {
             return redirect()->back()->with(ConfigDefaultInterface::FLASH_ERROR, 'Field not found');
         }
 
-        $tableFields = $this->factory()->createTableManagerAdmin()->retrieveTableFields();
+        $tableFields = $this->factory()->createTableManagerAdmin()->retrieveTableFields($table);
         $fieldGroups = ConfigDefaultInterface::AVAILABLE_FIELD_GROUPS;
 
-        return view('main.admin.field.edit', compact('tableFields', 'targetField', 'fieldGroups'));
+        return view('main.admin.field.edit', compact('tableFields', 'targetField', 'fieldGroups', 'availableTables', 'selectedTable'));
     }
 
     public function update(Request $request, int $id) {
@@ -78,7 +99,9 @@ class AdminFieldController extends MainController
         $targetOrder = $currentOrder - 1;
 
         // Find field that has target order value
-        $fieldWithTargetOrder = TableField::where('order', $targetOrder)->first();
+        $table = $this->getTableFromContext();
+
+        $fieldWithTargetOrder = TableField::where('order', $targetOrder)->where('table_id', $table->id)->first();
 
         // Swap orders
         $targetField->update(['order' => $targetOrder]);
@@ -98,7 +121,9 @@ class AdminFieldController extends MainController
         $targetOrder = $currentOrder + 1;
 
         // Find field that has target order value
-        $fieldWithTargetOrder = TableField::where('order', $targetOrder)->first();
+        $table = $this->getTableFromContext();
+
+        $fieldWithTargetOrder = TableField::where('order', $targetOrder)->where('table_id', $table->id)->first();
 
         // Swap orders
         $targetField->update(['order' => $targetOrder]);
@@ -108,11 +133,15 @@ class AdminFieldController extends MainController
     }
 
     public function create() {
-        $tableFields = $this->factory()->createTableManagerAdmin()->retrieveTableFields();
+        $availableTables = Table::all()->pluck('name')->toArray();
+        $table = $this->getTableFromContext();
+        $selectedTable = $table->name;
+
+        $tableFields = $this->factory()->createTableManagerAdmin()->retrieveTableFields($table);
         $fieldTypes = ConfigDefaultInterface::AVAILABLE_FIELD_TYPES;
         $fieldGroups = ConfigDefaultInterface::AVAILABLE_FIELD_GROUPS;
 
-        return view('main.admin.field.create', compact('tableFields', 'fieldTypes', 'fieldGroups'));
+        return view('main.admin.field.create', compact('tableFields', 'fieldTypes', 'fieldGroups', 'availableTables', 'selectedTable'));
     }
 
     public function store(Request $request) {
@@ -131,7 +160,7 @@ class AdminFieldController extends MainController
             'color' => 'required'
         ]);
 
-        $tableId = $this->factory()->createTableManagerAdmin()->getMainTable()->id;
+        $tableId = $this->getTableFromContext()->id;
         $order = TableField::all()->count() + 1;
 
         $field = TableField::create([
@@ -145,5 +174,19 @@ class AdminFieldController extends MainController
 
         return redirect()->route('admin-fields.edit', ['id' => $field->id])
             ->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Field created');
+    }
+
+    private function getTableFromContext(): Table
+    {
+        $tableName = Session::get(self::TABLE_CONTEXT);
+
+        if ($tableName) {
+            $table = Table::where('name', $tableName)->first();
+            if ($table) {
+                return $table;
+            }
+        }
+
+        return Table::first();
     }
 }

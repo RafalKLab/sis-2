@@ -26,7 +26,6 @@
                 <div class="form-group">
                     <label for="fieldType">Field type</label>
                     <select name="type" id="fieldType" class="form-control {{ $errors->has('type') ? 'is-invalid' : '' }}">
-                        <option value="" selected>Select</option>
                         @foreach($fieldTypes as $type)
                             <option value="{{$type}}">{{$type}}</option>
                         @endforeach

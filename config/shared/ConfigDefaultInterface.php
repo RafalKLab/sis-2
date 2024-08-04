@@ -13,6 +13,7 @@ interface ConfigDefaultInterface
     public const PERMISSION_SEE_UPLOADED_FILES = 'See uploaded files';
     public const PERMISSION_DELETE_UPLOADED_FILES = 'Delete uploaded files';
     public const PERMISSION_SEE_ALL_ORDERS = 'See all orders';
+    public const PERMISSION_SEE_ORDER_PRODUCTS = 'See order products';
     public const PERMISSION_ADD_ORDER_PRODUCTS = 'Add order products';
     public const PERMISSION_EDIT_ORDER_PRODUCTS = 'Edit order products';
     public const PERMISSION_REMOVE_ORDER_PRODUCTS = 'Remove order products';
@@ -24,10 +25,11 @@ interface ConfigDefaultInterface
 
     public const AVAILABLE_PERMISSIONS = [
         self::PERMISSION_REGISTER_ORDER,
+        self::PERMISSION_SEE_ALL_ORDERS,
         self::PERMISSION_UPLOAD_FILE,
         self::PERMISSION_SEE_UPLOADED_FILES,
         self::PERMISSION_DELETE_UPLOADED_FILES,
-        self::PERMISSION_SEE_ALL_ORDERS,
+        self::PERMISSION_SEE_ORDER_PRODUCTS,
         self::PERMISSION_ADD_ORDER_PRODUCTS,
         self::PERMISSION_EDIT_ORDER_PRODUCTS,
         self::PERMISSION_REMOVE_ORDER_PRODUCTS,

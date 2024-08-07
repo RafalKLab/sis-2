@@ -39,6 +39,7 @@ class NoteController extends MainController
             'message' => 'Note added successfully!',
             'note' => $noteDetails,
             'customer' => $note->target,
+            'canDelete' => $request->user()->can('Delete customer notes'),
         ]);
     }
 
@@ -48,7 +49,7 @@ class NoteController extends MainController
 
         // Assuming you have a Note model with the provided note ID
         $note = Note::find($noteId);
-        if ($note) {
+        if ($note && $request->user()->can('Delete customer notes')) {
             $note->delete();
             return response()->json(['success' => true, 'message' => 'Note deleted successfully']);
         } else {

@@ -18,6 +18,7 @@ interface ConfigDefaultInterface
     public const PERMISSION_EDIT_ORDER_PRODUCTS = 'Edit order products';
     public const PERMISSION_REMOVE_ORDER_PRODUCTS = 'Remove order products';
     public const PERMISSION_ACCESS_CUSTOMER_TABLE = 'Access customer table';
+    public const PERMISSION_DELETE_CUSTOMER_NOTES = 'Delete customer notes';
 
     public const AVAILABLE_ROLES = [
         self::ROLE_USER,
@@ -35,6 +36,7 @@ interface ConfigDefaultInterface
         self::PERMISSION_EDIT_ORDER_PRODUCTS,
         self::PERMISSION_REMOVE_ORDER_PRODUCTS,
         self::PERMISSION_ACCESS_CUSTOMER_TABLE,
+        self::PERMISSION_DELETE_CUSTOMER_NOTES,
     ];
 
     /* Filesystem */

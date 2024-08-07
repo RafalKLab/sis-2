@@ -46,11 +46,13 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        @can('Delete customer notes')
                                             <div class="note-{{ $note['note_id'] }} col-md-2">
                                                 <div class="note-block-actions text-end">
                                                     <a title="remove" class="text-danger" href="#" onclick="confirmRemoveNote('{{ $note['note_id'] }}')"><i class="fa-solid fa-trash"></i></a>
                                                 </div>
                                             </div>
+                                        @endcan
                                         @endforeach
                                     </div>
                                 </td>
@@ -138,6 +140,14 @@
                             var notesContainer = document.getElementById('notes-container-' + data.customer);
 
                             // Create the new note elements (adjust to match your HTML structure)
+                            var deleteButtonHtml = data.canDelete ? `
+            <div class="note-${data.note.note_id} col-md-2">
+                <div class="note-block-actions text-end">
+                    <a title="remove" class="text-danger" href="#" onclick="confirmRemoveNote(${data.note.note_id})"><i class="fa-solid fa-trash"></i></a>
+                </div>
+            </div>
+        ` : ''; // Only add delete button if user has permission
+
                             var newNoteHtml = `
             <div class="note-${data.note.note_id} col-md-10">
                 <div class="note-block">
@@ -147,11 +157,7 @@
                     </div>
                 </div>
             </div>
-            <div class="note-${data.note.note_id} col-md-2">
-                <div class="note-block-actions text-end">
-                    <a title="remove" class="text-danger" href="#" onclick="confirmRemoveNote(${data.note.note_id})"><i class="fa-solid fa-trash"></i></a>
-                </div>
-            </div>
+            ${deleteButtonHtml}
         `;
 
                             // Append the new note to the container

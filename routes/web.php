@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\File\FileController;
+use App\Http\Controllers\Note\NoteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Order\OrderController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,10 @@ Route::middleware('auth')->group(function () {
 
     /* Customer table */
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+
+    /* Notes */
+    Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
+    Route::delete('/notes/delete', [NoteController::class, 'destroy'])->name('notes.destroy');
 
     /* Order item */
     Route::get('/orders/{id}/add-item', [OrderController::class, 'addItem'])->name('orders.add-item');

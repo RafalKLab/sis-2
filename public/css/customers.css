@@ -1,0 +1,18 @@
+th, td {
+    min-width: 500px;
+}
+
+.note-block {
+    padding: 2px;
+}
+.note-block-author {
+    font-style: italic;
+    color: #aaa;
+}
+.custom-link {
+    color: inherit;
+}
+
+.custom-link:visited {
+    color: inherit;
+}

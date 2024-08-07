@@ -69,6 +69,16 @@
                     </a>
                     @endcan
 
+{{--                    <a class="nav-link" href="">--}}
+{{--                        <div class="sb-nav-link-icon"><i class="fa-solid fa-industry"></i></div>--}}
+{{--                        Suppliers--}}
+{{--                    </a>--}}
+
+{{--                    <a class="disabled nav-link" href="">--}}
+{{--                        <div class="sb-nav-link-icon"><i class="fa-solid fa-truck-moving"></i></div>--}}
+{{--                        Carriers--}}
+{{--                    </a>--}}
+
                     @role('admin')
                     <div class="sb-sidenav-menu-heading">Admin</div>
                     <a class="nav-link" href="{{ route('logs.index') }}">

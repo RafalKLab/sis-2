@@ -29,7 +29,7 @@ return new class extends Migration
     {
         Schema::table('order_items_data', function (Blueprint $table) {
             // Drop the foreign key constraint
-            $table->dropForeign('order_data_last_updated_by_user_id_foreign');
+            $table->dropForeign('order_item_data_last_updated_by_user_id_foreign');
 
             // Drop the column
             $table->dropColumn('last_updated_by_user_id');

@@ -71,7 +71,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/logs', [ActivityLogController::class, 'index'])->name('logs.index');
 
         /* Admin table */
-        Route::get('/admin/table', [AdminTableController::class, 'index'])->name('admin-table.index');
+        /* Will be removed */
+//        Route::get('/admin/table', [AdminTableController::class, 'index'])->name('admin-table.index');
 
         /* Admin table fields */
         Route::get('/admin/fields', [AdminFieldController::class, 'index'])->name('admin-fields.index');

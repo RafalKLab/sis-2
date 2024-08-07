@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminTableController;
 use App\Http\Controllers\Admin\BlockedUserController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\File\FileController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Order\OrderController;
@@ -22,6 +23,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    /* Customer table */
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
 
     /* Order item */
     Route::get('/orders/{id}/add-item', [OrderController::class, 'addItem'])->name('orders.add-item');

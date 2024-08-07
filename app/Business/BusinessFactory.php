@@ -5,6 +5,7 @@ namespace App\Business;
 use App\Business\ActivityLog\Manager\ActivityLogManager;
 use App\Business\ActivityLog\Transfer\ActivityLogTransferObject;
 use App\Business\ActivityLog\Writer\ActivityLogMysqlWriter;
+use App\Business\Customer\Manager\CustomerManager;
 use App\Business\Order\Calculator\OrderDataCalculator;
 use App\Business\Order\Manager\OrderManager;
 use App\Business\Table\Config\ItemsTableConfig;
@@ -64,6 +65,11 @@ class BusinessFactory
     public function createOrderManager(): OrderManager
     {
         return new OrderManager();
+    }
+
+    public function createCustomerManager(): CustomerManager
+    {
+        return new CustomerManager();
     }
 
     private function createTableConfig(): TableConfig

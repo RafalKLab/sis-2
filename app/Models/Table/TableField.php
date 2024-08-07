@@ -14,6 +14,7 @@ class TableField extends Model
 
     public const DO_NOT_LOG = [
         'order',
+        'identifier',
     ];
 
     protected $fillable = [
@@ -22,7 +23,8 @@ class TableField extends Model
         'group',
         'order',
         'table_id',
-        'color'
+        'color',
+        'identifier',
     ];
 
     /**

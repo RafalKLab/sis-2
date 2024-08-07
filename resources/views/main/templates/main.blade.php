@@ -61,6 +61,14 @@
                             @endif
                         </nav>
                     </div>
+
+                    @can('Access customer table')
+                    <a class="nav-link" href="{{ route('customers.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-user-tie"></i></div>
+                        Customers
+                    </a>
+                    @endcan
+
                     @role('admin')
                     <div class="sb-sidenav-menu-heading">Admin</div>
                     <a class="nav-link" href="{{ route('logs.index') }}">

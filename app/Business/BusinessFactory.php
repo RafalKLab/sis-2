@@ -8,6 +8,7 @@ use App\Business\ActivityLog\Writer\ActivityLogMysqlWriter;
 use App\Business\Customer\Manager\CustomerManager;
 use App\Business\Order\Calculator\OrderDataCalculator;
 use App\Business\Order\Manager\OrderManager;
+use App\Business\Statistics\Manager\StatisticsManager;
 use App\Business\Table\Config\ItemsTableConfig;
 use App\Business\Table\Config\TableConfig;
 use App\Business\Table\Manager\TableManager;
@@ -72,6 +73,10 @@ class BusinessFactory
         return new CustomerManager();
     }
 
+    public function createStatisticsManager(): StatisticsManager
+    {
+        return new StatisticsManager();
+    }
     private function createTableConfig(): TableConfig
     {
         return new TableConfig();

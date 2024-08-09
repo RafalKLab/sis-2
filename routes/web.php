@@ -11,6 +11,7 @@ use App\Http\Controllers\File\FileController;
 use App\Http\Controllers\Note\NoteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Order\OrderController;
+use App\Http\Controllers\Statistics\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
@@ -93,6 +94,11 @@ Route::middleware('auth')->group(function () {
         Route::put('/admin/fields/edit/{id}', [AdminFieldController::class, 'update'])->name('admin-fields.update');
         Route::get('/admin/fields/move-up/{id}', [AdminFieldController::class, 'moveUpFieldOrder'])->name('admin-fields.move-up');
         Route::get('/admin/fields/move-down/{id}', [AdminFieldController::class, 'moveDownFieldOrder'])->name('admin-fields.move-down');
+
+        /* Statistics */
+        Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
+        Route::post('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
+
     });
 });
 

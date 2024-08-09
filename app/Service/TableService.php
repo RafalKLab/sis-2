@@ -19,6 +19,17 @@ class TableService
        return $field;
     }
 
+    public static function getFieldByIdentifier(string $identifier): TableField
+    {
+        $field = TableField::where('identifier', $identifier)->first();
+
+        if (!$field) {
+            throw new \Exception(sprintf('Missing field with type: %s', $identifier));
+        }
+
+        return $field;
+    }
+
     public static function getItemsTable(): Table
     {
         return Table::where('name', ItemsTableConfig::TABLE_NAME)->first();

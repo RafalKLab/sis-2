@@ -23,6 +23,7 @@ class TableConfig implements TableConfigInterface
                 'name' => 'Užsakymo data',
                 'type' => 'date',
                 'group' => 'PREKĖS IR LOGISTIKA',
+                'identifier' => 'order_date',
             ],
             [
                 'name' => 'Užsakymo būsena',
@@ -263,6 +264,7 @@ class TableConfig implements TableConfigInterface
                 'name' => 'SF. Pard.',
                 'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
+                'identifier' => 'sales_invoice',
             ],
             [
                 'name' => 'Dokumentai',

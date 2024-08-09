@@ -81,9 +81,14 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_PROFIT = 'profit';
     public const FIELD_TYPE_INVOICE = 'invoice';
 
+    public const FIELD_IDENTIFIER_SALES_INVOICE = 'sales_invoice';
+    public const FIELD_IDENTIFIER_ORDER_DATE = 'order_date';
+
+    public const INVOICE_STATUS_AWAITING = 'awaiting_payment';
+    public const INVOICE_STATUS_PAID = 'paid';
     public const AVAILABLE_INVOICE_STATUS_SELECT = [
-        'awaiting_payment' => 'Laukia apmokėjimo',
-        'paid' => 'Apmokėta'
+        self::INVOICE_STATUS_AWAITING => 'Laukia apmokėjimo',
+        self::INVOICE_STATUS_PAID => 'Apmokėta'
     ];
 
     public const AVAILABLE_FIELD_TYPES = [

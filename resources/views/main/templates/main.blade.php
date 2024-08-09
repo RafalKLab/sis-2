@@ -81,6 +81,10 @@
 
                     @role('admin')
                     <div class="sb-sidenav-menu-heading">Admin</div>
+                    <a class="nav-link" href="{{ route('statistics.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-chart-simple"></i></div>
+                        Statistics
+                    </a>
                     <a class="nav-link" href="{{ route('logs.index') }}">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                         Activity logs

@@ -88,3 +88,8 @@
 .invoice-alert {
     color: red;
 }
+
+.stats-change-year-link {
+    cursor: pointer;
+    font-size: 16px;
+}

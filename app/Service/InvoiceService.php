@@ -3,7 +3,9 @@
 namespace App\Service;
 
 use App\Models\Order\Invoice;
+use App\Models\Order\OrderData;
 use DateTime;
+use shared\ConfigDefaultInterface;
 
 class InvoiceService
 {
@@ -38,5 +40,12 @@ class InvoiceService
         }
 
         return $colorClass;
+    }
+
+    public static function getInvoiceName(string $number): string
+    {
+        $fieldId = OrderData::where('value', $number)->first()->field_id;
+
+        return TableService::getFieldById($fieldId)->name;
     }
 }

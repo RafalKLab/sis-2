@@ -5,6 +5,7 @@ namespace App\Business\Statistics\Manager;
 use App\Models\Order\Invoice;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
+use App\Service\InvoiceService;
 use App\Service\OrderService;
 use App\Service\StatisticsService;
 use App\Service\TableService;
@@ -60,7 +61,7 @@ class StatisticsManager
         return [
             'orders' => $this->getOrderKeys($orderIds),
             'profit' => $this->calculateProfit($orderIds),
-            'paid_in_advance' => $this->getPaidInAdvanceOrders($orderIds),
+            'paid_in_advance' => $this->calculatePaidInAdvanceOrders($orderIds),
         ];
     }
 
@@ -88,7 +89,9 @@ class StatisticsManager
     private function calculateProfit(array $orderIds): array
     {
         $actualProfit = 0.0;
+        $actualProfitDetails = [];
         $expectedProfit = 0.0;
+        $expectedProfitDetails = [];
 
         $orderSalesInvoices = $this->getOrdersWithSalesInvoices($orderIds);
         foreach ($orderIds as $orderId) {
@@ -105,16 +108,27 @@ class StatisticsManager
 
             // find order invoice entity to check status
             $invoice = Invoice::where('invoice_number', $orderSalesInvoices[$orderId])->first();
+            $details = [
+                'order_id' => $orderId,
+                'order_key' => OrderService::getKeyFieldFrom($orderId)->value,
+                'order_sales_sum' => $this->formatNumberWithDecimals($orderProfit),
+                'invoice_number' => $invoice->invoice_number,
+            ];
+
             if ($invoice->status === ConfigDefaultInterface::INVOICE_STATUS_PAID) {
                 $actualProfit += $orderProfit;
+                $actualProfitDetails[] = $details;
             } else {
                 $expectedProfit += $orderProfit;
+                $expectedProfitDetails[] = $details;
             }
         }
 
         return [
-            'actual_profit' => number_format($actualProfit, 2, '.', ''),
-            'expected_profit' => number_format($expectedProfit, 2, '.', ''),
+            'actual_profit' => $this->formatNumberWithDecimals($actualProfit),
+            'actual_profit_details' => $actualProfitDetails,
+            'expected_profit' => $this->formatNumberWithDecimals($expectedProfit),
+            'expected_profit_details' => $expectedProfitDetails,
         ];
     }
 
@@ -137,8 +151,31 @@ class StatisticsManager
         return $annualStatistics;
     }
 
-    private function getPaidInAdvanceOrders(array $orderIds): array
+    private function calculatePaidInAdvanceOrders(array $orderIds): array
     {
-        return [];
+        $totalPrimeCost = 0.0;
+        $details = [];
+
+        $statuses = OrderService::getOrderStatuses($orderIds);
+        foreach ($statuses as $orderId => $status) {
+            $orderPrimeCost = OrderService::getOrderPrimeCost($orderId);
+            $totalPrimeCost += $orderPrimeCost;
+
+            $details[] = [
+                'order_id' => $orderId,
+                'order_key' => OrderService::getKeyFieldFrom($orderId)->value,
+                'prime_cost' => $this->formatNumberWithDecimals($orderPrimeCost),
+            ];
+        }
+
+        return [
+            'total_prime_cost' => $this->formatNumberWithDecimals($totalPrimeCost),
+            'details' => $details,
+        ];
+    }
+
+    private function formatNumberWithDecimals($number): string
+    {
+        return number_format($number, 2, '.', '');
     }
 }

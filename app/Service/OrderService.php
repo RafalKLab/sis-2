@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
 use App\Models\Table\TableField;
+use shared\ConfigDefaultInterface;
 
 class OrderService
 {
@@ -27,6 +28,24 @@ class OrderService
         }
 
         return $targetOrderKeyField;
+    }
+
+    public static function getOrderStatuses(array $orderIds): array
+    {
+        $orderStatusFieldId = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_SELECT_STATUS)->id;
+
+        return OrderData::where('field_id', $orderStatusFieldId)
+            ->whereIn('order_id', $orderIds)
+            ->where('value', ConfigDefaultInterface::ORDER_STATUS_PAID)
+            ->pluck('value', 'order_id')
+            ->toArray();
+    }
+
+    public static function getOrderPrimeCost(int $orderId): float
+    {
+        $primeCostFieldId = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_PRIME_COST)->id;
+
+        return OrderData::where('order_id', $orderId)->where('field_id', $primeCostFieldId)->first()?->value;
     }
 
     public static function generateKeyField(int $orderId): string

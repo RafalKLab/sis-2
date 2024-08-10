@@ -25,7 +25,13 @@
         <ul class="nav nav-tabs" id="monthTab" role="tablist">
             @foreach($statistics as $data)
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ $data['month_name'] === $currentMonth ? 'active' : '' }}" id="{{ $data['month_name'] }}-tab" data-bs-toggle="tab" data-bs-target="#{{ $data['month_name'] }}" type="button" role="tab" aria-controls="{{ $data['month_name'] }}" aria-selected="true">{{ $data['month_name'] }}</button>
+                    <button class="nav-link {{ $data['month_name'] === $currentMonth ? 'active' : '' }}" id="{{ $data['month_name'] }}-tab" data-bs-toggle="tab" data-bs-target="#{{ $data['month_name'] }}" type="button" role="tab" aria-controls="{{ $data['month_name'] }}" aria-selected="true">
+                        @if($data['month_name'] === $currentMonth)
+                            <b>{{ $data['month_name'] }}</b>
+                        @else
+                            {{ $data['month_name'] }}
+                        @endif
+                    </button>
                 </li>
             @endforeach
         </ul>
@@ -52,6 +58,37 @@
                                             </div>
                                             <div class="card-body">
                                                 <h3>€{{$data['profit']['actual_profit']}}</h3>
+                                                <a href="#collapseActualProfit" class="more-details-link" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseActualProfit">
+                                                    Show More <i class="fa fa-chevron-down"></i>
+                                                </a>
+                                            </div>
+                                            <!-- Collapsible Content -->
+                                            <div class="collapse" id="collapseActualProfit">
+                                                <div class="card-body">
+                                                    <!-- Additional information you want to show goes here -->
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th scope="col">Užsakymas</th>
+                                                            <th scope="col">Sąskaitos numeris</th>
+                                                            <th scope="col">Pelnas</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach($data['profit']['actual_profit_details'] as $actualProfitDetails )
+                                                            <tr>
+                                                                <td>
+                                                                    <a class="more-details-link" href="{{ route('orders.view', ['id'=>$actualProfitDetails['order_id']]) }}">
+                                                                        {{ $actualProfitDetails['order_key'] }}
+                                                                    </a>
+                                                                </td>
+                                                                <td>{{ $actualProfitDetails['invoice_number'] }}</td>
+                                                                <td class="text-success">{{ $actualProfitDetails['order_sales_sum'] }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -66,6 +103,37 @@
                                             </div>
                                             <div class="card-body">
                                                 <h3>+ €{{$data['profit']['expected_profit']}}</h3>
+                                                <a href="#collapseExpectedProfit" class="more-details-link" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseExpectedProfit">
+                                                    Show More <i class="fa fa-chevron-down"></i>
+                                                </a>
+                                            </div>
+                                            <!-- Collapsible Content -->
+                                            <div class="collapse" id="collapseExpectedProfit">
+                                                <div class="card-body">
+                                                    <!-- Additional information you want to show goes here -->
+                                                    <table class="table" id="">
+                                                        <thead>
+                                                        <tr>
+                                                            <th scope="col">Užsakymas</th>
+                                                            <th scope="col">Sąskaitos numeris</th>
+                                                            <th scope="col">Pelnas</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach($data['profit']['expected_profit_details'] as $expectedProfitDetails )
+                                                            <tr>
+                                                                <td>
+                                                                    <a class="more-details-link" href="{{ route('orders.view', ['id'=>$expectedProfitDetails['order_id']]) }}">
+                                                                        {{ $expectedProfitDetails['order_key'] }}
+                                                                    </a>
+                                                                </td>
+                                                                <td>{{ $expectedProfitDetails['invoice_number'] }}</td>
+                                                                <td class="text-primary">{{ $expectedProfitDetails['order_sales_sum'] }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -79,7 +147,36 @@
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <h3>in progress...</h3>
+                                                <h3>€{{$data['paid_in_advance']['total_prime_cost']}}</h3>
+                                                <a href="#collapsePaidInAdvance" class="more-details-link" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapsePaidInAdvance">
+                                                    Show More <i class="fa fa-chevron-down"></i>
+                                                </a>
+                                            </div>
+                                            <!-- Collapsible Content -->
+                                            <div class="collapse" id="collapsePaidInAdvance">
+                                                <div class="card-body">
+                                                    <!-- Additional information you want to show goes here -->
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th scope="col">Užsakymas</th>
+                                                            <th scope="col">Savikaina</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach($data['paid_in_advance']['details'] as $details )
+                                                            <tr>
+                                                                <td>
+                                                                    <a class="more-details-link" href="{{ route('orders.view', ['id'=>$details['order_id']]) }}">
+                                                                        {{ $details['order_key'] }}
+                                                                    </a>
+                                                                </td>
+                                                                <td class="text-warning">{{ $details['prime_cost'] }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -94,6 +191,9 @@
                                             </div>
                                             <div class="card-body">
                                                 <h3>in progress...</h3>
+                                                <a href="#collapseDebts" class="more-details-link" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseDebts">
+                                                    Show More <i class="fa fa-chevron-down"></i>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>

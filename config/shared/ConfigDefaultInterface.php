@@ -104,17 +104,28 @@ interface ConfigDefaultInterface
     ];
 
     /* Order status select color map */
+    public const ORDER_STATUS_ORDERED = 'Užsakyta';
+    public const ORDER_STATUS_PAID = 'Apmokėta';
+    public const ORDER_STATUS_READY = 'Paruošta';
+    public const ORDER_STATUS_TRANSPORT_ORDERED = 'Užsk. Trans';
+    public const ORDER_STATUS_COMING = 'Važiuoja';
+    public const ORDER_STATUS_IN_CUSTOMS = 'Muitinėje';
+    public const ORDER_STATUS_CUSTOMIZED = 'Išmuitinta';
+    public const ORDER_STATUS_IN_WAREHOUSE = 'Sandėlyje';
+    public const ORDER_STATUS_DELIVERED = 'Pristatyta';
+    public const ORDER_STATUS_CANCELED = 'Atšaukta';
+
     public const ORDER_STATUS_MAP = [
-        'Užsakyta' => '',
-        'Apmokėta' => 'pink',
-        'Paruošta' => 'yellow',
-        'Užsk. Trans' => 'blue',
-        'Važiuoja' => 'green',
-        'Muitinėje' => 'gray',
-        'Išmuitinta' => 'brown',
-        'Sandėlyje' => 'orange',
-        'Pristatyta' => 'purple',
-        'Atšaukta' => 'red'
+        self::ORDER_STATUS_ORDERED => '',
+        self::ORDER_STATUS_PAID => 'pink',
+        self::ORDER_STATUS_READY => 'yellow',
+        self::ORDER_STATUS_TRANSPORT_ORDERED => 'blue',
+        self::ORDER_STATUS_COMING => 'green',
+        self::ORDER_STATUS_IN_CUSTOMS => 'gray',
+        self::ORDER_STATUS_CUSTOMIZED => 'brown',
+        self::ORDER_STATUS_IN_WAREHOUSE => 'orange',
+        self::ORDER_STATUS_DELIVERED => 'purple',
+        self::ORDER_STATUS_CANCELED => 'red'
     ];
 
     public const ORDER_GLUE_MAP = [

@@ -221,32 +221,48 @@ class TableConfig implements TableConfigInterface
                 'group' => 'APSKAITA',
             ],
             [
-                'name' => 'SF. Pirk.',
+                'name' => 'P-SF. Pard.',
                 'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
             [
-                'name' => 'SF. BG',
+                'name' => 'SF. Pard.',
+                'type' => 'invoice',
+                'group' => 'SĄSKAITOS FAKTŪROS',
+                'identifier' => 'sales_invoice',
+            ],
+            [
+                'name' => 'SF. Pirk. 1',
                 'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
             [
-                'name' => 'SF. Trans',
+                'name' => 'SF. Pirk. 2',
                 'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
             [
-                'name' => 'SF. EE',
+                'name' => 'SF. Trans 1',
                 'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
             [
-                'name' => 'SF. Brok',
+                'name' => 'SF. Trans 2',
                 'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
             [
-                'name' => 'SF. Sand',
+                'name' => 'SF. Brokas',
+                'type' => 'invoice',
+                'group' => 'SĄSKAITOS FAKTŪROS',
+            ],
+            [
+                'name' => 'SF. Muitinė',
+                'type' => 'invoice',
+                'group' => 'SĄSKAITOS FAKTŪROS',
+            ],
+            [
+                'name' => 'SF. Sand.',
                 'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],
@@ -259,12 +275,6 @@ class TableConfig implements TableConfigInterface
                 'name' => 'SF. Factor',
                 'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
-            ],
-            [
-                'name' => 'SF. Pard.',
-                'type' => 'invoice',
-                'group' => 'SĄSKAITOS FAKTŪROS',
-                'identifier' => 'sales_invoice',
             ],
             [
                 'name' => 'Dokumentai',

@@ -13,6 +13,8 @@ class Invoice extends Model
         'invoice_number',
         'issue_date',
         'pay_until_date',
-        'status'
+        'status',
+        'order_id',
+        'field_id',
     ];
 }

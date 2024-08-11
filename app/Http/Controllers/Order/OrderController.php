@@ -139,7 +139,7 @@ class OrderController extends MainController
 
             // Create or update invoice entity
             if (TableService::getFieldById($fieldId)->type === ConfigDefaultInterface::FIELD_TYPE_INVOICE) {
-                $updatedFields = $this->executeInvoiceUpdate($request, $fieldId, $updatedFields, $value);
+                $updatedFields = $this->executeInvoiceUpdate($request, $fieldId, $updatedFields, $orderId, $value);
             }
 
             if ($orderData) {
@@ -493,7 +493,7 @@ class OrderController extends MainController
             $calculator->calculateTotalProfit($order);
     }
 
-    protected function executeInvoiceUpdate(Request $request, array|string|null $fieldId, int $updatedFields, ?string $value): int
+    protected function executeInvoiceUpdate(Request $request, array|string|null $fieldId, int $updatedFields, int $orderId, ?string $value): int
     {
         $allInputs = $request->all();
         $invoiceNumber = 'field_' . $fieldId;
@@ -550,6 +550,8 @@ class OrderController extends MainController
                 'issue_date' => $validated[$issueDate],
                 'pay_until_date' => $validated[$payUntilDate],
                 'status' => $validated[$status],
+                'order_id' => $orderId,
+                'field_id' => $fieldId,
             ]);
         }
 

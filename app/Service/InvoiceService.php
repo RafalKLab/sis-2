@@ -48,4 +48,21 @@ class InvoiceService
 
         return TableService::getFieldById($fieldId)->name;
     }
+
+    public static function getNotPaidInvoicesForOrder(int $orderId): array
+    {
+        $invoices = [];
+
+        $invoiceEntities = Invoice::where('order_id', $orderId)
+            ->where('status', ConfigDefaultInterface::INVOICE_STATUS_AWAITING)->get();
+
+        foreach ($invoiceEntities as $entity) {
+            $invoices[] = [
+                'invoice_name' => TableService::getFieldById($entity->field_id)->name,
+                'invoice_number' => $entity->invoice_number,
+            ];
+        }
+
+        return $invoices;
+    }
 }

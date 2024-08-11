@@ -62,6 +62,7 @@ class StatisticsManager
             'orders' => $this->getOrderKeys($orderIds),
             'profit' => $this->calculateProfit($orderIds),
             'paid_in_advance' => $this->calculatePaidInAdvanceOrders($orderIds),
+            'debts' => $this->calculateDebts($orderIds),
         ];
     }
 
@@ -170,6 +171,32 @@ class StatisticsManager
 
         return [
             'total_prime_cost' => $this->formatNumberWithDecimals($totalPrimeCost),
+            'details' => $details,
+        ];
+    }
+
+    private function calculateDebts(array $orderIds): array
+    {
+        $totalDebts = 0;
+        $details = [];
+
+        foreach ($orderIds as $orderId) {
+            $orderInvoices = InvoiceService::getNotPaidInvoicesForOrder($orderId);
+
+            if (empty($orderInvoices)) {
+                continue;
+            }
+
+            $totalDebts += count($orderInvoices);
+            $details[] = [
+                'order_id' => $orderId,
+                'order_key' => OrderService::getKeyFieldFrom($orderId)->value,
+                'debts' => $orderInvoices
+            ];
+        }
+
+        return [
+            'total_debts' => $totalDebts,
             'details' => $details,
         ];
     }

@@ -190,10 +190,40 @@
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <h3>in progress...</h3>
+                                                <h3>{{ $data['debts']['total_debts'] }}</h3>
                                                 <a href="#collapseDebts" class="more-details-link" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseDebts">
                                                     Show More <i class="fa fa-chevron-down"></i>
                                                 </a>
+                                            </div>
+                                            <!-- Collapsible Content -->
+                                            <div class="collapse" id="collapseDebts">
+                                                <div class="card-body">
+                                                    <!-- Additional information you want to show goes here -->
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th scope="col">Užsakymas</th>
+                                                            <th scope="col">Skola</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach($data['debts']['details'] as $order)
+                                                            <tr>
+                                                                <td>
+                                                                    <a class="more-details-link" href="{{ route('orders.view', ['id'=>$order['order_id']]) }}">
+                                                                        {{ $order['order_key'] }}
+                                                                    </a>
+                                                                </td>
+                                                                <td>
+                                                                    @foreach($order['debts'] as $debt)
+                                                                        <p>{{$debt['invoice_name']}}: {{$debt['invoice_number']}}</p>
+                                                                    @endforeach
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

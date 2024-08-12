@@ -34,7 +34,6 @@
                                 <th>
                                     @if (!$user->is_root)
                                     <div class="btn-group" style="display: flex; width: 100%;">
-                                        <a href="" title="View" class="disabled btn btn-outline-info"><i class="fa-solid fa-magnifying-glass"></i></a>
                                         <a href="{{ route('user.edit', ['id'=>$user->id]) }}" title="Edit" class="btn btn-outline-primary"><i class="fa-solid fa-pen"></i></a>
                                         <a href="{{ route('user.assign-fields', ['id'=>$user->id]) }}" title="Assign fields" class="btn btn-outline-primary"><i class="fa-solid fa-table-cells"></i></a>
                                         <a href="{{ route('user-blocked.block', ['id'=>$user->id]) }}" title="Block" class="btn btn-outline-danger"><i class="fa-solid fa-lock"></i></a>

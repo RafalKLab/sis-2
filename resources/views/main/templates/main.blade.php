@@ -69,15 +69,15 @@
                     </a>
                     @endcan
 
-{{--                    <a class="nav-link" href="">--}}
-{{--                        <div class="sb-nav-link-icon"><i class="fa-solid fa-industry"></i></div>--}}
-{{--                        Suppliers--}}
-{{--                    </a>--}}
+                    <a class="disabled nav-link" href="">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-industry"></i></div>
+                        Suppliers (in progress)
+                    </a>
 
-{{--                    <a class="disabled nav-link" href="">--}}
-{{--                        <div class="sb-nav-link-icon"><i class="fa-solid fa-truck-moving"></i></div>--}}
-{{--                        Carriers--}}
-{{--                    </a>--}}
+                    <a class="disabled nav-link" href="">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-truck-moving"></i></div>
+                        Carriers (in progress)
+                    </a>
 
                     @role('admin')
                     <div class="sb-sidenav-menu-heading">Admin</div>
@@ -85,6 +85,12 @@
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-chart-simple"></i></div>
                         Statistics
                     </a>
+
+                    <a class="disabled nav-link" href="">
+                        <div class="sb-nav-link-icon"><i class="fa-regular fa-address-card"></i></div>
+                        User performance (in progress)
+                    </a>
+
                     <a class="nav-link" href="{{ route('logs.index') }}">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                         Activity logs
@@ -107,7 +113,7 @@
                     </a>
                     <div class="collapse" id="collapseTable" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="{{ route('admin-fields.index') }}">Fields settings</a>
+                            <a class="nav-link" href="{{ route('admin-fields.index') }}">Field settings</a>
                         </nav>
                     </div>
 

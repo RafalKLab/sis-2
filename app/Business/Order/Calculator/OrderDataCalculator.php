@@ -41,12 +41,12 @@ class OrderDataCalculator
         // 1 collect needed fields purchase number and amount
         $purchaseSum = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TOTAL_PURCHASE_SUM)?->value;
         if (!$purchaseSum) {
-            return;
+            $purchaseSum = 0.0;
         }
 
         $transportPrice1 = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1)?->value;
         if (!$transportPrice1) {
-            return;
+            $transportPrice1 = 0.0;
         }
 
         // Convert strings to floats
@@ -76,12 +76,12 @@ class OrderDataCalculator
         // 1 collect needed fields purchase number and amount
         $purchaseSum = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TOTAL_PURCHASE_SUM)?->value;
         if (!$purchaseSum) {
-            return;
+            $purchaseSum = 0.0;
         }
 
         $transportPrice1 = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1)?->value;
         if (!$transportPrice1) {
-            return;
+            $transportPrice1 = 0.0;
         }
 
         // Convert strings to floats

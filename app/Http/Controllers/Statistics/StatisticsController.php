@@ -32,11 +32,23 @@ class StatisticsController extends MainController
 
     protected function extractDataForProfitAreaChart(array $statistics): array
     {
-        $data = [];
+        $actualProfit = [];
+        $expectedProfit = [];
         foreach ($statistics as $statistic) {
-            $data[$statistic['month_name']] = $statistic['profit']['actual_profit'];
+            $actualProfit[$statistic['month_name']] = $statistic['profit']['actual_profit'];
+            $expectedProfit[$statistic['month_name']] = $this->calculateExpectedProfitForChart($statistic);
         }
 
-        return $data;
+        return [
+            'actual' => $actualProfit,
+            'expected' => $expectedProfit,
+        ];
+    }
+
+    private function calculateExpectedProfitForChart(array $statistic): string
+    {
+        $expectedProfit = $statistic['profit']['actual_profit'] + $statistic['profit']['expected_profit'];
+
+        return number_format($expectedProfit, 2, '.', '');
     }
 }

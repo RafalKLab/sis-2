@@ -239,7 +239,7 @@
         <div class="container-fluid px-4 mt-3">
             <div class="card">
                 <div class="card-header text-white bg-success">
-                    <i class="fas fa-chart-area me-1"></i> Metinė faktinio pelno diagrama
+                    <i class="fas fa-chart-area me-1"></i> Metinė faktinio ir numatomo pelno diagrama
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -258,12 +258,13 @@
     <script src="{{ asset('js/chart-area-total-profit.js') }}"></script>
     <script>
         var statistics = @json($profitAreaChartData);
-        var labels = Object.keys(statistics);
-        var data = Object.values(statistics);
+        var labels = Object.keys(statistics.actual);
+        var actualData = Object.values(statistics.actual);
+        var expectedData = Object.values(statistics.expected);
 
         // Ensure the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', function() {
-            initializeTotalProfitAreaChart(labels, data);
+            initializeTotalProfitAreaChart(labels, actualData, expectedData);
         });
     </script>
 

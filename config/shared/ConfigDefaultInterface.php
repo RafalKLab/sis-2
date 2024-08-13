@@ -141,6 +141,7 @@ interface ConfigDefaultInterface
     ];
 
     public const ORDER_CERTIFICATION_MAP = [
+        'nėra',
         'FSC',
         'PEFC',
     ];

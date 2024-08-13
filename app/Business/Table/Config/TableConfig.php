@@ -232,6 +232,11 @@ class TableConfig implements TableConfigInterface
                 'identifier' => 'sales_invoice',
             ],
             [
+                'name' => 'P-SF. Pirk.',
+                'type' => 'invoice',
+                'group' => 'SĄSKAITOS FAKTŪROS',
+            ],
+            [
                 'name' => 'SF. Pirk. 1',
                 'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',

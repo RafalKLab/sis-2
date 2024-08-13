@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Order;
 use App\Business\ActivityLog\Config\ActivityLogConstants;
 use App\Http\Controllers\MainController;
 use App\Models\Order\Invoice;
+use App\Models\Order\ItemBuyer;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
 use App\Models\Order\OrderItem;
@@ -434,6 +435,60 @@ class OrderController extends MainController
         $this->executeItemCalculations($item);
 
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item was removed'));
+    }
+
+    public function addBuyer(int $orderId, int $itemId)
+    {
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
+        $availableBuyers = ItemBuyer::all()->pluck('name')->toArray();
+
+        return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers'));
+    }
+
+    public function storeBuyer(Request $request, int $orderId) {
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        // TODO: Implement balance check
+
+        // Validation rules
+        $validatedData = $request->validate([
+            'buyer' => 'required',
+            'quantity' => 'required|numeric|min:1', // Ensure quantity is a number and at least 1
+            'itemId' => 'required',
+        ]);
+
+        $orderItem = OrderItem::find($validatedData['itemId']);
+        if (!$orderItem) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order item not found');
+        }
+        $orderItem->buyers()->create([
+            'name' => $validatedData['buyer'],
+            'quantity' => $validatedData['quantity'],
+        ]);
+
+        $this->executeItemCalculations($orderItem);
+
+        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was added '));
     }
 
     protected function extractTargetItem(array $orderData, int $itemId): array

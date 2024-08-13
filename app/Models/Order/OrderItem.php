@@ -36,6 +36,11 @@ class OrderItem extends Model
         return OrderItemData::where('field_id', $fieldId)->where('order_item_id', $this->id)->first()->value;
     }
 
+    public function buyers()
+    {
+        return $this->hasMany(ItemBuyer::class, 'order_item_id');
+    }
+
     public function getPurchaseSum(): string
     {
         $purchaseSumFieldId = TableField::where('type', ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM)->first()->id;

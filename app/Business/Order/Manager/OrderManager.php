@@ -7,6 +7,7 @@ use App\Business\Table\Config\TableConfig;
 use App\Models\Order\Invoice;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
+use App\Models\Order\OrderItem;
 use App\Models\Order\OrderItemData;
 use App\Models\Table\TableField;
 use App\Service\InvoiceService;
@@ -217,6 +218,8 @@ class OrderManager
             $itemData['settings']['sales_sum'] = $item->getSalesSum();
             $itemData['settings']['sales_sum_field_name'] = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_SALES_SUM)->name;
 
+            $itemData['buyers'] = $this->collectItemBuyers($item);
+
             $data[$prefixedName] = $itemData;
         }
 
@@ -248,5 +251,19 @@ class OrderManager
         $data['display_class'] = InvoiceService::getInvoiceDisplayColor($data['invoice_number']);
 
         return $data;
+    }
+
+    private function collectItemBuyers(OrderItem $item): array
+    {
+        $buyers = [];
+        foreach ($item->buyers as $buyer) {
+            $buyers[] = [
+                'id' => $buyer->id,
+                'name' => $buyer->name,
+                'quantity' => $buyer->quantity,
+            ];
+        }
+
+        return $buyers;
     }
 }

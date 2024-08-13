@@ -176,8 +176,9 @@
                                                     {{$item['settings']['sales_sum_field_name']}}: {{$item['settings']['sales_sum']}}
                                                 </td>
                                                 <td class="text-end">
+                                                    <a title="Add buyer" href="{{route('orders.add-item-buyer', ['orderId'=>$orderData['id'], 'itemId'=>$item['settings']['item_id']])}}"><i class="fa-solid fa-user-plus"></i></a>
                                                     @if(Auth::user()->hasPermissionTo('Edit order products'))
-                                                        <a href="{{ route('orders.edit-item', ['orderId' => $orderData['id'], 'itemId' => $item['settings']['item_id']]) }}" title="Edit"><i class="fa-solid fa-pen"></i></a>
+                                                        <a style="margin-left: 10px;" href="{{ route('orders.edit-item', ['orderId' => $orderData['id'], 'itemId' => $item['settings']['item_id']]) }}" title="Edit"><i class="fa-solid fa-pen"></i></a>
                                                     @endif
                                                     @if(Auth::user()->hasPermissionTo('Remove order products'))
                                                         <a style="font-size: 20px; margin-left: 10px;" href="{{ route('orders.remove-item', ['orderId' =>$orderData['id'], 'itemId' => $item['settings']['item_id']]) }}" onclick="return confirmAction()" class="text-danger" title="Remove"><i class="fa-solid fa-xmark"></i></a>
@@ -187,6 +188,15 @@
                                             <tr id="collapseItem_{{$item['settings']['collapse_id']}}" class="collapse">
                                                 <td colspan="4">
                                                     <table class="table">
+                                                        @foreach($item['buyers'] as $buyer)
+                                                            <tr>
+                                                                <th scope="row">Pirkėjas {{ $buyer['name'] }} kiekis:</th>
+                                                                <td>{{ $buyer['quantity'] }}</td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                        @endforeach
+
                                                         @foreach($item['details'] as $data)
                                                             @switch($data['field_type'])
                                                                 @case('load date')

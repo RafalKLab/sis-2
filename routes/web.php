@@ -40,6 +40,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/orders/{orderId}/edit-item/{itemId}', [OrderController::class, 'updateItem'])->name('orders.update-item');
     Route::get('/orders/{orderId}/remove-item/{itemId}', [OrderController::class, 'removeItem'])->name('orders.remove-item');
 
+    /* Item buyer */
+    Route::get('/orders/{orderId}/item/{itemId}/add-buyer', [OrderController::class, 'addBuyer'])->name('orders.add-item-buyer');
+    Route::post('/orders/{orderId}/item/{itemId}/add-buyer', [OrderController::class, 'storeBuyer'])->name('orders.store-item-buyer');
+
     /* User orders table */
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/register', [OrderController::class, 'register'])->name('orders.register');

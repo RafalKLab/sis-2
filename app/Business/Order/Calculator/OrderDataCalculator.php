@@ -271,7 +271,7 @@ class OrderDataCalculator
         }
 
         $amount = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_AMOUNT)?->value;
-        if (!$amount) {
+        if ($amount === null) {
             return;
         }
 
@@ -304,9 +304,8 @@ class OrderDataCalculator
         }
 
         $totalAmount = $orderItem->buyers->sum('quantity');
-
         $totalItemSalesAmount = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_AMOUNT);
-        if ($totalItemSalesAmount) {
+        if ($totalItemSalesAmount !== null) {
             $totalItemSalesAmount->update([
                 'value' => $totalAmount,
             ]);

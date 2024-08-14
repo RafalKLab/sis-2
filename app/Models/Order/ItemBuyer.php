@@ -14,4 +14,9 @@ class ItemBuyer extends Model
     ];
 
     use HasFactory;
+
+    public function item()
+    {
+        return $this->belongsTo(OrderItem::class, 'order_item_id');
+    }
 }

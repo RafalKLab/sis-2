@@ -3,9 +3,11 @@
 namespace App\Business\Customer\Manager;
 
 use App\Models\Note\Note;
+use App\Models\Order\ItemBuyer;
 use App\Models\Order\OrderItem;
 use App\Models\Order\OrderItemData;
 use App\Models\Table\TableField;
+use Illuminate\Database\Eloquent\Collection;
 
 class CustomerManager
 {
@@ -13,45 +15,27 @@ class CustomerManager
 
     public function getCustomersData(): array
     {
-        $customerIdentifierFields = $this->getCustomerIdentifierFields();
-        $customers = $this->getCustomers($customerIdentifierFields);
+        $customers = ItemBuyer::all();
 
         return $this->retrieveCustomersOrders($customers);
     }
 
-    private function getCustomerIdentifierFields(): array
-    {
-        return TableField::where('identifier', self::FIELD_IDENTIFIER)->pluck('id')->toArray();
-    }
-
-    private function getCustomers(array $customerIdentifierFields): array
-    {
-        return OrderItemData::whereIn('field_id', $customerIdentifierFields)
-            ->where('value', '!=', '-')
-            ->distinct()
-            ->pluck('value')->toArray();
-    }
-
-    protected function retrieveCustomersOrders(array $customers): array
+    protected function retrieveCustomersOrders(Collection $customers): array
     {
         $customersOrders = [];
         foreach ($customers as $customer) {
-            $orderItems = [];
-            $orderItemData = OrderItemData::where('value', $customer)->get();
+            $order = $customer->item->order->getKeyField();
+            $orderId = $customer->item->order->id;
+            if (!array_key_exists($customer->name, $customersOrders)) {
+                $customersOrders[$customer->name]['orders'] = [$order => $orderId];
+                $customersOrders[$customer->name]['notes'] = $this->retrieveCustomerNotes($customer->name);
+            } else {
+                if (in_array($order, $customersOrders[$customer->name]['orders'])) {
+                    continue;
+                }
 
-
-            foreach ($orderItemData as $itemDatum) {
-                $orderItems[$itemDatum->order_item_id] = $itemDatum->order_item_id;
+                $customersOrders[$customer->name]['orders'][$order] = $orderId;
             }
-
-            $orders = [];
-            foreach ($orderItems as $orderItem) {
-                $orderEntity = OrderItem::find($orderItem)->order;
-                $orders[$orderEntity->getKeyField()] = $orderEntity->id;
-            }
-
-            $customersOrders[$customer]['orders'] = $orders;
-            $customersOrders[$customer]['notes'] = $this->retrieveCustomerNotes($customer);
         }
 
         return $customersOrders;

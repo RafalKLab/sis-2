@@ -128,6 +128,26 @@
                     </div>
                 @endforeach
             </form>
+            @foreach($orderFormData['details'] as $data)
+                @switch($data['field_type'])
+                    @case('duty 7')
+                        <div class="col-sm-9">
+                            <label class="form-check-label" for="dutyToggle{{ $data['field_id'] }}">
+                                Išjungti automatinius {{ $data['field_name'] }} skaičiavimus
+                            </label>
+                            <input {{ $data['additional_data']['settings']['disabled-auto-calculation'] ?? false ? 'checked' : '' }} class="form-check-input duty-toggle" type="checkbox" value="" id="dutyToggle{{ $data['field_id'] }}" data-field-id="{{$data['field_id']}}" data-order-id="{{$orderFormData['id']}}">
+                        </div>
+                    @break
+                    @case('duty 15')
+                        <div class="col-sm-9">
+                            <label class="form-check-label" for="dutyToggle{{ $data['field_id'] }}">
+                                Išjungti automatinius {{ $data['field_name'] }} skaičiavimus
+                            </label>
+                            <input {{ $data['additional_data']['settings']['disabled-auto-calculation'] ?? false ? 'checked' : '' }} class="form-check-input duty-toggle" type="checkbox" value="" id="dutyToggle{{ $data['field_id'] }}" data-field-id="{{$data['field_id']}}" data-order-id="{{$orderFormData['id']}}">
+                        </div>
+                        @break
+                @endswitch
+            @endforeach
         </div>
     </div>
 </div>
@@ -158,6 +178,49 @@
                             newTag: true // Distinguishes between new and existing tags
                         };
                     }
+                });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Select all checkboxes with the class 'duty-toggle'
+            const checkboxes = document.querySelectorAll('.duty-toggle');
+
+            // Iterate over each checkbox to attach the change event listener
+            checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    const isChecked = this.checked;
+                    const fieldId = this.getAttribute('data-field-id'); // Retrieve the field ID
+                    const orderId = this.getAttribute('data-order-id');
+                    const form = document.querySelector('#edit-order-form'); // Select the form by ID
+                    const csrfToken = form.querySelector('input[name="_token"]').value; // Get the CSRF token from the form
+
+                    fetch('{{route("field.toggle-auto-calculations")}}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify({
+                            toggle: isChecked,
+                            fieldId: fieldId,
+                            orderId: orderId
+                        })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Success:', data);
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
                 });
             });
         });

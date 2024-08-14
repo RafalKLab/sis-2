@@ -77,4 +77,9 @@ class TableField extends Model
             }
         });
     }
+
+    public function settings()
+    {
+        return $this->hasMany(FieldSettings::class, 'field_id');
+    }
 }

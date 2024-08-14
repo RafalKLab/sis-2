@@ -649,11 +649,11 @@ class OrderController extends MainController
         $calculator = $this->factory()->createOrderDataCalculator();
 
         $calculator->calculateTotalPurchaseSum($order);
-            $calculator->calculateDuty7($order);
-            $calculator->calculateDuty15($order);
-            $calculator->calculatePrimeCost($order);
-            $calculator->calculateTotalSalesSum($order);
-            $calculator->calculateTotalProfit($order);
+        $calculator->calculateDuty7($order);
+        $calculator->calculateDuty15($order);
+        $calculator->calculatePrimeCost($order);
+        $calculator->calculateTotalSalesSum($order);
+        $calculator->calculateTotalProfit($order);
     }
 
     protected function executeInvoiceUpdate(Request $request, array|string|null $fieldId, int $updatedFields, int $orderId, ?string $value): int

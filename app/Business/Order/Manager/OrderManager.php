@@ -230,6 +230,7 @@ class OrderManager
     {
         return match ($field->type) {
             ConfigDefaultInterface::FIELD_TYPE_INVOICE => $this->getInvoiceData($orderDataEntity?->value),
+            ConfigDefaultInterface::FIELD_TYPE_DUTY_7, ConfigDefaultInterface::FIELD_TYPE_DUTY_15 => $this->getAdditionalDutyData($field, $orderDataEntity),
             default => [],
         };
     }
@@ -265,5 +266,23 @@ class OrderManager
         }
 
         return $buyers;
+    }
+
+    private function getAdditionalDutyData(TableField $field, ?OrderData $orderDataEntity = null): array
+    {
+        if (!$orderDataEntity) {
+            return [];
+        }
+
+        $orderId = $orderDataEntity->order->id;
+
+        $settings = [];
+        foreach ($field->settings()->where('order_id', $orderId)->get() as $setting) {
+            $settings[$setting->setting] = $setting->value;
+        }
+
+        return [
+            'settings' => $settings
+        ];
     }
 }

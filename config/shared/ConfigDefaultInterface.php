@@ -52,6 +52,7 @@ interface ConfigDefaultInterface
     public const ERROR_MISSING_PERMISSION = 'User does not have permission for this action';
 
     /* Field settings */
+    public const AUTO_CALCULATION_SETTING = 'disabled-auto-calculation';
     public const FIELD_TYPE_TEXT = 'text';
     public const FIELD_TYPE_DATE = 'date';
     public const FIELD_TYPE_SELECT_STATUS = 'select status';

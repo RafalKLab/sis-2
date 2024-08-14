@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\BlockedUserController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\FieldSettings\FieldSettingsController;
 use App\Http\Controllers\File\FileController;
 use App\Http\Controllers\Note\NoteController;
 use App\Http\Controllers\ProfileController;
@@ -58,6 +59,9 @@ Route::middleware('auth')->group(function () {
 
     /* Api route for order select creation */
     Route::get('/api/orders', [OrderController::class, 'orders'])->name('api.orders');
+
+    /* Api route for field settings */
+    Route::post('/settings/field/toggle-auto-calculations', [FieldSettingsController::class, 'toggleFieldAutoCalculations'])->name('field.toggle-auto-calculations');
 
     /* Order file upload */
     Route::get('/order/{orderId}/files', [FileController::class, 'index'])->name('order-files.index');

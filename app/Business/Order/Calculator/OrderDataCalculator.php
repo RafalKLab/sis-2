@@ -6,6 +6,7 @@ use App\Models\Order\Order;
 use App\Models\Order\OrderData;
 use App\Models\Order\OrderItem;
 use App\Models\Order\OrderItemData;
+use App\Models\Table\FieldSettings;
 use App\Models\Table\TableField;
 use App\Service\TableService;
 use shared\ConfigDefaultInterface;
@@ -57,6 +58,18 @@ class OrderDataCalculator
         $formattedResult = number_format($result, 2, '.', '');
 
         $orderFieldData = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_DUTY_7);
+
+        // Check if calculation is disabled
+        $calculationIsDisabled = FieldSettings::where('order_id', $order->id)
+            ->where('field_id', $orderFieldData?->field_id)
+            ->where('setting', ConfigDefaultInterface::AUTO_CALCULATION_SETTING)
+            ->first()?->value;
+
+        $calculationIsDisabled = (bool) $calculationIsDisabled;
+        if ($calculationIsDisabled) {
+            $formattedResult = '0.00';
+        }
+
         if ($orderFieldData) {
             $orderFieldData->update([
                 'value' => $formattedResult,
@@ -92,6 +105,18 @@ class OrderDataCalculator
         $formattedResult = number_format($result, 2, '.', '');
 
         $orderFieldData = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_DUTY_15);
+
+        // Check if calculation is disabled
+        $calculationIsDisabled = FieldSettings::where('order_id', $order->id)
+            ->where('field_id', $orderFieldData?->field_id)
+            ->where('setting', ConfigDefaultInterface::AUTO_CALCULATION_SETTING)
+            ->first()?->value;
+
+        $calculationIsDisabled = (bool) $calculationIsDisabled;
+        if ($calculationIsDisabled) {
+            $formattedResult = '0.00';
+        }
+
         if ($orderFieldData) {
             $orderFieldData->update([
                 'value' => $formattedResult,

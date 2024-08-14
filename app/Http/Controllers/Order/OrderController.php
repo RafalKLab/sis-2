@@ -451,7 +451,7 @@ class OrderController extends MainController
         }
 
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
-        $availableBuyers = ItemBuyer::all()->pluck('name')->toArray();
+        $availableBuyers = ItemBuyer::query()->distinct()->pluck('name')->toArray();
 
         return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers'));
     }
@@ -489,6 +489,113 @@ class OrderController extends MainController
         $this->executeItemCalculations($orderItem);
 
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was added '));
+    }
+
+    public function editBuyer(int $orderId, int $itemId, int $buyerId)
+    {
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        $item = OrderItem::find($itemId);
+        if (!$item) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order item not found');
+        }
+
+        $buyer = ItemBuyer::find($buyerId);
+        if (!$buyer) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item buyer not found');
+        }
+
+        $isEdit = true;
+        $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
+        $availableBuyers = ItemBuyer::query()->distinct()->pluck('name')->toArray();
+
+        return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'isEdit', 'buyer'));
+    }
+
+    public function updateBuyer(Request $request, int $orderId, int $itemId, int $buyerId)
+    {
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        $item = OrderItem::find($itemId);
+        if (!$item) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order item not found');
+        }
+
+        $buyer = ItemBuyer::find($buyerId);
+        if (!$buyer) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item buyer not found');
+        }
+
+        // TODO: Implement balance check
+
+        // Validation rules
+        $validatedData = $request->validate([
+            'buyer' => 'required',
+            'quantity' => 'required|numeric|min:1', // Ensure quantity is a number and at least 1
+            'itemId' => 'required',
+        ]);
+
+        $buyer->update([
+            'name' => $validatedData['buyer'],
+            'quantity' => $validatedData['quantity'],
+        ]);
+
+        $this->executeItemCalculations($item);
+
+        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was updated '));
+    }
+
+    public function removeBuyer(int $orderId, int $itemId, int $buyerId)
+    {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_REMOVE_ITEM_BUYER)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, ConfigDefaultInterface::ERROR_MISSING_PERMISSION);
+        }
+
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        $item = OrderItem::find($itemId);
+        if (!$item) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order item not found');
+        }
+
+        $buyer = ItemBuyer::find($buyerId);
+        if (!$buyer) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item buyer not found');
+        }
+
+        // TODO Implement permissions and check invoice
+        $buyer->delete();
+
+        $this->executeItemCalculations($item);
+
+        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was removed '));
     }
 
     protected function extractTargetItem(array $orderData, int $itemId): array
@@ -530,6 +637,7 @@ class OrderController extends MainController
     {
         $calculator = $this->factory()->createOrderDataCalculator();
 
+        $calculator->calculateTotalSalesAmount($orderItem);
         $calculator->calculatePurchaseSumForItem($orderItem);
         $calculator->calculateSalesSumForItem($orderItem);
 

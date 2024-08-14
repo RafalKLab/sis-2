@@ -245,7 +245,7 @@ class OrderDataCalculator
             return;
         }
 
-        $amount = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_AMOUNT)?->value;
+        $amount = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_AMOUNT)?->value;
         if (!$amount) {
             return;
         }
@@ -266,6 +266,29 @@ class OrderDataCalculator
             $data = [
                 'value' => $formattedResult,
                 'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_SALES_SUM)->id,
+            ];
+
+            $orderItem->data()->create($data);
+        }
+    }
+
+    public function calculateTotalSalesAmount(OrderItem $orderItem): void
+    {
+        if (!$orderItem->exists) {
+            return;
+        }
+
+        $totalAmount = $orderItem->buyers->sum('quantity');
+
+        $totalItemSalesAmount = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_AMOUNT);
+        if ($totalItemSalesAmount) {
+            $totalItemSalesAmount->update([
+                'value' => $totalAmount,
+            ]);
+        } else {
+            $data = [
+                'value' => $totalAmount,
+                'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_AMOUNT)->id,
             ];
 
             $orderItem->data()->create($data);

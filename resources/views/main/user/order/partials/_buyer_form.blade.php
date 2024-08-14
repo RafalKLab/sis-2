@@ -6,7 +6,11 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <div class="col-md-5">
-                Add item buyer
+                @if(isset($isEdit))
+                    Edit item buyer {{$buyer->name}}
+                @else
+                    Add item buyer
+                @endif
             </div>
             <div class="col-md-1 d-flex justify-content-end">
                 <button class="btn-outline-primary btn" onclick="submitForm()">Save</button>
@@ -14,7 +18,7 @@
         </div>
         <div class="card-body">
             @if(isset($isEdit))
-                <form id="add-buyer-form" method="POST" action="{{ route('orders.update-item', ['orderId' => $orderData['id'], 'itemId' => $itemId]) }}">
+                <form id="add-buyer-form" method="POST" action="{{ route('orders.update-item-buyer', ['orderId' => $orderId, 'itemId' => $itemId, 'buyerId' => $buyer->id]) }}">
                 @method('PUT')
             @else
                 <form id="add-buyer-form" method="POST" action="{{route('orders.store-item-buyer', ['orderId'=>$orderId, 'itemId'=>$itemId])}}">
@@ -24,9 +28,18 @@
                         <label for="buyer" class="col-sm-3 col-form-label">Pirkėjas</label>
                         <div class="col-sm-9">
                             <select class="form-control select-with-search" id="buyer" name="buyer">
-                                @foreach($availableBuyers as $availableBuyer)
-                                    <option value="{{ $availableBuyer }}">{{ $availableBuyer }}</option>
-                                @endforeach
+                                @if(isset($isEdit))
+                                    <option value="{{$buyer->name}}">{{$buyer->name}}</option>
+                                    @foreach($availableBuyers as $availableBuyer)
+                                        @if($availableBuyer !== $buyer->name)
+                                            <option value="{{ $availableBuyer }}">{{ $availableBuyer }}</option>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    @foreach($availableBuyers as $availableBuyer)
+                                        <option value="{{ $availableBuyer }}">{{ $availableBuyer }}</option>
+                                    @endforeach
+                                @endif
                                 <!-- Your options -->
                             </select>
                             @if ($errors->has('buyer'))
@@ -40,7 +53,7 @@
                     <div class="form-group row mb-3">
                         <label for="quantity" class="col-sm-3 col-form-label">Kiekis</label>
                         <div class="col-sm-9">
-                            <input name="quantity" type="number" class="form-control" id="quantity" value="1">
+                            <input name="quantity" type="number" class="form-control" id="quantity" value="{{ isset($isEdit) ? $buyer->quantity : '1' }}">
                             @if ($errors->has('quantity'))
                                 <span class="text-danger" role="alert">
                                  {{ $errors->first('quantity') }}

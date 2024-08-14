@@ -17,6 +17,7 @@ interface ConfigDefaultInterface
     public const PERMISSION_ADD_ORDER_PRODUCTS = 'Add order products';
     public const PERMISSION_EDIT_ORDER_PRODUCTS = 'Edit order products';
     public const PERMISSION_REMOVE_ORDER_PRODUCTS = 'Remove order products';
+    public const PERMISSION_REMOVE_ITEM_BUYER = 'Remove item buyer';
     public const PERMISSION_ACCESS_CUSTOMER_TABLE = 'Access customer table';
     public const PERMISSION_DELETE_CUSTOMER_NOTES = 'Delete customer notes';
 
@@ -35,6 +36,7 @@ interface ConfigDefaultInterface
         self::PERMISSION_ADD_ORDER_PRODUCTS,
         self::PERMISSION_EDIT_ORDER_PRODUCTS,
         self::PERMISSION_REMOVE_ORDER_PRODUCTS,
+        self::PERMISSION_REMOVE_ITEM_BUYER,
         self::PERMISSION_ACCESS_CUSTOMER_TABLE,
         self::PERMISSION_DELETE_CUSTOMER_NOTES,
     ];
@@ -64,6 +66,7 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_SALES_SUM = 'sales sum';
     public const FIELD_TYPE_TOTAL_SALES_SUM = 'total sales sum';
     public const FIELD_TYPE_AMOUNT = 'amount';
+    public const FIELD_TYPE_TOTAL_SALES_AMOUNT = 'item sells amount';
     public const FIELD_TYPE_PURCHASE_NUMBER = 'purchase number';
     public const FIELD_TYPE_SALES_NUMBER = 'sales number';
     public const FIELD_TYPE_DUTY_7 = 'duty 7';

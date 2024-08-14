@@ -15,28 +15,33 @@ class ItemsTableConfig implements TableConfigInterface
     {
         return [
             [
+                'name' => 'Bendras pardavimo kiekis',
+                'type' => 'item sells amount',
+                'group' => 'PREKĖS IR LOGISTIKA',
+            ],
+            [
                 'name' => 'Pardavėjas',
                 'type' => 'dynamic select',
                 'group' => 'PREKĖS IR LOGISTIKA',
             ],
-            [
-                'name' => 'Pirkėjas 1',
-                'type' => 'dynamic select',
-                'group' => 'PREKĖS IR LOGISTIKA',
-                'identifier' => 'customer',
-            ],
-            [
-                'name' => 'Pirkėjas 2',
-                'type' => 'dynamic select',
-                'group' => 'PREKĖS IR LOGISTIKA',
-                'identifier' => 'customer',
-            ],
-            [
-                'name' => 'Pirkėjas 3',
-                'type' => 'dynamic select',
-                'group' => 'PREKĖS IR LOGISTIKA',
-                'identifier' => 'customer',
-            ],
+//            [
+//                'name' => 'Pirkėjas 1',
+//                'type' => 'dynamic select',
+//                'group' => 'PREKĖS IR LOGISTIKA',
+//                'identifier' => 'customer',
+//            ],
+//            [
+//                'name' => 'Pirkėjas 2',
+//                'type' => 'dynamic select',
+//                'group' => 'PREKĖS IR LOGISTIKA',
+//                'identifier' => 'customer',
+//            ],
+//            [
+//                'name' => 'Pirkėjas 3',
+//                'type' => 'dynamic select',
+//                'group' => 'PREKĖS IR LOGISTIKA',
+//                'identifier' => 'customer',
+//            ],
             [
                 'name' => 'Prekės pavadinimas',
                 'type' => 'dynamic select',
@@ -58,7 +63,7 @@ class ItemsTableConfig implements TableConfigInterface
                 'group' => 'PREKĖS IR LOGISTIKA',
             ],
             [
-                'name' => 'Kiekis',
+                'name' => 'Bendras pirkimo kiekis',
                 'type' => 'amount',
                 'group' => 'PREKĖS IR LOGISTIKA',
             ],

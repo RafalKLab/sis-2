@@ -164,7 +164,7 @@
                                             Prekių sąrašas tuščias
                                         @endif
                                         @foreach($orderData['items'] as $name => $item)
-                                            <tr data-bs-toggle="collapse" data-bs-target="#collapseItem_{{$item['settings']['collapse_id']}}" aria-expanded="false" aria-controls="collapseItem_{{$item['settings']['collapse_id']}}">
+                                            <tr class="order-item-row" data-bs-toggle="collapse" data-bs-target="#collapseItem_{{$item['settings']['collapse_id']}}" aria-expanded="false" aria-controls="collapseItem_{{$item['settings']['collapse_id']}}">
                                                 <td>
                                                     {{ $name }}
                                                     <i class="fa-solid fa-chevron-down"></i>

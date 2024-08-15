@@ -51,6 +51,10 @@
                                     <input disabled type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
                                     <small id="{{ $data['field_id'] }}" class="form-text text-muted">This field is automatically calculated and can not be edited</small>
                                     @break
+                                @case('other costs')
+                                    <input disabled type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
+                                    <small id="{{ $data['field_id'] }}" class="form-text text-muted">This field is automatically calculated and can not be edited</small>
+                                    @break
                                 @case('prime cost')
                                     <input disabled type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
                                     <small id="{{ $data['field_id'] }}" class="form-text text-muted">This field is automatically calculated and can not be edited</small>

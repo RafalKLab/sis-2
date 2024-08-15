@@ -181,7 +181,7 @@ class TableConfig implements TableConfigInterface
                 'group' => 'APSKAITA',
             ],
             [
-                'name' => 'Kitos išlaidos',
+                'name' => 'Bendros kitos išlaidos',
                 'type' => 'other costs',
                 'group' => 'APSKAITA',
             ],
@@ -253,6 +253,11 @@ class TableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'SF. Trans 2',
+                'type' => 'invoice',
+                'group' => 'SĄSKAITOS FAKTŪROS',
+            ],
+            [
+                'name' => 'SF. Kitos išlaidos',
                 'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
             ],

@@ -84,7 +84,7 @@ class ItemsTableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Išskr. Šalis',
-                'type' => 'text',
+                'type' => 'select country',
                 'group' => 'PREKĖS IR LOGISTIKA',
             ],
             [
@@ -140,6 +140,11 @@ class ItemsTableConfig implements TableConfigInterface
             [
                 'name' => 'Pardavimo suma',
                 'type' => 'sales sum',
+                'group' => 'APSKAITA',
+            ],
+            [
+                'name' => 'Kitos išlaidos',
+                'type' => 'item other costs',
                 'group' => 'APSKAITA',
             ],
         ];

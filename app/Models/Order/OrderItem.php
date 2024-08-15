@@ -60,4 +60,14 @@ class OrderItem extends Model
 
         return $sum;
     }
+
+    public function getItemOtherCosts(): string
+    {
+        $itemOtherCosts = TableField::where('type', ConfigDefaultInterface::FIELD_TYPE_ITEM_OTHER_COSTS)->first()->id;
+
+        $costs = OrderItemData::where('field_id', $itemOtherCosts)->where('order_item_id', $this->id)->first()?->value;
+        $costs = number_format($costs, 2, '.', '');
+
+        return $costs;
+    }
 }

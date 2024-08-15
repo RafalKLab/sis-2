@@ -79,6 +79,7 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_WAREHOUSES = 'warehouses';
     public const FIELD_TYPE_BANK = 'bank';
     public const FIELD_TYPE_OTHER_COSTS = 'other costs';
+    public const FIELD_TYPE_ITEM_OTHER_COSTS = 'item other costs';
     public const FIELD_TYPE_FLAW = 'flaw';
     public const FIELD_TYPE_AGENT = 'agent';
     public const FIELD_TYPE_FACTORING = 'factoring';

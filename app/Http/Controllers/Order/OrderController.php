@@ -654,6 +654,7 @@ class OrderController extends MainController
         $calculator->calculatePrimeCost($order);
         $calculator->calculateTotalSalesSum($order);
         $calculator->calculateTotalProfit($order);
+        $calculator->calculateOtherCosts($order);
     }
 
     protected function executeInvoiceUpdate(Request $request, array|string|null $fieldId, int $updatedFields, int $orderId, ?string $value): int

@@ -229,6 +229,30 @@ class OrderDataCalculator
         }
     }
 
+    public function calculateOtherCosts(Order $order): void
+    {
+        $otherCosts = 0;
+        foreach ($order->items as $item) {
+            $otherCosts += $item->getItemOtherCosts();
+        }
+
+        $formattedResult = number_format($otherCosts, 2, '.', '');
+
+        $orderFieldData = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_OTHER_COSTS);
+        if ($orderFieldData) {
+            $orderFieldData->update([
+                'value' => $formattedResult,
+            ]);
+        } else {
+            $data = [
+                'value' => $formattedResult,
+                'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_OTHER_COSTS)->id,
+            ];
+
+            $order->data()->create($data);
+        }
+    }
+
     public function calculatePurchaseSumForItem(OrderItem $orderItem): void
     {
         $purchaseNumber = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_NUMBER)?->value;

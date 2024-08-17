@@ -598,6 +598,51 @@ class OrderController extends MainController
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was removed '));
     }
 
+    public function editCustomerInvoice(int $orderId, string $customer)
+    {
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
+
+        $invoice = Invoice::where('order_id', $orderId)->where('customer', $customer)->first();
+        if ($invoice) {
+            $invoiceData = [
+                'is_new' => false,
+                'number' => $invoice->invoice_number,
+                'status' => $invoice->status,
+                'issue_date' => $invoice->issue_date,
+                'pay_until_date' => $invoice->pay_until_date,
+                'id' => $invoice->id,
+            ];
+        } else {
+            $invoiceData = [
+                'is_new' => true,
+                'number' => null,
+                'status' => null,
+                'issue_date' => null,
+                'pay_until_date' => null,
+            ];
+        }
+
+        $invoiceStatusSelect = ConfigDefaultInterface::AVAILABLE_INVOICE_STATUS_SELECT;
+
+        return view('main.user.order.edit-customer-invoice', compact('orderData', 'customer', 'invoiceData', 'invoiceStatusSelect', 'orderId'));
+    }
+
+    public function saveCustomerInvoice(Request $request, int $orderId, string $customer)
+    {
+        dd($request->all());
+    }
+
     protected function extractTargetItem(array $orderData, int $itemId): array
     {
         foreach ($orderData['items'] as $item) {

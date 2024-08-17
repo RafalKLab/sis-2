@@ -116,6 +116,9 @@ class OrderManager
             }
         }
 
+        // Add invoices for each buyer/customer
+        $orderData['details']['PIRKĖJŲ SĄSKAITOS'] = $this->collectBuyerInvoices($order);
+
         return $orderData;
     }
 
@@ -284,5 +287,65 @@ class OrderManager
         return [
             'settings' => $settings
         ];
+    }
+
+    private function collectBuyerInvoices(Order $order): array
+    {
+        $buyers = [];
+        $itemSellPriceFieldId = TableField::where('type', ConfigDefaultInterface::FIELD_TYPE_SALES_NUMBER)->first()->id;
+
+        foreach ($order->items as $item) {
+            $itemSellPrice = OrderItemData::where('order_item_id', $item->id)->where('field_id', $itemSellPriceFieldId)->first()?->value;
+
+            foreach ($item->buyers as $buyer) {
+                $buyers[$buyer->name]['price_for_items'][] = $itemSellPrice * $buyer->quantity;
+                $buyers[$buyer->name]['buyer_id'] = $buyer->id;
+
+            }
+        }
+
+        // Format results
+        $results = [];
+        foreach ($buyers as $buyer => $data) {
+            $totalPrice = 0.0;
+            $buyerId = $data['buyer_id'];
+
+            foreach ($data['price_for_items'] as $price) {
+                $totalPrice += $price;
+            }
+
+            $results[$buyer] = [
+                'total_price' => number_format($totalPrice, 2, '.', ''),
+                'buyer_id' => $buyerId,
+                'order_id' => $order->id,
+                'invoice' => $this->getInvoiceForBuyer($order->id, $buyer),
+            ];
+        }
+
+        return $results;
+    }
+
+    private function getInvoiceForBuyer(int $orderId, string $buyer): array
+    {
+        $data = [
+            'number' => null,
+            'status' => null,
+            'issue_date' => null,
+            'pay_until_date' => null,
+        ];
+
+        $invoice = Invoice::where('order_id', $orderId)->where('customer', $buyer)->first();
+
+        if ($invoice) {
+            $data = [
+                'number' => $invoice->invoice_number,
+                'status' => $invoice->status,
+                'issue_date' => $invoice->issue_date,
+                'pay_until_date' => $invoice->pay_until_date,
+                'display_class' => InvoiceService::getInvoiceDisplayColor($invoice->invoice_number),
+            ];
+        }
+
+        return $data;
     }
 }

@@ -430,6 +430,29 @@
                         <table class="table">
                             <tbody>
                             @if(array_key_exists('SĄSKAITOS FAKTŪROS', $orderData['details']))
+                                @dump($orderData['details'])
+                                @foreach($orderData['details']['PIRKĖJŲ SĄSKAITOS'] as $buyer => $data)
+                                    <tr>
+                                        <th scope="row">SF. {{ $buyer }}</th>
+                                        <td>{{ $data['invoice']['number'] }}</td>
+                                        @if ($data['invoice']['pay_until_date'])
+                                            <td>
+                                                <div class="{{ $data['invoice']['display_class']}}">
+                                                    @if($data['invoice']['status'] === 'paid')
+                                                        Apmokėta
+                                                    @else
+                                                        Apmokėti iki {{ $data['invoice']['pay_until_date'] }}
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        @else
+                                            <td></td>
+                                        @endif
+                                        <td></td>
+                                        <td><a href="{{ route('orders.edit-customer-invoice', ['orderId'=>$orderData['id'], 'customer'=>$buyer]) }}" title="Edit {{ $buyer }} invoice" class="text-primary"><i class="fa-solid fa-pen"></i></a></td>
+                                    </tr>
+                                @endforeach
+
                                 @foreach($orderData['details']['SĄSKAITOS FAKTŪROS'] as $data)
                                 @switch($data['field_type'])
                                     @case('file')

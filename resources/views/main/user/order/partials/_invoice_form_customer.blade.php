@@ -13,7 +13,6 @@
             </div>
         </div>
         <div class="card-body">
-            @dump($invoiceData)
             <form id="edit-customer-invoice-form" method="POST" action="{{ route('orders.save-customer-invoice', ['orderId'=>$orderId, 'customer'=>$customer]) }}">
                 <div class="form-group row mb-3">
                     <label class="col-sm-3 col-form-label">SF. {{ $customer }}</label>

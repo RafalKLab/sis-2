@@ -590,6 +590,12 @@ class OrderController extends MainController
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item buyer not found');
         }
 
+        // Check if buyer has invoice
+        $buyerInvoice = Invoice::where('order_id', $orderId)->where('customer', $buyer->name)->first();
+        if ($buyerInvoice) {
+            return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_ERROR, sprintf('Can not delete buyer that has invoice assigned'));
+        }
+
         // TODO Implement permissions and check invoice
         $buyer->delete();
 
@@ -640,7 +646,78 @@ class OrderController extends MainController
 
     public function saveCustomerInvoice(Request $request, int $orderId, string $customer)
     {
-        dd($request->all());
+        $customMessages = [
+            'required' => 'Šis laukas yra privalomas.',
+            'date' => 'Šis laukas nėra galiojanti data.',
+            'in' => 'Pasirinkta reikšmė šiam laukui yra netinkama.',
+            'unique' => 'Toks sąskaitos faktūros numeris jau egzistuoja. Prašome pasirinkti kitą numerį.',
+        ];
+
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        $invoiceId = $request->invoice_id;
+        $invoiceEntity = $this->getInvoiceEntity($invoiceId);
+
+        if ($invoiceId && $invoiceEntity) {
+            // Update old invoice
+            $validated = $request->validate([
+                'invoice_number' => [
+                    'required',
+                    'string',
+                    Rule::unique('invoices', 'invoice_number')->ignore($invoiceEntity->id),
+                ],
+                'invoice_issue_date' => 'date',
+                'invoice_pay_until_date' => 'date',
+                'invoice_status' => [
+                    'required',
+                    'string',
+                    'in:' . implode(',', array_keys(ConfigDefaultInterface::AVAILABLE_INVOICE_STATUS_SELECT))
+                ],
+            ], $customMessages);
+
+            $invoiceEntity->update([
+                'invoice_number' => $validated['invoice_number'],
+                'issue_date' => $validated['invoice_issue_date'],
+                'pay_until_date' => $validated['invoice_pay_until_date'],
+                'status' => $validated['invoice_status'],
+            ]);
+
+            $returnMessage = sprintf('Invoice for %s updated', $customer);
+        } else {
+            // Create new invoice
+            $validated = $request->validate([
+                'invoice_number' => 'required|string|unique:invoices,invoice_number',
+                'invoice_issue_date' => 'date',
+                'invoice_pay_until_date' => 'date',
+                'invoice_status' => [
+                    'required',
+                    'string',
+                    'in:' . implode(',', array_keys(ConfigDefaultInterface::AVAILABLE_INVOICE_STATUS_SELECT))
+                ],
+            ], $customMessages);
+
+            Invoice::create([
+                'invoice_number' => $validated['invoice_number'],
+                'issue_date' => $validated['invoice_issue_date'],
+                'pay_until_date' => $validated['invoice_pay_until_date'],
+                'status' => $validated['invoice_status'],
+                'order_id' => $orderId,
+                'customer' => $customer,
+            ]);
+
+            $returnMessage = sprintf('Invoice for %s created', $customer);
+        }
+
+        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, $returnMessage);
     }
 
     protected function extractTargetItem(array $orderData, int $itemId): array

@@ -16,5 +16,6 @@ class Invoice extends Model
         'status',
         'order_id',
         'field_id',
+        'customer',
     ];
 }

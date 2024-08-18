@@ -430,7 +430,6 @@
                         <table class="table">
                             <tbody>
                             @if(array_key_exists('SĄSKAITOS FAKTŪROS', $orderData['details']))
-                                @dump($orderData['details'])
                                 @foreach($orderData['details']['PIRKĖJŲ SĄSKAITOS'] as $buyer => $data)
                                     <tr>
                                         <th scope="row">SF. {{ $buyer }}</th>

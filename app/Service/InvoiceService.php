@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use App\Models\Order\Invoice;
+use App\Models\Order\ItemBuyer;
+use App\Models\Order\Order;
 use App\Models\Order\OrderData;
 use DateTime;
 use shared\ConfigDefaultInterface;
@@ -64,5 +66,37 @@ class InvoiceService
         }
 
         return $invoices;
+    }
+
+    public static function calculateSum(int $orderId, $customer): array
+    {
+        $sum = 0.0;
+        $details = [];
+
+        $order = Order::find($orderId);
+        foreach ($order->items as $item) {
+            $buyerEntity = ItemBuyer::where('order_item_id', $item->id)->where('name', $customer)->first();
+            if (!$buyerEntity) {
+                continue;
+            }
+            $itemPrice = $item->getSalesNumber();
+            $priceForItem = $itemPrice * $buyerEntity->quantity;
+            $sum += $priceForItem;
+
+            $details['items'][] = [
+                'item_name' => $item->getNameField(),
+                'item_price' => $itemPrice,
+                'purchased_quantity' => $buyerEntity->quantity,
+                'total_price_for_item' => number_format($priceForItem, 2, '.', ''),
+            ];
+        }
+
+        $details['total_price'] = number_format($sum, 2, '.', '');
+
+        return [
+            'calculated_sum' => number_format($sum, 2, '.', ''),
+            'details' => $details,
+        ];
+
     }
 }

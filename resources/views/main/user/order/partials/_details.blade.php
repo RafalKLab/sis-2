@@ -434,6 +434,7 @@
                                     <tr>
                                         <th scope="row">SF. {{ $buyer }}</th>
                                         <td>{{ $data['invoice']['number'] }}</td>
+                                        <td><b>Suma:</b> {{ $data['invoice']['sum'] }}</td>
                                         @if ($data['invoice']['pay_until_date'])
                                             <td>
                                                 <div class="{{ $data['invoice']['display_class']}}">
@@ -447,7 +448,6 @@
                                         @else
                                             <td></td>
                                         @endif
-                                        <td></td>
                                         <td><a href="{{ route('orders.edit-customer-invoice', ['orderId'=>$orderData['id'], 'customer'=>$buyer]) }}" title="Edit {{ $buyer }} invoice" class="text-primary"><i class="fa-solid fa-pen"></i></a></td>
                                     </tr>
                                 @endforeach

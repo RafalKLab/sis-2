@@ -51,6 +51,16 @@ class OrderItem extends Model
         return $sum;
     }
 
+    public function getSalesNumber(): string
+    {
+        $salesNumberFieldId = TableField::where('type', ConfigDefaultInterface::FIELD_TYPE_SALES_NUMBER)->first()->id;
+
+        $salesNumber = OrderItemData::where('field_id', $salesNumberFieldId)->where('order_item_id', $this->id)->first()?->value;
+        $salesNumber = number_format($salesNumber, 2, '.', '');
+
+        return $salesNumber;
+    }
+
     public function getSalesSum(): string
     {
         $purchaseSumFieldId = TableField::where('type', ConfigDefaultInterface::FIELD_TYPE_SALES_SUM)->first()->id;

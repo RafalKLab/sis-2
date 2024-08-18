@@ -11,6 +11,7 @@ use App\Models\Order\OrderData;
 use App\Models\Order\OrderItem;
 use App\Models\Order\OrderItemData;
 use App\Models\Table\TableField;
+use App\Service\InvoiceService;
 use App\Service\OrderService;
 use App\Service\TableService;
 use Illuminate\Http\Request;
@@ -620,6 +621,8 @@ class OrderController extends MainController
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
 
         $invoice = Invoice::where('order_id', $orderId)->where('customer', $customer)->first();
+        $sumCalculations = InvoiceService::calculateSum($orderId, $customer);
+
         if ($invoice) {
             $invoiceData = [
                 'is_new' => false,
@@ -628,6 +631,9 @@ class OrderController extends MainController
                 'issue_date' => $invoice->issue_date,
                 'pay_until_date' => $invoice->pay_until_date,
                 'id' => $invoice->id,
+                'calculated_sum' => $sumCalculations['calculated_sum'],
+                'calculation_details' => $sumCalculations['details'],
+                'sum' => number_format($invoice->sum, 2, '.', ''),
             ];
         } else {
             $invoiceData = [
@@ -636,6 +642,9 @@ class OrderController extends MainController
                 'status' => null,
                 'issue_date' => null,
                 'pay_until_date' => null,
+                'calculated_sum' => $sumCalculations['calculated_sum'],
+                'calculation_details' => $sumCalculations['details'],
+                'sum' => null,
             ];
         }
 
@@ -677,6 +686,7 @@ class OrderController extends MainController
                 ],
                 'invoice_issue_date' => 'date',
                 'invoice_pay_until_date' => 'date',
+                'sum' => 'required',
                 'invoice_status' => [
                     'required',
                     'string',
@@ -689,6 +699,7 @@ class OrderController extends MainController
                 'issue_date' => $validated['invoice_issue_date'],
                 'pay_until_date' => $validated['invoice_pay_until_date'],
                 'status' => $validated['invoice_status'],
+                'sum' => $validated['sum'],
             ]);
 
             $returnMessage = sprintf('Invoice for %s updated', $customer);
@@ -698,6 +709,7 @@ class OrderController extends MainController
                 'invoice_number' => 'required|string|unique:invoices,invoice_number',
                 'invoice_issue_date' => 'date',
                 'invoice_pay_until_date' => 'date',
+                'sum' => 'required',
                 'invoice_status' => [
                     'required',
                     'string',
@@ -712,6 +724,7 @@ class OrderController extends MainController
                 'status' => $validated['invoice_status'],
                 'order_id' => $orderId,
                 'customer' => $customer,
+                'sum' => $validated['sum'],
             ]);
 
             $returnMessage = sprintf('Invoice for %s created', $customer);

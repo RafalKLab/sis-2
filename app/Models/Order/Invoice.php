@@ -17,5 +17,6 @@ class Invoice extends Model
         'order_id',
         'field_id',
         'customer',
+        'sum',
     ];
 }

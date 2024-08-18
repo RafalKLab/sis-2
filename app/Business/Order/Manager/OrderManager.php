@@ -332,6 +332,7 @@ class OrderManager
             'status' => null,
             'issue_date' => null,
             'pay_until_date' => null,
+            'sum' => '0.00'
         ];
 
         $invoice = Invoice::where('order_id', $orderId)->where('customer', $buyer)->first();
@@ -343,6 +344,7 @@ class OrderManager
                 'issue_date' => $invoice->issue_date,
                 'pay_until_date' => $invoice->pay_until_date,
                 'display_class' => InvoiceService::getInvoiceDisplayColor($invoice->invoice_number),
+                'sum' => number_format($invoice->sum, 2, '.', ''),
             ];
         }
 

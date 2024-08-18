@@ -2,6 +2,56 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 @endsection
 
+<!-- Modal -->
+<div class="modal fade" id="calculationModal" tabindex="-1" aria-labelledby="calculationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="calculationModalLabel">Pirkėjo Rafal užsakymas {{ $orderData['key'] }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Your table here -->
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Prekės pavadinimas</th>
+                        <th>Kaina</th>
+                        <th>Pirktas kiekis</th>
+                        <th>Visa kaina</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($invoiceData['calculation_details']['items'] as $index => $item)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $item['item_name'] }}</td>
+                            <td>{{ $item['item_price'] }}</td>
+                            <td>{{ $item['purchased_quantity'] }}</td>
+                            <td>{{ $item['total_price_for_item'] }}</td>
+                        </tr>
+                    @endforeach
+                    <!-- More rows as needed -->
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Mokėjimo suma: {{ $invoiceData['calculation_details']['total_price'] }}</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="col-md-6">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -42,6 +92,22 @@
                             </div>
                         @endif
 
+                        <label for="sum" class="col-sm-3 col-form-label">Mokėjimo suma
+                        @if($invoiceData['calculated_sum'] !== $invoiceData['sum'])
+                            <span class="text-warning"><i title="Suma nėra lygi sumai, kuri buvo apskaičiuota automatiškai" class="fa-solid fa-triangle-exclamation"></i></span>
+                        @endif
+                        </label>
+                        <input required name="sum" type="number" class="form-control {{ $errors->has('sum') ? 'is-invalid' : '' }}" id="sum" value="{{ $invoiceData['sum'] }}">
+                        @if ($errors->has('sum'))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('sum') }}
+                            </div>
+                        @endif
+                        <div class="feedback">
+                            <i><small>Automatiškai apskaičiuota suma: <b>{{ $invoiceData['calculated_sum'] }}</b></small></i>
+                            <i style="cursor: pointer;" onclick="showCalculationModal()" title="Rodyti skaičiavimus" class="fa-solid fa-window-restore"></i>
+                        </div>
+
                         <label for="invoice_status" class="col-sm-3 col-form-label">Būsena</label>
                         <select class="form-control {{ $errors->has('invoice_status') ? 'is-invalid' : '' }}" id="invoice_status" name="invoice_status">
                             @foreach($invoiceStatusSelect as $key => $option)
@@ -63,6 +129,12 @@
         function submitForm() {
             // Ensure the ID here matches your form's ID
             document.getElementById('edit-customer-invoice-form').submit();
+        }
+    </script>
+    <script>
+        function showCalculationModal() {
+            var myModal = new bootstrap.Modal(document.getElementById('calculationModal'), {});
+            myModal.show();
         }
     </script>
 @endsection

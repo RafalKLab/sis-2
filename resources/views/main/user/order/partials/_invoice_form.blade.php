@@ -21,6 +21,25 @@
     </div>
 @endif
 
+<label for="sum" class="col-sm-3 col-form-label">Mokėjimo suma
+    @if($data['additional_data']['auto_calculated_sum']['exists'] && $data['additional_data']['auto_calculated_sum']['amount'] !== $data['additional_data']['sum'])
+        <span class="text-warning"><i title="Suma nėra lygi susieto lauko sumai" class="fa-solid fa-triangle-exclamation"></i></span>
+    @endif
+</label>
+<input required name="sum" type="number" class="form-control {{ $errors->has('sum') ? 'is-invalid' : '' }}" id="sum" value="{{ $data['additional_data']['sum'] }}">
+@if ($errors->has('sum'))
+    <div class="invalid-feedback">
+        {{ $errors->first('sum') }}
+    </div>
+@endif
+<div class="feedback">
+    @if($data['additional_data']['auto_calculated_sum']['exists'])
+        <i><small>Susietas sumos laukas -> {{$data['additional_data']['auto_calculated_sum']['represented_field']}}: {{$data['additional_data']['auto_calculated_sum']['amount']}} </small></i>
+    @else
+        <i><small>Sąskaita faktūra neturi susieto sumos lauko </small></i>
+    @endif
+
+</div>
 <label for="invoice_status" class="col-sm-3 col-form-label">Būsena</label>
 <select class="form-control {{ $errors->has('invoice_status') ? 'is-invalid' : '' }}" id="invoice_status" name="invoice_status">
     @foreach($data['input_select'] as $key => $option)

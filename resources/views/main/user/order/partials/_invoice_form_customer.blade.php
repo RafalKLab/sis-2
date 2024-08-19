@@ -105,7 +105,7 @@
                         @endif
                         <div class="feedback">
                             <i><small>Automatiškai apskaičiuota suma: <b>{{ $invoiceData['calculated_sum'] }}</b></small></i>
-                            <i style="cursor: pointer;" onclick="showCalculationModal()" title="Rodyti skaičiavimus" class="fa-solid fa-window-restore"></i>
+                            <i style="cursor: pointer;" onclick="showCalculationModal()" title="Rodyti skaičiavimus" class="fa-solid fa-up-right-from-square"></i>
                         </div>
 
                         <label for="invoice_status" class="col-sm-3 col-form-label">Būsena</label>

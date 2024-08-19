@@ -800,6 +800,7 @@ class OrderController extends MainController
         $payUntilDate = 'invoice_pay_until_date';
         $status = 'invoice_status';
         $id = 'invoice_id';
+        $sum = 'sum';
 
         $customMessages = [
             'required' => 'Šis laukas yra privalomas.',
@@ -819,6 +820,7 @@ class OrderController extends MainController
                 ],
                 $issueDate => 'date',
                 $payUntilDate => 'date',
+                $sum => 'required',
                 $status => [
                     'required',
                     'string',
@@ -831,12 +833,14 @@ class OrderController extends MainController
                 'issue_date' => $validated[$issueDate],
                 'pay_until_date' => $validated[$payUntilDate],
                 'status' => $validated[$status],
+                'sum' => $validated[$sum],
             ]);
         } else {
             $validated = $request->validate([
                 $invoiceNumber => 'required|string|unique:invoices,invoice_number',
                 $issueDate => 'date',
                 $payUntilDate => 'date',
+                $sum => 'required',
                 $status => [
                     'required',
                     'string',
@@ -849,6 +853,7 @@ class OrderController extends MainController
                 'issue_date' => $validated[$issueDate],
                 'pay_until_date' => $validated[$payUntilDate],
                 'status' => $validated[$status],
+                'sum' => $validated[$sum],
                 'order_id' => $orderId,
                 'field_id' => $fieldId,
             ]);

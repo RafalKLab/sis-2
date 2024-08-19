@@ -433,7 +433,7 @@
                                 @foreach($orderData['details']['PIRKĖJŲ SĄSKAITOS'] as $buyer => $data)
                                     <tr>
                                         <th scope="row">SF. {{ $buyer }}</th>
-                                        <td>{{ $data['invoice']['number'] }}</td>
+                                        <td>@if($data['invoice']['number']) <b>Nr: </b> @endif {{ $data['invoice']['number'] }}</td>
                                         <td><b>Suma:</b> {{ $data['invoice']['sum'] }}</td>
                                         @if ($data['invoice']['pay_until_date'])
                                             <td>
@@ -528,7 +528,8 @@
                                     @case('invoice')
                                         <tr>
                                             <th scope="row">{{ $data['field_name'] }}</th>
-                                            <td>{{ $data['value'] }} </td>
+                                            <td>@if($data['value']) <b>Nr: </b> @endif{{ $data['value'] }} </td>
+                                            <td><b>Suma:</b> {{ $data['additional_data']['sum'] }}</td>
                                             @if ($data['additional_data']['pay_until_date'])
                                                 <td>
                                                     <div class="{{ $data['additional_data']['display_class']}}">
@@ -542,7 +543,6 @@
                                             @else
                                                 <td></td>
                                             @endif
-                                            <td></td>
                                             <td><a href="{{ route('orders.edit-field', ['orderId'=>$orderData['id'], 'fieldId'=>$data['field_id']]) }}" title="Edit {{ $data['field_name'] }}" class="text-primary"><i class="fa-solid fa-pen"></i></a></td>
                                         </tr>
                                         @break

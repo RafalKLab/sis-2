@@ -64,4 +64,9 @@ class OrderService
 
         return sprintf('%s-%s', $parentKeyFieldValue, $childrenCount);
     }
+
+    public static function getOrderDataFor(int $fieldId, int $orderId): ?OrderData
+    {
+        return OrderData::where('field_id', $fieldId)->where('order_id', $orderId)->first();
+    }
 }

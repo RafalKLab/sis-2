@@ -88,6 +88,26 @@ interface ConfigDefaultInterface
 
     public const FIELD_IDENTIFIER_SALES_INVOICE = 'sales_invoice';
     public const FIELD_IDENTIFIER_ORDER_DATE = 'order_date';
+    public const FIELD_IDENTIFIER_INVOICE_TRANSPORT_1 = 'invoice_trans_1';
+    public const FIELD_IDENTIFIER_INVOICE_TRANSPORT_2 = 'invoice_trans_2';
+    public const FIELD_IDENTIFIER_INVOICE_OTHER_COSTS = 'invoice_other_costs';
+    public const FIELD_IDENTIFIER_INVOICE_DEFECT = 'invoice_defect';
+    public const FIELD_IDENTIFIER_INVOICE_CUSTOMS = 'invoice_customs';
+    public const FIELD_IDENTIFIER_INVOICE_WAREHOUSE = 'invoice_warehouse';
+    public const FIELD_IDENTIFIER_INVOICE_AGENT = 'invoice_agent';
+    public const FIELD_IDENTIFIER_INVOICE_FACTORING = 'invoice_factoring';
+
+    public const INVOICE_AND_REPRESENTED_SUM_MAP = [
+        self::FIELD_IDENTIFIER_SALES_INVOICE => self::FIELD_TYPE_TOTAL_SALES_SUM,
+        self::FIELD_IDENTIFIER_INVOICE_TRANSPORT_1 => self::FIELD_TYPE_TRANSPORT_PRICE_1,
+        self::FIELD_IDENTIFIER_INVOICE_TRANSPORT_2 => self::FIELD_TYPE_TRANSPORT_PRICE_2,
+        self::FIELD_IDENTIFIER_INVOICE_OTHER_COSTS => self::FIELD_TYPE_OTHER_COSTS,
+        self::FIELD_IDENTIFIER_INVOICE_DEFECT => self::FIELD_TYPE_FLAW,
+//        self::FIELD_IDENTIFIER_INVOICE_CUSTOMS => '',
+        self::FIELD_IDENTIFIER_INVOICE_WAREHOUSE => self::FIELD_TYPE_WAREHOUSES,
+        self::FIELD_IDENTIFIER_INVOICE_AGENT => self::FIELD_TYPE_AGENT,
+        self::FIELD_IDENTIFIER_INVOICE_FACTORING => self::FIELD_TYPE_FACTORING,
+    ];
 
     public const INVOICE_STATUS_AWAITING = 'awaiting_payment';
     public const INVOICE_STATUS_PAID = 'paid';

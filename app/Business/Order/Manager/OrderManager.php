@@ -48,7 +48,7 @@ class OrderManager
                     'updated_by' => $orderDataEntity->lastUpdatedBy?->name,
                     'updated_at' => $orderDataEntity->updated_at,
                     'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, TableConfig::MAIN_TABLE_NAME),
-                    'additional_data' => $this->getFieldAdditionalData($field, $orderDataEntity),
+                    'additional_data' => $this->getFieldAdditionalData($field, $order->id, $orderDataEntity),
                 ];
             } else {
                 $orderData['details'][] = [
@@ -61,7 +61,7 @@ class OrderManager
                     'updated_by' => null,
                     'updated_at' => null,
                     'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, TableConfig::MAIN_TABLE_NAME),
-                    'additional_data' => $this->getFieldAdditionalData($field),
+                    'additional_data' => $this->getFieldAdditionalData($field, $order->id),
                 ];
             }
         }
@@ -98,7 +98,7 @@ class OrderManager
                     'updated_by' => $orderDataEntity->lastUpdatedBy?->name,
                     'updated_at' => $orderDataEntity->updated_at,
                     'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, TableConfig::MAIN_TABLE_NAME),
-                    'additional_data' => $this->getFieldAdditionalData($field, $orderDataEntity),
+                    'additional_data' => $this->getFieldAdditionalData($field, $order->id, $orderDataEntity),
                 ];
             } else {
                 $orderData['details'][$field->group][] = [
@@ -111,7 +111,7 @@ class OrderManager
                     'updated_by' => null,
                     'updated_at' => null,
                     'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, TableConfig::MAIN_TABLE_NAME),
-                    'additional_data' => $this->getFieldAdditionalData($field),
+                    'additional_data' => $this->getFieldAdditionalData($field, $order->id),
                 ];
             }
         }
@@ -229,30 +229,33 @@ class OrderManager
         return $data;
     }
 
-    protected function getFieldAdditionalData(TableField $field, ?OrderData $orderDataEntity = null): array
+    protected function getFieldAdditionalData(TableField $field, int $orderId, ?OrderData $orderDataEntity = null): array
     {
         return match ($field->type) {
-            ConfigDefaultInterface::FIELD_TYPE_INVOICE => $this->getInvoiceData($orderDataEntity?->value),
+            ConfigDefaultInterface::FIELD_TYPE_INVOICE => $this->getInvoiceData($orderDataEntity?->value, $field, $orderId),
             ConfigDefaultInterface::FIELD_TYPE_DUTY_7, ConfigDefaultInterface::FIELD_TYPE_DUTY_15 => $this->getAdditionalDutyData($field, $orderDataEntity),
             default => [],
         };
     }
 
-    protected function getInvoiceData(?string $invoiceNumber): array
+    protected function getInvoiceData(?string $invoiceNumber, TableField $field, int $orderId): array
     {
         // Retrieve the invoice by invoice number or return null if not found.
         $invoice = Invoice::where('invoice_number', $invoiceNumber)->first();
 
         // Use ternary operator to assign data or default values.
-        $data = $invoice ? $invoice->only(['id', 'invoice_number', 'issue_date', 'pay_until_date', 'status']) : [
+        $data = $invoice ? $invoice->only(['id', 'invoice_number', 'issue_date', 'pay_until_date', 'status', 'sum']) : [
             'invoice_number' => null,
             'issue_date' => null,
             'pay_until_date' => null,
             'status' => null,
             'id' => null,
+            'sum'=> null,
         ];
 
+        $data['sum'] = number_format($data['sum'], 2, '.', '');
         $data['display_class'] = InvoiceService::getInvoiceDisplayColor($data['invoice_number']);
+        $data['auto_calculated_sum'] = TableService::getSumRepresentationForInvoiceField($field, $orderId);
 
         return $data;
     }

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
+    @yield('meta')
     <title>@yield('title')</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet" />
@@ -67,6 +68,13 @@
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-user-tie"></i></div>
                         Customers
                     </a>
+                    @endcan
+
+                    @can('Manage invoice table')
+                        <a class="nav-link" href="{{ route('invoices.index') }}">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-file-invoice"></i></div>
+                            Invoices
+                        </a>
                     @endcan
 
                     <a class="disabled nav-link" href="">
@@ -155,8 +163,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="{{ asset('js/scripts.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-<script src="{{ asset('assets/demo/chart-area-demo.js') }}"></script>
-<script src="{{ asset('assets/demo/chart-bar-demo.js') }}"></script>
+{{--<script src="{{ asset('assets/demo/chart-area-demo.js') }}"></script>--}}
+{{--<script src="{{ asset('assets/demo/chart-bar-demo.js') }}"></script>--}}
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
 <script src="{{ asset('js/datatables-simple-demo.js') }}"></script>
 @yield('script')

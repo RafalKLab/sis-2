@@ -20,6 +20,7 @@ interface ConfigDefaultInterface
     public const PERMISSION_REMOVE_ITEM_BUYER = 'Remove item buyer';
     public const PERMISSION_ACCESS_CUSTOMER_TABLE = 'Access customer table';
     public const PERMISSION_DELETE_CUSTOMER_NOTES = 'Delete customer notes';
+    public const PERMISSION_MANAGE_INVOICE_TABLE = 'Manage invoice table';
 
     public const AVAILABLE_ROLES = [
         self::ROLE_USER,
@@ -39,6 +40,7 @@ interface ConfigDefaultInterface
         self::PERMISSION_REMOVE_ITEM_BUYER,
         self::PERMISSION_ACCESS_CUSTOMER_TABLE,
         self::PERMISSION_DELETE_CUSTOMER_NOTES,
+        self::PERMISSION_MANAGE_INVOICE_TABLE,
     ];
 
     /* Filesystem */
@@ -85,7 +87,6 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_FACTORING = 'factoring';
     public const FIELD_TYPE_PROFIT = 'profit';
     public const FIELD_TYPE_INVOICE = 'invoice';
-
     public const FIELD_IDENTIFIER_SALES_INVOICE = 'sales_invoice';
     public const FIELD_IDENTIFIER_ORDER_DATE = 'order_date';
     public const FIELD_IDENTIFIER_INVOICE_TRANSPORT_1 = 'invoice_trans_1';

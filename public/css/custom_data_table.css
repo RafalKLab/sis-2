@@ -1,0 +1,15 @@
+th, td {
+    border: 1px solid #DEE2E6;
+}
+tbody tr:hover {
+    background-color: #DEE2E6;
+}
+
+.sort-button {
+    color: #CCCCCC;
+    cursor: pointer;
+}
+
+.sort-link {
+    color: inherit;
+}

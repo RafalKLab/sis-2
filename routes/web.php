@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\FieldSettings\FieldSettingsController;
 use App\Http\Controllers\File\FileController;
+use App\Http\Controllers\Invoice\InvoiceController;
 use App\Http\Controllers\Note\NoteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Order\OrderController;
@@ -29,6 +30,9 @@ Route::middleware('auth')->group(function () {
 
     /* Customer table */
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+
+    /* Invoice table */
+    Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
 
     /* Notes */
     Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');

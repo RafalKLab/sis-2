@@ -51,25 +51,30 @@
                         @endif
                     </div>
                     <div class="card-body">
-                        <table class="table">
+                        <table class="table text-center">
                             <thead>
                             <tr>
-                                <th scope="col">Has permissions</th>
+                                <th scope="col">Assigned permissions</th>
                                 <th scope="col">Available permissions</th>
                             </tr>
                             </thead>
                             <tbody>
+                            @foreach($groupedPermissions as $group => $permissions)
+                                <tr>
+                                    <td style="background-color: #F7F7F7" colspan="4" class="text-center font-weight-bold"><i>{{ $group }}</i></td>
+                                </tr>
                                 @foreach($permissions as $permission)
                                     <tr>
-                                    @if($user->hasPermissionTo($permission->name))
-                                        <td>{{ $permission->name }} <a title="Remove permission" href="{{ route('user.remove-permission', ['userId' => $user->id, 'permission' => $permission->name]) }}" class="text-danger"><i class="fa-solid fa-minus"></i></a></td>
-                                        <td></td>
-                                    @else
-                                        <td></td>
-                                        <td>{{ $permission->name }} <a title="Give permission" href="{{ route('user.give-permission', ['userId' => $user->id, 'permission' => $permission->name]) }}" class="text-primary"><i class="fa-solid fa-plus"></i></a></td>
-                                    @endif
+                                        @if($user->hasPermissionTo($permission->name))
+                                            <td>{{ $permission->name }} <a title="Remove permission" href="{{ route('user.remove-permission', ['userId' => $user->id, 'permission' => $permission->name]) }}" class="text-danger"><i class="fa-solid fa-minus"></i></a></td>
+                                            <td></td>
+                                        @else
+                                            <td></td>
+                                            <td>{{ $permission->name }} <a title="Give permission" href="{{ route('user.give-permission', ['userId' => $user->id, 'permission' => $permission->name]) }}" class="text-primary"><i class="fa-solid fa-plus"></i></a></td>
+                                        @endif
                                     </tr>
                                 @endforeach
+                            @endforeach
                             </tbody>
                         </table>
                     </div>

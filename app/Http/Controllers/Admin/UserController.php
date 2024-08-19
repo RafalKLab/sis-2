@@ -73,9 +73,18 @@ class UserController extends MainController
             return redirect()->route('user.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Admin root can not be edited');
         }
 
-        $permissions = Permission::all();
+        // Get all permissions as a collection
+        $allPermissions = Permission::all()->keyBy('name');
+        // Use mapWithKeys to iterate over the permission groups and organize permissions
+        $groupedPermissions = collect(ConfigDefaultInterface::PERMISSION_GROUPS)->mapWithKeys(function ($permissions, $groupName) use ($allPermissions) {
+            // Filter the permissions that exist in the current group
+            $groupPermissions = $allPermissions->whereIn('name', $permissions)->values();
 
-        return view('main.admin.user.edit', compact('user', 'permissions'));
+            // Return the group name with its permissions if not empty
+            return $groupPermissions->isNotEmpty() ? [$groupName => $groupPermissions] : [];
+        });
+
+        return view('main.admin.user.edit', compact('user', 'groupedPermissions'));
     }
 
     public function update(Request $request, int $userId)

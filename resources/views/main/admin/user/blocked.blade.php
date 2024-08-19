@@ -31,7 +31,7 @@
                                 <th>
                                     <div class="btn-group" style="display: flex; justify-content: space-between; width: 100%;">
                                         <a href="{{ route('user-blocked.unblock', ['id'=>$user->id]) }}" title="Unblock" class="btn btn-outline-success"><i class="fa-solid fa-lock-open"></i></a>
-                                        <a href="" title="Delete" class="disabled btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></a>
+{{--                                        <a href="" title="Delete" class="disabled btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></a>--}}
                                     </div>
                                 </th>
                             </tr>

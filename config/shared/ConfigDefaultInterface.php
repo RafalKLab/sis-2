@@ -43,6 +43,32 @@ interface ConfigDefaultInterface
         self::PERMISSION_MANAGE_INVOICE_TABLE,
     ];
 
+    public const PERMISSION_GROUPS = [
+        'Order related permissions' => [
+            self::PERMISSION_REGISTER_ORDER,
+            self::PERMISSION_SEE_ALL_ORDERS,
+        ],
+        'Order product related permissions' => [
+            self::PERMISSION_SEE_ORDER_PRODUCTS,
+            self::PERMISSION_ADD_ORDER_PRODUCTS,
+            self::PERMISSION_EDIT_ORDER_PRODUCTS,
+            self::PERMISSION_REMOVE_ORDER_PRODUCTS,
+            self::PERMISSION_REMOVE_ITEM_BUYER,
+        ],
+        'Document related permissions' => [
+            self::PERMISSION_UPLOAD_FILE,
+            self::PERMISSION_SEE_UPLOADED_FILES,
+            self::PERMISSION_DELETE_UPLOADED_FILES,
+        ],
+        'Customer table related permissions' => [
+            self::PERMISSION_ACCESS_CUSTOMER_TABLE,
+            self::PERMISSION_DELETE_CUSTOMER_NOTES,
+        ],
+        'Invoice table related permissions' => [
+            self::PERMISSION_MANAGE_INVOICE_TABLE,
+        ],
+    ];
+
     /* Filesystem */
     public const FILE_SYSTEM_PRIVATE = 'private';
 

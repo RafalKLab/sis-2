@@ -14,6 +14,7 @@ use App\Business\Table\Config\TableConfig;
 use App\Business\Table\Manager\TableManager;
 use App\Business\Table\Reader\AdminTableReader;
 use App\Business\Table\Reader\UserTableReader;
+use App\Business\Warehouse\Manager\WarehouseManager;
 
 class BusinessFactory
 {
@@ -77,6 +78,12 @@ class BusinessFactory
     {
         return new StatisticsManager();
     }
+
+    public function createWarehouseManager(): WarehouseManager
+    {
+        return new WarehouseManager();
+    }
+
     private function createTableConfig(): TableConfig
     {
         return new TableConfig();

@@ -23,34 +23,19 @@ class ItemsTableConfig implements TableConfigInterface
                 'name' => 'Pardavėjas',
                 'type' => 'dynamic select',
                 'group' => 'PREKĖS IR LOGISTIKA',
+                'identifier' => 'item_seller',
             ],
-//            [
-//                'name' => 'Pirkėjas 1',
-//                'type' => 'dynamic select',
-//                'group' => 'PREKĖS IR LOGISTIKA',
-//                'identifier' => 'customer',
-//            ],
-//            [
-//                'name' => 'Pirkėjas 2',
-//                'type' => 'dynamic select',
-//                'group' => 'PREKĖS IR LOGISTIKA',
-//                'identifier' => 'customer',
-//            ],
-//            [
-//                'name' => 'Pirkėjas 3',
-//                'type' => 'dynamic select',
-//                'group' => 'PREKĖS IR LOGISTIKA',
-//                'identifier' => 'customer',
-//            ],
             [
                 'name' => 'Prekės pavadinimas',
                 'type' => 'dynamic select',
                 'group' => 'PREKĖS IR LOGISTIKA',
+                'identifier' => 'item_name',
             ],
             [
                 'name' => 'Išmatavimai',
                 'type' => 'dynamic select',
                 'group' => 'PREKĖS IR LOGISTIKA',
+                'identifier' => 'item_measurements',
             ],
             [
                 'name' => 'Kokybė',

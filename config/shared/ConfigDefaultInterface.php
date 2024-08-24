@@ -115,6 +115,10 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_FACTORING = 'factoring';
     public const FIELD_TYPE_PROFIT = 'profit';
     public const FIELD_TYPE_INVOICE = 'invoice';
+
+    public const FIELD_IDENTIFIER_ITEM_NAME = 'item_name';
+    public const FIELD_IDENTIFIER_ITEM_SELLER = 'item_seller';
+    public const FIELD_IDENTIFIER_ITEM_MEASUREMENTS = 'item_measurements';
     public const FIELD_IDENTIFIER_SALES_INVOICE = 'sales_invoice';
     public const FIELD_IDENTIFIER_ORDER_DATE = 'order_date';
     public const FIELD_IDENTIFIER_INVOICE_TRANSPORT_1 = 'invoice_trans_1';
@@ -188,8 +192,8 @@ interface ConfigDefaultInterface
     ];
 
     public const ORDER_MEASUREMENT_MAP = [
-        'm3',
-        'm2',
+        'm³',
+        'm²',
         'm',
         'kg',
     ];

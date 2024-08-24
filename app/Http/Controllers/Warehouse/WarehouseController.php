@@ -14,14 +14,21 @@ class WarehouseController extends MainController
     {
         $warehouses = Warehouse::all();
 
-        return view('main.user.warehouse.index', compact('warehouses'));
+        $productsInStock = $this->factory()->createWarehouseManager()->collectWarehouseInStockItemCount();
+
+        return view('main.user.warehouse.index', compact('warehouses', 'productsInStock'));
     }
 
     public function view(string $name)
     {
         $warehouse = Warehouse::where('name', $name)->first();
+        if (!$warehouse) {
+            return redirect()->route('warehouses.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Warehouse not found!');
+        }
 
-        return view('main.user.warehouse.view', compact('warehouse'));
+        $items = $this->factory()->createWarehouseManager()->collectWarehouseItems($warehouse);
+
+        return view('main.user.warehouse.view', compact('warehouse', 'items'));
     }
 
     public function create(Request $request)

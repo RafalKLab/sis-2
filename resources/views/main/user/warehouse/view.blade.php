@@ -19,6 +19,38 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="datatablesSimple">
+                                <thead>
+                                <tr>
+                                    <th scope="col">pavadinimas</th>
+                                    <th scope="col">išmatavimai</th>
+                                    <th scope="col">klijai</th>
+                                    <th scope="col">kiekis</th>
+                                    <th scope="col">pirkimo kaina</th>
+                                    <th scope="col">bendra vertė</th>
+                                    <th scope="col">užsakymas</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($items['items'] as $item)
+                                    <tr>
+                                        <td>{{ $item['name'] }}</td>
+                                        <td>{{ $item['measurement'] }}</td>
+                                        <td>{{ $item['glue'] }}</td>
+                                        <td>{{ $item['amount'] }} {{ $item['measurement_unit'] }}</td>
+                                        <td>{{ $item['price'] }}</td>
+                                        <td>{{ $item['total_price'] }}</td>
+                                        <td>
+                                            <a class="custom-link" href="{{ route('orders.view', ['id'=>$item['order']['id']]) }}">
+                                                {{ $item['order']['key'] }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -42,20 +74,20 @@
                             <div class="col-md-6">
                                 <div class="card product-worth">
                                     <div class="amount-block">
-                                        <span id="totalProducts" data-target="0">0</span>
+                                        <span id="totalProducts" data-target="{{ $items['total_quantity'] }}">0</span>
                                     </div>
                                     <div class="label-block">
-                                        Total products
+                                        Prekių kiekis
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="card product-worth">
                                     <div class="amount-block">
-                                        €<span id="netWorth" data-target="0.00">0.00</span>
+                                        €<span id="netWorth" data-target="{{ $items['total_worth'] }}">0.00</span>
                                     </div>
                                     <div class="label-block">
-                                        Net worth
+                                        Bendra vertė
                                     </div>
                                 </div>
                             </div>

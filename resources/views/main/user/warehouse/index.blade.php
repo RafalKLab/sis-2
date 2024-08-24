@@ -23,6 +23,7 @@
                                 <th scope="col">id</th>
                                 <th scope="col">name</th>
                                 <th scope="col">address</th>
+                                <th scope="col">products in stock</th>
                                 <th scope="col">status</th>
                             </tr>
                             </thead>
@@ -32,6 +33,7 @@
                                     <th scope="row">{{ $warehouse->id }}</th>
                                     <td>{{ $warehouse->name }}</td>
                                     <td>{{ $warehouse->address }}</td>
+                                    <td>{{ $productsInStock[$warehouse->id] }}</td>
                                     <td>
                                         @if($warehouse->is_active)
                                             <a class="btn btn-outline-success status-button" href="#">Active</a>

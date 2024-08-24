@@ -10,6 +10,7 @@ use App\Models\Order\OrderData;
 use App\Models\Order\OrderItem;
 use App\Models\Order\OrderItemData;
 use App\Models\Table\TableField;
+use App\Models\Warehouse\Warehouse;
 use App\Service\InvoiceService;
 use App\Service\OrderItemService;
 use App\Service\TableService;
@@ -154,6 +155,7 @@ class OrderManager
             ConfigDefaultInterface::FIELD_TYPE_SELECT_TRANSPORT => ConfigDefaultInterface::ORDER_TRANSPORT_MAP,
             ConfigDefaultInterface::FIELD_TYPE_DYNAMIC_SELECT => $this->getDynamicSelectOptionsByField($fieldId, $tableScope),
             ConfigDefaultInterface::FIELD_TYPE_INVOICE => ConfigDefaultInterface::AVAILABLE_INVOICE_STATUS_SELECT,
+            ConfigDefaultInterface::FIELD_TYPE_SELECT_WAREHOUSE => $this->getSelectWarehouseOptions(),
             default => [],
         };
 
@@ -349,6 +351,16 @@ class OrderManager
                 'display_class' => InvoiceService::getInvoiceDisplayColor($invoice->invoice_number),
                 'sum' => number_format($invoice->sum, 2, '.', ''),
             ];
+        }
+
+        return $data;
+    }
+
+    private function getSelectWarehouseOptions(): array
+    {
+        $data = [];
+        foreach (Warehouse::orderBy('is_active','desc')->get() as $warehouse) {
+            $data[$warehouse->id] = $warehouse->is_active ? $warehouse->name : sprintf('%s (Neveikiantis)', $warehouse->name);
         }
 
         return $data;

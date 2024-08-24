@@ -244,6 +244,24 @@
                                                                     </tr>
                                                                     @break
 
+                                                                    @case('select warehouse')
+                                                                        <tr>
+                                                                            <th scope="row">{{ $data['field_name'] }}</th>
+                                                                            <td>
+                                                                                @if($data['value'] && array_key_exists($data['value'],$data['input_select']))
+                                                                                    {{ $data['input_select'][$data['value']] }}
+                                                                                @endif
+                                                                            </td>
+                                                                            @if($data['updated_by'])
+                                                                                <td><i>Atnaujino:</i> {{ $data['updated_by'] }}</td>
+                                                                                <td>{{ $data['updated_at'] }}</td>
+                                                                            @else
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                            @endif
+                                                                        </tr>
+                                                                        @break
+
                                                                 @default
                                                                     <tr>
                                                                         <th scope="row">{{ $data['field_name'] }}</th>

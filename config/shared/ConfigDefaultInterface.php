@@ -105,6 +105,8 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_PRIME_COST = 'prime cost';
     public const FIELD_TYPE_BROKER = 'broker';
     public const FIELD_TYPE_WAREHOUSES = 'warehouses';
+    public const FIELD_TYPE_SELECT_WAREHOUSE = 'select warehouse';
+    public const FIELD_TYPE_AMOUNT_TO_WAREHOUSE = 'amount to warehouse';
     public const FIELD_TYPE_BANK = 'bank';
     public const FIELD_TYPE_OTHER_COSTS = 'other costs';
     public const FIELD_TYPE_ITEM_OTHER_COSTS = 'item other costs';

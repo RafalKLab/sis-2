@@ -343,6 +343,42 @@ class OrderDataCalculator
         }
     }
 
+    public function calculateQuantityGoingToWarehouse(OrderItem $orderItem): void
+    {
+        if (!$orderItem->exists) {
+            return;
+        }
+
+        // Check if warehouse is assigned
+        $warehouseIsAssigned = (bool) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_SELECT_WAREHOUSE)?->value;
+
+        $availableQuantity = (int) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_AMOUNT)?->value;
+        $totalSalesQuantity = (int) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_AMOUNT)?->value;
+        $value = $availableQuantity - $totalSalesQuantity;
+
+        if ($value < 0) {
+            $value = sprintf('%s (Nepakankamas pirkimo kiekis)', $value);
+        }
+
+        if (!$warehouseIsAssigned) {
+            $value = sprintf('%s (Sandėlis nepriskirtas)', $value);
+        }
+
+        $quantityGoingToWarehouse = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE);
+        if ($quantityGoingToWarehouse) {
+            $quantityGoingToWarehouse->update([
+                'value' => $value,
+            ]);
+        } else {
+            $data = [
+                'value' => $value,
+                'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)->id,
+            ];
+
+            $orderItem->data()->create($data);
+        }
+    }
+
     protected function getOrderFieldData(Order $order, string $targetField): ?OrderData
     {
         $targetFieldId = TableField::where('type', $targetField)->first()?->id;

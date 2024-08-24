@@ -775,6 +775,7 @@ class OrderController extends MainController
         $calculator->calculateTotalSalesAmount($orderItem);
         $calculator->calculatePurchaseSumForItem($orderItem);
         $calculator->calculateSalesSumForItem($orderItem);
+        $calculator->calculateQuantityGoingToWarehouse($orderItem);
 
         $this->executeOrderCalculations($orderItem->order);
     }

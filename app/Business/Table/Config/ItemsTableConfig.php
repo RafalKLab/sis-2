@@ -109,7 +109,12 @@ class ItemsTableConfig implements TableConfigInterface
             ],
             [
                 'name' => 'Sandėlis',
-                'type' => 'dynamic select',
+                'type' => 'select warehouse',
+                'group' => 'PREKĖS IR LOGISTIKA',
+            ],
+            [
+                'name' => 'Kiekis keliaujantis į sandėlį',
+                'type' => 'amount to warehouse',
                 'group' => 'PREKĖS IR LOGISTIKA',
             ],
             [

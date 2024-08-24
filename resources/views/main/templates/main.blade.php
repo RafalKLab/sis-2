@@ -77,6 +77,13 @@
                         </a>
                     @endcan
 
+{{--                    @can('Manage invoice table')--}}
+                        <a class="nav-link" href="{{ route('warehouses.index') }}">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-warehouse"></i></div>
+                            Warehouses
+                        </a>
+{{--                    @endcan--}}
+
                     <a class="disabled nav-link" href="">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-industry"></i></div>
                         Suppliers (in progress)

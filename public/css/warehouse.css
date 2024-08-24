@@ -1,0 +1,22 @@
+table.table tr[data-url] {
+    cursor: pointer;
+}
+
+table.table tr[data-url]:hover {
+    background-color: #F7F7F7;
+}
+
+.status-button {
+    width: 100px;
+    text-align: center;
+}
+
+.product-worth {
+    text-align: center;
+    color: #3672F7;
+    border: 1px solid #3672F7;
+}
+
+.product-worth .amount-block {
+    font-size: 36px;
+}

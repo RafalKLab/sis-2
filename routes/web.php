@@ -14,6 +14,7 @@ use App\Http\Controllers\Note\NoteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Statistics\StatisticsController;
+use App\Http\Controllers\Warehouse\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
@@ -64,6 +65,12 @@ Route::middleware('auth')->group(function () {
     /* Customer invoices */
     Route::get('/orders/edit/{orderId}/customer-invoice/{customer}', [OrderController::class, 'editCustomerInvoice'])->name('orders.edit-customer-invoice');
     Route::post('/orders/edit/{orderId}/customer-invoice/{customer}', [OrderController::class, 'saveCustomerInvoice'])->name('orders.save-customer-invoice');
+
+    /* Warehouse */
+    Route::get('/warehouses', [WarehouseController::class, 'index'])->name('warehouses.index');
+    Route::get('/warehouses/{name}', [WarehouseController::class, 'view'])->name('warehouses.view');
+    Route::put('/warehouses/{name}', [WarehouseController::class, 'update'])->name('warehouses.update');
+    Route::post('/warehouses', [WarehouseController::class, 'create'])->name('warehouses.create');
 
     /* Api route for order select creation */
     Route::get('/api/orders', [OrderController::class, 'orders'])->name('api.orders');

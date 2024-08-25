@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Warehouse;
 use App\Http\Controllers\MainController;
 use App\Models\Warehouse\Warehouse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use shared\ConfigDefaultInterface;
 
@@ -12,6 +13,10 @@ class WarehouseController extends MainController
 {
     public function index()
     {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_MANAGE_WAREHOUSES)) {
+            return redirect()->route('dashboard')->with(ConfigDefaultInterface::FLASH_ERROR, ConfigDefaultInterface::ERROR_MISSING_PERMISSION);
+        }
+
         $warehouses = Warehouse::all();
 
         $productsInStock = $this->factory()->createWarehouseManager()->collectWarehouseInStockItemCount();
@@ -21,6 +26,10 @@ class WarehouseController extends MainController
 
     public function view(string $name)
     {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_MANAGE_WAREHOUSES)) {
+            return redirect()->route('dashboard')->with(ConfigDefaultInterface::FLASH_ERROR, ConfigDefaultInterface::ERROR_MISSING_PERMISSION);
+        }
+
         $warehouse = Warehouse::where('name', $name)->first();
         if (!$warehouse) {
             return redirect()->route('warehouses.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Warehouse not found!');
@@ -33,6 +42,10 @@ class WarehouseController extends MainController
 
     public function create(Request $request)
     {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_MANAGE_WAREHOUSES)) {
+            return redirect()->route('dashboard')->with(ConfigDefaultInterface::FLASH_ERROR, ConfigDefaultInterface::ERROR_MISSING_PERMISSION);
+        }
+
         $validated = $request->validate([
             'name' => [
                 'required',
@@ -65,6 +78,10 @@ class WarehouseController extends MainController
 
     public function update(Request $request, string $name)
     {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_MANAGE_WAREHOUSES)) {
+            return redirect()->route('dashboard')->with(ConfigDefaultInterface::FLASH_ERROR, ConfigDefaultInterface::ERROR_MISSING_PERMISSION);
+        }
+
         $warehouse = Warehouse::where('name', $name)->first();
         if (!$warehouse) {
             return redirect()->route('warehouses.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Warehouse not found!');

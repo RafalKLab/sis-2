@@ -23,6 +23,7 @@
                             <table class="table" id="datatablesSimple">
                                 <thead>
                                 <tr>
+                                    <th scope="col">id</th>
                                     <th scope="col">pavadinimas</th>
                                     <th scope="col">išmatavimai</th>
                                     <th scope="col">klijai</th>
@@ -35,6 +36,7 @@
                                 <tbody>
                                 @foreach($items['items'] as $item)
                                     <tr>
+                                        <td>{{ $item['item_id'] }}</td>
                                         <td>{{ $item['name'] }}</td>
                                         <td>{{ $item['measurement'] }}</td>
                                         <td>{{ $item['glue'] }}</td>

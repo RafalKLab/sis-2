@@ -21,6 +21,7 @@ interface ConfigDefaultInterface
     public const PERMISSION_ACCESS_CUSTOMER_TABLE = 'Access customer table';
     public const PERMISSION_DELETE_CUSTOMER_NOTES = 'Delete customer notes';
     public const PERMISSION_MANAGE_INVOICE_TABLE = 'Manage invoice table';
+    public const PERMISSION_MANAGE_WAREHOUSES = 'Manage warehouses';
 
     public const AVAILABLE_ROLES = [
         self::ROLE_USER,
@@ -41,6 +42,7 @@ interface ConfigDefaultInterface
         self::PERMISSION_ACCESS_CUSTOMER_TABLE,
         self::PERMISSION_DELETE_CUSTOMER_NOTES,
         self::PERMISSION_MANAGE_INVOICE_TABLE,
+        self::PERMISSION_MANAGE_WAREHOUSES,
     ];
 
     public const PERMISSION_GROUPS = [
@@ -66,6 +68,9 @@ interface ConfigDefaultInterface
         ],
         'Invoice table related permissions' => [
             self::PERMISSION_MANAGE_INVOICE_TABLE,
+        ],
+        'Warehouse table related permissions' => [
+            self::PERMISSION_MANAGE_WAREHOUSES,
         ],
     ];
 

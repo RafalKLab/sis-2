@@ -16,6 +16,7 @@ use App\Service\OrderService;
 use App\Service\TableService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use shared\ConfigDefaultInterface;
 
@@ -453,8 +454,9 @@ class OrderController extends MainController
 
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
         $availableBuyers = ItemBuyer::query()->distinct()->pluck('name')->toArray();
+        $availableItemQuantity = $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
 
-        return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers'));
+        return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'availableItemQuantity'));
     }
 
     public function storeBuyer(Request $request, int $orderId) {
@@ -469,14 +471,31 @@ class OrderController extends MainController
             }
         }
 
-        // TODO: Implement balance check
-
         // Validation rules
         $validatedData = $request->validate([
             'buyer' => 'required',
             'quantity' => 'required|numeric|min:1', // Ensure quantity is a number and at least 1
             'itemId' => 'required',
         ]);
+
+        // Available quantity check
+        $availableItemQuantity = (int)$this->getItemFieldDataByType($validatedData['itemId'], ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+        // Create a manual validator for the available quantity check
+        $validator = Validator::make($validatedData, [
+            'quantity' => [
+                function ($attribute, $value, $fail) use ($availableItemQuantity) {
+                    if ($value > $availableItemQuantity) {
+                        $fail('The selected quantity exceeds the available stock');
+                    }
+                },
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            // Return with the validation errors
+            return back()->withErrors($validator)->withInput();
+        }
+
 
         $orderItem = OrderItem::find($validatedData['itemId']);
         if (!$orderItem) {
@@ -518,8 +537,10 @@ class OrderController extends MainController
         $isEdit = true;
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
         $availableBuyers = ItemBuyer::query()->distinct()->pluck('name')->toArray();
+        $availableItemQuantity = (int)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+        $availableItemQuantity += $buyer->quantity;
 
-        return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'isEdit', 'buyer'));
+        return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'isEdit', 'buyer', 'availableItemQuantity'));
     }
 
     public function updateBuyer(Request $request, int $orderId, int $itemId, int $buyerId)
@@ -545,14 +566,30 @@ class OrderController extends MainController
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item buyer not found');
         }
 
-        // TODO: Implement balance check
-
         // Validation rules
         $validatedData = $request->validate([
             'buyer' => 'required',
             'quantity' => 'required|numeric|min:1', // Ensure quantity is a number and at least 1
             'itemId' => 'required',
         ]);
+
+        $availableItemQuantity = (int)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+        $availableItemQuantity += $buyer->quantity;
+        // Create a manual validator for the available quantity check
+        $validator = Validator::make($validatedData, [
+            'quantity' => [
+                function ($attribute, $value, $fail) use ($availableItemQuantity) {
+                    if ($value > $availableItemQuantity) {
+                        $fail('The selected quantity exceeds the available stock');
+                    }
+                },
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            // Return with the validation errors
+            return back()->withErrors($validator)->withInput();
+        }
 
         $buyer->update([
             'name' => $validatedData['buyer'],
@@ -870,5 +907,12 @@ class OrderController extends MainController
         }
 
         return Invoice::find($id);
+    }
+
+    protected function getItemFieldDataByType(int $itemId, string $targetField): ?OrderItemData
+    {
+        $targetFieldId = TableField::where('type', $targetField)->first()?->id;
+
+        return OrderItemData::where('order_item_id', $itemId)->where('field_id', $targetFieldId)->first();
     }
 }

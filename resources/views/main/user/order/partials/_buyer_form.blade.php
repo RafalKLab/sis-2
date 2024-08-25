@@ -59,6 +59,9 @@
                                  {{ $errors->first('quantity') }}
                                 </span>
                             @endif
+                            <div class="feedback">
+                                <i><small>Galimas kiekis iki: <b>{{ $availableItemQuantity }}</b></small></i>
+                            </div>
                         </div>
                     </div>
                     <input type="hidden" name="itemId" value="{{$itemId}}">

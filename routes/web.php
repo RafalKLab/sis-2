@@ -14,6 +14,7 @@ use App\Http\Controllers\Note\NoteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Statistics\StatisticsController;
+use App\Http\Controllers\Statistics\UserStatisticsController;
 use App\Http\Controllers\Warehouse\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
@@ -124,6 +125,10 @@ Route::middleware('auth')->group(function () {
         /* Statistics */
         Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
         Route::post('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
+
+        Route::get('/statistics/users', [UserStatisticsController::class, 'index'])->name('statistics-user.index');
+        Route::post('/statistics/users', [UserStatisticsController::class, 'index'])->name('statistics-user.index');
+        Route::get('/statistics/users/{userId}/{year}/{month}', [UserStatisticsController::class, 'show'])->name('statistics-user.show');
 
     });
 });

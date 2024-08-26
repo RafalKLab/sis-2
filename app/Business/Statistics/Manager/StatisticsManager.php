@@ -5,6 +5,8 @@ namespace App\Business\Statistics\Manager;
 use App\Models\Order\Invoice;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
+use App\Models\Table\TableField;
+use App\Models\User;
 use App\Service\InvoiceService;
 use App\Service\OrderService;
 use App\Service\StatisticsService;
@@ -22,6 +24,16 @@ class StatisticsManager
         $months = $this->getMonths($targetYear);
 
         $annualStatistics = $this->calculateAnnualStatistics($months);
+        $annualStatistics = $this->addMonthNames($annualStatistics);
+
+        return $annualStatistics;
+    }
+
+    public function retrieveAnnualStatisticsAllUsers(string $targetYear): array
+    {
+        $months = $this->getMonths($targetYear);
+
+        $annualStatistics = $this->calculateAnnualStatisticsUsers($months);
         $annualStatistics = $this->addMonthNames($annualStatistics);
 
         return $annualStatistics;
@@ -54,6 +66,16 @@ class StatisticsManager
         return $statistics;
     }
 
+    private function calculateAnnualStatisticsUsers(array $months): array
+    {
+        $statistics = [];
+        foreach ($months as $month) {
+            $statistics[$month] = $this->calculateMonthStatisticsUsers($month);
+        }
+
+        return $statistics;
+    }
+
     private function calculateMonthStatistics(string $month): array
     {
         $orderIds = $this->getOrdersForMonth($month);
@@ -63,6 +85,71 @@ class StatisticsManager
             'profit' => $this->calculateProfit($orderIds),
             'paid_in_advance' => $this->calculatePaidInAdvanceOrders($orderIds),
             'debts' => $this->calculateDebts($orderIds),
+        ];
+    }
+    private function calculateMonthStatisticsUsers(string $month): array
+    {
+        $monthPattern = $month . '%';
+        $orderDateFieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_IDENTIFIER_ORDER_DATE)->id;
+        $orderIds = OrderData::where('field_id', $orderDateFieldId)
+            ->where('value', 'like', $monthPattern)
+            ->pluck('order_id')
+            ->toArray();
+
+        $orderSaleInvoices = $this->getOrdersWithSalesInvoices($orderIds);
+
+        $ordersByUserId = [];
+        $orders = Order::find($orderIds);
+        foreach ($orders as $order) {
+            // Check if order is paid
+            if (!array_key_exists($order->id, $orderSaleInvoices)) {
+                continue;
+            }
+
+            $invoice = Invoice::where('invoice_number', $orderSaleInvoices[$order->id])->first();
+            if ($invoice->status !== ConfigDefaultInterface::INVOICE_STATUS_PAID) {
+                continue;
+            }
+
+            $ordersByUserId[$order->user_id]['orders'][$order->id] = [
+                'order_id' => $order->id,
+                'order_key' => $order->getKeyField(),
+                'profit' => (float) $this->getOrderFieldDataByType($order->id, ConfigDefaultInterface::FIELD_TYPE_PROFIT)?->value,
+            ];
+        }
+
+        // Populate data with user info
+        $users = User::all();
+        foreach ($users as $user) {
+            if (array_key_exists($user->id, $ordersByUserId)) {
+                $ordersByUserId[$user->id]['user'] = [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ];
+            } else {
+                $ordersByUserId[$user->id]['user'] = [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ];
+                $ordersByUserId[$user->id]['orders'] = [];
+            }
+        }
+
+        // Populate data with additional data
+        foreach ($ordersByUserId as &$item) {
+            $item['total_orders'] = count($item['orders']);
+            $item['profit'] = $this->countUserOrdersProfit($item['orders']);
+        }
+        unset($item);
+
+        usort($ordersByUserId, function ($item1, $item2) {
+            return $item2['profit'] <=> $item1['profit'];
+        });
+
+        return [
+            'users' => $ordersByUserId,
         ];
     }
 
@@ -204,5 +291,22 @@ class StatisticsManager
     private function formatNumberWithDecimals($number): string
     {
         return number_format($number, 2, '.', '');
+    }
+
+    private function getOrderFieldDataByType(int $orderId, string $targetField): ?OrderData
+    {
+        $targetFieldId = TableField::where('type', $targetField)->first()?->id;
+
+        return OrderData::where('order_id', $orderId)->where('field_id', $targetFieldId)->first();
+    }
+
+    private function countUserOrdersProfit(array $orders): string
+    {
+        $profit = 0.00;
+        foreach ($orders as $order) {
+            $profit += $order['profit'];
+        }
+
+        return $this->formatNumberWithDecimals($profit);
     }
 }

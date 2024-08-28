@@ -29,11 +29,11 @@ class StatisticsManager
         return $annualStatistics;
     }
 
-    public function retrieveAnnualStatisticsAllUsers(string $targetYear): array
+    public function retrieveAnnualStatisticsAllUsersOrSpecificUser(string $targetYear, ?User $user = null): array
     {
         $months = $this->getMonths($targetYear);
 
-        $annualStatistics = $this->calculateAnnualStatisticsUsers($months);
+        $annualStatistics = $this->calculateAnnualStatisticsUsers($months, $user);
         $annualStatistics = $this->addMonthNames($annualStatistics);
 
         return $annualStatistics;
@@ -66,11 +66,15 @@ class StatisticsManager
         return $statistics;
     }
 
-    private function calculateAnnualStatisticsUsers(array $months): array
+    private function calculateAnnualStatisticsUsers(array $months, ?User $user = null): array
     {
         $statistics = [];
         foreach ($months as $month) {
-            $statistics[$month] = $this->calculateMonthStatisticsUsers($month);
+            if ($user) {
+                $statistics[$month] = $this->calculateMonthStatisticsForUser($user, $month);
+            } else {
+                $statistics[$month] = $this->calculateMonthStatisticsUsers($month);
+            }
         }
 
         return $statistics;
@@ -141,6 +145,97 @@ class StatisticsManager
         foreach ($ordersByUserId as &$item) {
             $item['total_orders'] = count($item['orders']);
             $item['profit'] = $this->countUserOrdersProfit($item['orders']);
+        }
+        unset($item);
+
+        usort($ordersByUserId, function ($item1, $item2) {
+            return $item2['profit'] <=> $item1['profit'];
+        });
+
+        return [
+            'users' => $ordersByUserId,
+        ];
+    }
+
+    private function calculateMonthStatisticsForUser(User $user, string $month): array
+    {
+        $monthPattern = $month . '%';
+        $orderDateFieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_IDENTIFIER_ORDER_DATE)->id;
+        $orderIds = OrderData::where('field_id', $orderDateFieldId)
+            ->where('value', 'like', $monthPattern)
+            ->pluck('order_id')
+            ->toArray();
+
+        $orderSaleInvoices = $this->getOrdersWithSalesInvoices($orderIds);
+
+        $ordersByUserId = [];
+        $orders = Order::whereIn('id', $orderIds)
+            ->where('user_id', $user->id)
+            ->get();
+
+        foreach ($orders as $order) {
+            // Check if order is paid
+            $notPaidOrder = false;
+            if (!array_key_exists($order->id, $orderSaleInvoices)) {
+                $notPaidOrder = true;
+            }
+
+            if (!$notPaidOrder) {
+                $invoice = Invoice::where('invoice_number', $orderSaleInvoices[$order->id])->first();
+                if ($invoice->status !== ConfigDefaultInterface::INVOICE_STATUS_PAID) {
+                    $notPaidOrder = true;
+                }
+            }
+
+            $profit = (float) $this->getOrderFieldDataByType($order->id, ConfigDefaultInterface::FIELD_TYPE_PROFIT)?->value;
+
+            if ($notPaidOrder) {
+                $ordersByUserId[$order->user_id]['not_paid_orders'][$order->id] = [
+                    'order_id' => $order->id,
+                    'order_key' => $order->getKeyField(),
+                    'profit' => $this->formatNumberWithDecimals($profit),
+                ];
+            } else {
+                $ordersByUserId[$order->user_id]['orders'][$order->id] = [
+                    'order_id' => $order->id,
+                    'order_key' => $order->getKeyField(),
+                    'profit' => $this->formatNumberWithDecimals($profit),
+                ];
+            }
+        }
+
+        // Populate data with user info
+        if (array_key_exists($user->id, $ordersByUserId)) {
+            $ordersByUserId[$user->id]['user'] = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ];
+
+        } else {
+            $ordersByUserId[$user->id]['user'] = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ];
+            $ordersByUserId[$user->id]['orders'] = [];
+            $ordersByUserId[$user->id]['not_paid_orders'] = [];
+        }
+
+        // Populate data with additional data
+        foreach ($ordersByUserId as &$item) {
+            if (!array_key_exists('orders', $item)) {
+                $item['orders'] = [];
+            }
+
+            if (!array_key_exists('not_paid_orders', $item)) {
+                $item['not_paid_orders'] = [];
+            }
+
+            $item['total_orders'] = count($item['orders']);
+            $item['total_not_paid_orders'] = count($item['not_paid_orders']);
+            $item['profit'] = $this->countUserOrdersProfit($item['orders']);
+            $item['expected_profit'] = $this->countUserOrdersProfit($item['not_paid_orders']);;
         }
         unset($item);
 

@@ -129,6 +129,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/statistics/users', [UserStatisticsController::class, 'index'])->name('statistics-user.index');
         Route::post('/statistics/users', [UserStatisticsController::class, 'index'])->name('statistics-user.index');
         Route::get('/statistics/users/{userId}/{year}/{month}', [UserStatisticsController::class, 'show'])->name('statistics-user.show');
+        Route::post('/statistics/users/{userId}/{year}/{month}', [UserStatisticsController::class, 'show'])->name('statistics-user.show');
 
     });
 });

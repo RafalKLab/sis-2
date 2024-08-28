@@ -7,7 +7,7 @@
 @endsection
 @section('content')
     <div class="container-fluid px-4">
-        <h4 class="mt-4">User performance {{ $targetYear }} <span class="text-primary stats-change-year-link"><i class="fa-solid fa-chevron-down"></i></span></h4>
+        <h4 class="mt-4">All users performance {{ $targetYear }} <span class="text-primary stats-change-year-link"><i class="fa-solid fa-chevron-down"></i></span></h4>
         <form class="mb-3" id="yearForm" style="display:none;" action="" method="POST">
             @csrf
             <div class="row">
@@ -89,7 +89,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div></div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -101,7 +102,7 @@
         <div class="container-fluid px-4 mt-3">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <i class="fas fa-chart-area me-1"></i> Metinė statistika
+                    <i class="fas fa-chart-area me-1"></i> Metinė vartotojų pelno statistika
                 </div>
                 <div class="card-body">
                     <div class="row">

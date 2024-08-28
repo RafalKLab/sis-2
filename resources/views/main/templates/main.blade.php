@@ -103,7 +103,7 @@
 
                     <a class="nav-link" href="{{ route('statistics-user.index') }}">
                         <div class="sb-nav-link-icon"><i class="fa-regular fa-address-card"></i></div>
-                        User performance (in progress)
+                        User performance
                     </a>
 
                     <a class="nav-link" href="{{ route('logs.index') }}">

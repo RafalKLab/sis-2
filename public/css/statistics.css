@@ -6,6 +6,20 @@ table.table tr[data-url]:hover {
     background-color: #F7F7F7;
 }
 
+.custom-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.custom-link:hover {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.custom-link:visited {
+    color: inherit;
+}
+
 /*.scoreboard {*/
 /*    position: relative;*/
 /*    height: 200px; !* Set this to your desired maximum bar height *!*/

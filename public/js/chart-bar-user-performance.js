@@ -48,8 +48,12 @@ function initializeUserPerformanceBarChart(labels, data) {
                 callbacks: {
                     // Include a euro sign in the tooltips
                     label: function(tooltipItem, chart) {
-                        return chart.datasets[tooltipItem.datasetIndex].label
-                            + ': €' + tooltipItem.yLabel;
+                        let label = chart.datasets[tooltipItem.datasetIndex].label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        label += '€' + parseFloat(tooltipItem.value).toFixed(2); // This ensures the number is treated as a float and fixes to two decimals
+                        return label;
                     }
                 }
             },

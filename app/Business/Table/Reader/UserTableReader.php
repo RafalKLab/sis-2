@@ -14,10 +14,19 @@ use shared\ConfigDefaultInterface;
 
 class UserTableReader implements TableReaderInterface
 {
+    protected $userFields;
+
+
+
     protected const PAGINATION_ITEMS_PER_PAGE = 15;
 
     protected bool $failedSearch = false;
     protected ?int $exactMatch = null;
+
+    public function __construct()
+    {
+        $this->userFields = Auth::user()->getAssignedFields();
+    }
 
     public function readTableData(?string $search): array
     {
@@ -46,18 +55,15 @@ class UserTableReader implements TableReaderInterface
      */
     public function readTableFields(?Table $mainTable = null): array
     {
-        $fieldData = [];
-        foreach (Auth::user()->getAssignedFields() as $field) {
-            $fieldData[] = [
-                'id' => $field->id,
-                'name' => $field->name,
-                'type' => $field->type,
+        return $this->userFields->map(function ($field) {
+            return [
+                'id'    => $field->id,
+                'name'  => $field->name,
+                'type'  => $field->type,
                 'color' => $field->color,
-                'order' => $field->order
+                'order' => $field->order,
             ];
-        }
-
-        return $fieldData;
+        })->all();
     }
 
     public function getTableField(int $id): ?TableField
@@ -113,8 +119,7 @@ class UserTableReader implements TableReaderInterface
     {
         $orderKeyFieldId = null;
 
-        $userFields = Auth::user()
-            ->getAssignedFields()
+        $userFields = $this->userFields
             ->pluck('id', 'type')
             ->toArray();
 
@@ -159,20 +164,25 @@ class UserTableReader implements TableReaderInterface
     {
         $ordersData = [];
 
+        $fieldsById = [];
+        foreach ($this->userFields as $field) {
+            $fieldsById[$field->id] = $field;
+        }
+
         foreach ($orders as $order) {
             $data = [];
-
             $data['id'] = $order->id;
-            foreach (Auth::user()->getAssignedFields() as $field) {
-                $orderDataEntity = OrderData::where('order_id', $order->id)->where('field_id', $field->id)->first();
-                $data[$field->name] = $orderDataEntity?->value;
-                $data['uploaded_files'] = $order->files()->count();
-                $data['user'] = $order->user?->name;
-                $data['config'][$field->name] = [
-                    'status_color_class' => $this->getStatusColorClass($field, $orderDataEntity),
+            $orderDataEntities = OrderData::where('order_id', $order->id)->whereIn('field_id', array_keys($fieldsById))->get();
 
+            foreach ($orderDataEntities as $orderDataEntity) {
+                $targetField = $fieldsById[$orderDataEntity->field_id];
+                $data[$targetField->name] = $orderDataEntity?->value;
+                $data['user'] = $order->user?->name;
+                $data['config'][$targetField->name] = [
+                    'status_color_class' => $this->getStatusColorClass($targetField, $orderDataEntity),
                 ];
             }
+            $data['uploaded_files'] = $order->files()->count();
 
             $ordersData[] = $data;
         }

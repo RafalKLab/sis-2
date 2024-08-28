@@ -24,13 +24,19 @@ class OrderController extends MainController
 {
     public function index(Request $request)
     {
+        // Start time
+        $start_time = microtime(true);
+
         $search = $request->search;
         $tableData = $this->factory()->createTableManager()->retrieveTableData($search);
         if ($tableData['exact_match']) {
             return redirect()->route('orders.view', ['id'=>$tableData['exact_match']]);
         }
 
-        return view('main.user.order.index', compact('tableData', 'search'));
+        $end_time = microtime(true);
+        $execution_time = $end_time - $start_time;
+
+        return view('main.user.order.index', compact('tableData', 'search', 'execution_time'));
     }
 
     public function view(int $orderId)

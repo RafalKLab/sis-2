@@ -9,6 +9,7 @@
 
 @section('content')
     <div class="container-fluid px-4">
+        <h6>Time: {{ $execution_time }}</h6>
         <h4 class="mt-4">Orders view</h4>
         @if($tableData)
             <div class="card mb-4">

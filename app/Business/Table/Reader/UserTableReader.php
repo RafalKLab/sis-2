@@ -9,14 +9,13 @@ use App\Models\Order\OrderData;
 use App\Models\Table\Table;
 use App\Models\Table\TableField;
 use App\Service\InvoiceService;
+use App\Service\TableService;
 use Illuminate\Support\Facades\Auth;
 use shared\ConfigDefaultInterface;
 
 class UserTableReader implements TableReaderInterface
 {
     protected $userFields;
-
-
 
     protected const PAGINATION_ITEMS_PER_PAGE = 15;
 
@@ -162,32 +161,41 @@ class UserTableReader implements TableReaderInterface
 
     protected function formatOrdersData($orders): array
     {
-        $ordersData = [];
+        // Assuming $orders is a collection of Order models
+        $fileFieldName = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_FILE)->name;
 
-        $fieldsById = [];
-        foreach ($this->userFields as $field) {
-            $fieldsById[$field->id] = $field;
-        }
+        $orders->load([
+            'data.field', // Corrected relationship name
+            'user',
+            'files'
+        ]);
 
-        foreach ($orders as $order) {
-            $data = [];
-            $data['id'] = $order->id;
-            $orderDataEntities = OrderData::where('order_id', $order->id)->whereIn('field_id', array_keys($fieldsById))->get();
+        $fieldsById = $this->userFields->keyBy('id');
 
-            foreach ($orderDataEntities as $orderDataEntity) {
-                $targetField = $fieldsById[$orderDataEntity->field_id];
-                $data[$targetField->name] = $orderDataEntity?->value;
-                $data['user'] = $order->user?->name;
-                $data['config'][$targetField->name] = [
-                    'status_color_class' => $this->getStatusColorClass($targetField, $orderDataEntity),
-                ];
+        $ordersData = $orders->map(function ($order) use ($fieldsById, $fileFieldName) {
+            $data = [
+                'id' => $order->id,
+                'user' => $order->user->name,
+                'uploaded_files' => $order->files->count(),
+                $fileFieldName => '',
+            ];
+
+            // Using the correct relationship name 'data' instead of 'orderDataEntities'
+            foreach ($order->data as $orderDataEntity) {
+                // Only process if the field is part of the userFields
+                if (isset($fieldsById[$orderDataEntity->field_id])) {
+                    $targetField = $fieldsById[$orderDataEntity->field_id];
+                    $data[$targetField->name] = $orderDataEntity->value;
+                    $data['config'][$targetField->name] = [
+                        'status_color_class' => $this->getStatusColorClass($targetField, $orderDataEntity),
+                    ];
+                }
             }
-            $data['uploaded_files'] = $order->files()->count();
 
-            $ordersData[] = $data;
-        }
+            return $data;
+        });
 
-        return $ordersData;
+        return $ordersData->all();
     }
 
     protected function getStatusColorClass(TableField $field, ?OrderData $orderDataEntity): string

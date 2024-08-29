@@ -89,6 +89,7 @@ class StatisticsManager
             'profit' => $this->calculateProfit($orderIds),
             'paid_in_advance' => $this->calculatePaidInAdvanceOrders($orderIds),
             'debts' => $this->calculateDebts($orderIds),
+            'expenses' => $this->calculateExpenses($orderIds),
         ];
     }
     private function calculateMonthStatisticsUsers(string $month): array
@@ -265,7 +266,7 @@ class StatisticsManager
 
         return OrderData::where('field_id', $orderKeyFieldId)
             ->whereIn('order_id', $orderIds)
-            ->pluck('value')
+            ->pluck('order_id','value')
             ->toArray();
     }
 
@@ -360,6 +361,7 @@ class StatisticsManager
     private function calculateDebts(array $orderIds): array
     {
         $totalDebts = 0;
+        $totalDebtsSum = 0.0;
         $details = [];
 
         foreach ($orderIds as $orderId) {
@@ -370,15 +372,49 @@ class StatisticsManager
             }
 
             $totalDebts += count($orderInvoices);
-            $details[] = [
+            $orderDebts = [
                 'order_id' => $orderId,
                 'order_key' => OrderService::getKeyFieldFrom($orderId)->value,
                 'debts' => $orderInvoices
             ];
+
+            $totalDebtsSum += $this->countInvoiceSum($orderDebts['debts']);
+            $details[] = $orderDebts;
+
         }
 
         return [
             'total_debts' => $totalDebts,
+            'total_debts_sum' => $this->formatNumberWithDecimals($totalDebtsSum),
+            'details' => $details,
+        ];
+    }
+
+    private function calculateExpenses(array $orderIds): array
+    {
+        $totalExpenses = 0.0;
+        $details = [];
+
+        foreach ($orderIds as $orderId) {
+            $orderInvoices = InvoiceService::getPaidInvoicesForOrder($orderId);
+
+            if (empty($orderInvoices)) {
+                continue;
+            }
+
+            $orderDebts = [
+                'order_id' => $orderId,
+                'order_key' => OrderService::getKeyFieldFrom($orderId)->value,
+                'expenses' => $orderInvoices
+            ];
+
+            $totalExpenses += $this->countInvoiceSum($orderDebts['expenses']);
+            $details[] = $orderDebts;
+
+        }
+
+        return [
+            'total_expenses' => $this->formatNumberWithDecimals($totalExpenses),
             'details' => $details,
         ];
     }
@@ -403,5 +439,15 @@ class StatisticsManager
         }
 
         return $this->formatNumberWithDecimals($profit);
+    }
+
+    private function countInvoiceSum(array $invoices): float
+    {
+        $sum = 0.0;
+        foreach ($invoices as $invoice) {
+            $sum += $invoice['sum'];
+        }
+
+        return $sum;
     }
 }

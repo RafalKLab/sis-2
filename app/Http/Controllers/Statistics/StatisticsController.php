@@ -21,7 +21,6 @@ class StatisticsController extends MainController
 
         $statistics = $this->factory()->createStatisticsManager()->retrieveAnnualStatistics($targetYear);
         $profitAreaChartData = $this->extractDataForProfitAreaChart($statistics);
-
         $currentMonth = StatisticsService::getMonthName(date('Y-m'));
 
         return view(

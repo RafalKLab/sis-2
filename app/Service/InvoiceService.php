@@ -62,6 +62,26 @@ class InvoiceService
             $invoices[] = [
                 'invoice_name' => TableService::getFieldById($entity->field_id)->name,
                 'invoice_number' => $entity->invoice_number,
+                'sum' => number_format($entity->sum, 2, '.', ''),
+            ];
+        }
+
+        return $invoices;
+    }
+
+    public static function getPaidInvoicesForOrder(int $orderId): array
+    {
+        $invoices = [];
+
+        $invoiceEntities = Invoice::where('order_id', $orderId)
+            ->where('status', ConfigDefaultInterface::INVOICE_STATUS_PAID)->get();
+
+        foreach ($invoiceEntities as $entity) {
+            $invoices[] = [
+                'invoice_name' => $entity->field_id ? TableService::getFieldById($entity->field_id)->name : '',
+                'invoice_number' => $entity->invoice_number,
+                'sum' => number_format($entity->sum, 2, '.', ''),
+                'customer' => $entity->customer ? sprintf('SF. %s', $entity->customer) : '',
             ];
         }
 

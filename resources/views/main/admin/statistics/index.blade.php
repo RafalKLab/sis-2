@@ -44,14 +44,14 @@
                     <div class="container-fluid px-4">
                         <div class="card mt-3">
                             <div class="card-header">
-                                <h6>{{ $data['month_name'] }} - užsakymų kiekis: {{ count($data['orders']) }}</h6>
+                                <h6>{{ $data['month_name'] }}</h6>
                             </div>
                             <div class="card-body">
                                 <div class="row mt-3">
-                                    <div class="col-xl-3 col-md-6">
+                                    <div class="col-xl-4 col-md-6">
                                         <div class="card mb-4">
                                             <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                                                <div class="col-md-6"><h6>Faktinis pelnas</h6></div>
+                                                <div class="col-md-6"><h6 title="Pardavimo saskaita apmokėta">Faktinis pelnas</h6></div>
                                                 <div class="col-md-6 d-flex justify-content-end">
                                                     <i class="fa-solid fa-money-bill"></i>
                                                 </div>
@@ -93,10 +93,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-xl-3 col-md-6">
+                                    <div class="col-xl-4 col-md-6">
                                         <div class="card mb-4">
                                             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                                                <div class="col-md-6"><h6>Numatomas pelnas</h6></div>
+                                                <div class="col-md-6"><h6 title="Pardavimo saskaita neapmokėta">Numatomas pelnas</h6></div>
                                                 <div class="col-md-6 d-flex justify-content-end">
                                                     <i class="fa-solid fa-money-bill-trend-up"></i>
                                                 </div>
@@ -138,10 +138,51 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-xl-3 col-md-6">
+                                    <div class="col-xl-4 col-md-6">
+                                        <div class="card mb-4">
+                                            <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                                                <div class="col-md-6"><h6 title="Visi mėnesio užsakymai">Iš viso užsakymų</h6></div>
+                                                <div class="col-md-6 d-flex justify-content-end">
+                                                    <i class="fa-solid fa-clipboard-list"></i>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <h3>{{ count($data['orders']) }}</h3>
+                                                <a href="#collapseTotalOrders" class="more-details-link" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseTotalOrders">
+                                                    Show More <i class="fa fa-chevron-down"></i>
+                                                </a>
+                                            </div>
+                                            <!-- Collapsible Content -->
+                                            <div class="collapse" id="collapseTotalOrders">
+                                                <div class="card-body">
+                                                    <!-- Additional information you want to show goes here -->
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th scope="col">Užsakymas</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach($data['orders'] as $orderKey => $orderId)
+                                                            <tr>
+                                                                <td>
+                                                                    <a class="more-details-link" href="{{ route('orders.view', ['id'=>$orderId]) }}">
+                                                                        {{ $orderKey }}
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-4 col-md-6">
                                         <div class="card mb-4">
                                             <div class="card-header bg-warning text-white d-flex justify-content-between align-items-center">
-                                                <div class="col-md-6"><h6>Sumokėta avansų</h6></div>
+                                                <div class="col-md-6"><h6 title="Užsakymai, kur būsena apmokėta">Sumokėta avansų</h6></div>
                                                 <div class="col-md-6 d-flex justify-content-end">
                                                     <i class="fa-solid fa-hand-holding-dollar"></i>
                                                 </div>
@@ -181,16 +222,16 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-xl-3 col-md-6">
+                                    <div class="col-xl-4 col-md-6">
                                         <div class="card mb-4">
                                             <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
-                                                <div class="col-md-6"><h6>Mūsų skolos</h6></div>
+                                                <div class="col-md-6"><h6 title="Visos neapmokėtos sąskaitos">Mūsų skolos</h6></div>
                                                 <div class="col-md-6 d-flex justify-content-end">
                                                     <i class="fas fa-file-invoice-dollar"></i>
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <h3>{{ $data['debts']['total_debts'] }}</h3>
+                                                <h3>{{ $data['debts']['total_debts'] }}&nbsp;&nbsp;|&nbsp;&nbsp;€{{ $data['debts']['total_debts_sum'] }}</h3>
                                                 <a href="#collapseDebts" class="more-details-link" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseDebts">
                                                     Show More <i class="fa fa-chevron-down"></i>
                                                 </a>
@@ -203,23 +244,78 @@
                                                         <thead>
                                                         <tr>
                                                             <th scope="col">Užsakymas</th>
-                                                            <th scope="col">Skola</th>
+                                                            <th scope="col">Sąskaitos numeris</th>
+                                                            <th scope="col">Suma</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>
                                                         @foreach($data['debts']['details'] as $order)
-                                                            <tr>
-                                                                <td>
-                                                                    <a class="more-details-link" href="{{ route('orders.view', ['id'=>$order['order_id']]) }}">
-                                                                        {{ $order['order_key'] }}
-                                                                    </a>
-                                                                </td>
-                                                                <td>
-                                                                    @foreach($order['debts'] as $debt)
-                                                                        <p>{{$debt['invoice_name']}}: {{$debt['invoice_number']}}</p>
-                                                                    @endforeach
-                                                                </td>
-                                                            </tr>
+                                                                @foreach($order['debts'] as $debt)
+                                                                    <tr>
+                                                                    <td>
+                                                                        <a class="more-details-link" href="{{ route('orders.view', ['id'=>$order['order_id']]) }}">
+                                                                            {{ $order['order_key'] }}
+                                                                        </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        {{$debt['invoice_name']}}: {{$debt['invoice_number']}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{$debt['sum']}}
+                                                                    </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-4 col-md-6">
+                                        <div class="card mb-4">
+                                            <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                                                <div class="col-md-6"><h6 title="Visos apmokėtos sąskaitos">Mūsų išlaidos</h6></div>
+                                                <div class="col-md-6 d-flex justify-content-end">
+                                                    <i class="fa-solid fa-receipt"></i>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <h3>€{{ $data['expenses']['total_expenses'] }}</h3>
+                                                <a href="#collapseExpenses" class="more-details-link" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseExpenses">
+                                                    Show More <i class="fa fa-chevron-down"></i>
+                                                </a>
+                                            </div>
+                                            <!-- Collapsible Content -->
+                                            <div class="collapse" id="collapseExpenses">
+                                                <div class="card-body">
+                                                    <!-- Additional information you want to show goes here -->
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th scope="col">Užsakymas</th>
+                                                            <th scope="col">Sąskaitos numeris</th>
+                                                            <th scope="col">Suma</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach($data['expenses']['details'] as $order)
+                                                            @foreach($order['expenses'] as $expenseData)
+                                                                <tr>
+                                                                    <td>
+                                                                        <a class="more-details-link" href="{{ route('orders.view', ['id'=>$order['order_id']]) }}">
+                                                                            {{ $order['order_key'] }}
+                                                                        </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ $expenseData['invoice_name'] ?: $expenseData['customer'] }}: {{$expenseData['invoice_number']}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{$expenseData['sum']}}
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
                                                         @endforeach
                                                         </tbody>
                                                     </table>

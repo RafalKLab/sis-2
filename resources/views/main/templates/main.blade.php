@@ -84,10 +84,10 @@
                         </a>
                     @endcan
 
-                    <a class="disabled nav-link" href="">
-                        <div class="sb-nav-link-icon"><i class="fa-solid fa-industry"></i></div>
-                        Suppliers (in progress)
-                    </a>
+{{--                    <a class="disabled nav-link" href="">--}}
+{{--                        <div class="sb-nav-link-icon"><i class="fa-solid fa-industry"></i></div>--}}
+{{--                        Suppliers (in progress)--}}
+{{--                    </a>--}}
 
                     @can('Access carrier table')
                         <a class="nav-link" href="{{ route('carriers.index') }}">

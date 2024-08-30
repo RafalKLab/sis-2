@@ -6,6 +6,7 @@ use App\Http\Controllers\MainController;
 use App\Models\Note\Note;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use shared\ConfigDefaultInterface;
 
 class NoteController extends MainController
 {
@@ -49,7 +50,16 @@ class NoteController extends MainController
 
         // Assuming you have a Note model with the provided note ID
         $note = Note::find($noteId);
-        if ($note && $request->user()->can('Delete customer notes')) {
+        if ($note) {
+            $noteIdentifier = $note->identifier;
+            $permission = match($noteIdentifier) {
+                'carrier' => ConfigDefaultInterface::PERMISSION_DELETE_CARRIER_NOTES,
+                'customer' => ConfigDefaultInterface::PERMISSION_DELETE_CUSTOMER_NOTES,
+                default => 'Missing permission',
+            };
+
+            $request->user()->can($permission);
+
             $note->delete();
             return response()->json(['success' => true, 'message' => 'Note deleted successfully']);
         } else {

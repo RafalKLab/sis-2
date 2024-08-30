@@ -89,10 +89,12 @@
                         Suppliers (in progress)
                     </a>
 
-                    <a class="disabled nav-link" href="">
-                        <div class="sb-nav-link-icon"><i class="fa-solid fa-truck-moving"></i></div>
-                        Carriers (in progress)
-                    </a>
+                    @can('Access carrier table')
+                        <a class="nav-link" href="{{ route('carriers.index') }}">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-truck-moving"></i></div>
+                            Carriers
+                        </a>
+                    @endcan
 
                     @role('admin')
                     <div class="sb-sidenav-menu-heading">Admin</div>

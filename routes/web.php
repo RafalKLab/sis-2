@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminTableController;
 use App\Http\Controllers\Admin\BlockedUserController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Carrier\CarrierController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\FieldSettings\FieldSettingsController;
 use App\Http\Controllers\File\FileController;
@@ -32,6 +33,9 @@ Route::middleware('auth')->group(function () {
 
     /* Customer table */
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+
+    /* Carrier table */
+    Route::get('/carriers', [CarrierController::class, 'index'])->name('carriers.index');
 
     /* Invoice table */
     Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');

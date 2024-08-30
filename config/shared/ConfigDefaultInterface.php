@@ -23,6 +23,9 @@ interface ConfigDefaultInterface
     public const PERMISSION_MANAGE_INVOICE_TABLE = 'Manage invoice table';
     public const PERMISSION_MANAGE_WAREHOUSES = 'Manage warehouses';
 
+    public const PERMISSION_ACCESS_CARRIER_TABLE = 'Access carrier table';
+    public const PERMISSION_DELETE_CARRIER_NOTES = 'Delete carrier notes';
+
     public const AVAILABLE_ROLES = [
         self::ROLE_USER,
         self::ROLE_ADMIN,
@@ -43,6 +46,8 @@ interface ConfigDefaultInterface
         self::PERMISSION_DELETE_CUSTOMER_NOTES,
         self::PERMISSION_MANAGE_INVOICE_TABLE,
         self::PERMISSION_MANAGE_WAREHOUSES,
+        self::PERMISSION_ACCESS_CARRIER_TABLE,
+        self::PERMISSION_DELETE_CARRIER_NOTES,
     ];
 
     public const PERMISSION_GROUPS = [
@@ -71,6 +76,10 @@ interface ConfigDefaultInterface
         ],
         'Warehouse table related permissions' => [
             self::PERMISSION_MANAGE_WAREHOUSES,
+        ],
+        'Carrier table related permissions' => [
+            self::PERMISSION_ACCESS_CARRIER_TABLE,
+            self::PERMISSION_DELETE_CARRIER_NOTES,
         ],
     ];
 
@@ -123,6 +132,7 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_INVOICE = 'invoice';
 
     public const FIELD_IDENTIFIER_ITEM_NAME = 'item_name';
+    public const FIELD_IDENTIFIER_CARRIER = 'carrier';
     public const FIELD_IDENTIFIER_ITEM_SELLER = 'item_seller';
     public const FIELD_IDENTIFIER_ITEM_MEASUREMENTS = 'item_measurements';
     public const FIELD_IDENTIFIER_SALES_INVOICE = 'sales_invoice';

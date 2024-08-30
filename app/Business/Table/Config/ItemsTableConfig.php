@@ -81,6 +81,7 @@ class ItemsTableConfig implements TableConfigInterface
                 'name' => 'Vežėjas',
                 'type' => 'dynamic select',
                 'group' => 'PREKĖS IR LOGISTIKA',
+                'identifier' => 'carrier',
             ],
             [
                 'name' => 'Trans. nr.',

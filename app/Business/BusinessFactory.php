@@ -5,6 +5,7 @@ namespace App\Business;
 use App\Business\ActivityLog\Manager\ActivityLogManager;
 use App\Business\ActivityLog\Transfer\ActivityLogTransferObject;
 use App\Business\ActivityLog\Writer\ActivityLogMysqlWriter;
+use App\Business\Carrier\Manager\CarrierManager;
 use App\Business\Customer\Manager\CustomerManager;
 use App\Business\Order\Calculator\OrderDataCalculator;
 use App\Business\Order\Manager\OrderManager;
@@ -102,5 +103,10 @@ class BusinessFactory
     private function createUserTableReader(): UserTableReader
     {
         return new UserTableReader();
+    }
+
+    public function createCarrierManager(): CarrierManager
+    {
+        return new CarrierManager();
     }
 }

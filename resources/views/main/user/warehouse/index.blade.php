@@ -56,7 +56,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="{{ route('warehouses.update', ['name'=>isset($warehouse) ? $warehouse->name : 'empty']) }}">
+                        <form method="post" action="{{ route('warehouses.create') }}">
                             @csrf
                             <div class="form-group row mb-3">
                                 <label for="name" class="col-md-2 col-form-label">Name</label>

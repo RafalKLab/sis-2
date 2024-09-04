@@ -49,7 +49,7 @@
                             </thead>
                             <tbody>
                             @foreach($tableData['orders']['data'] as $order)
-                                <tr>
+                                <tr class>
                                     <td>{{ $order['user'] }}</td>
                                     @foreach($tableData['fields'] as $field)
                                         @if(array_key_exists($field['name'], $order))
@@ -134,4 +134,21 @@
         Table does not exist
     @endif
     @endsection
+
+@section('script')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var table = document.getElementById('orders-table-admin');
+            table.addEventListener('click', function (e) {
+                var target = e.target;
+                while (target && target.nodeName !== 'TR') {
+                    target = target.parentElement;
+                }
+                if (target) {
+                    target.classList.toggle('marked-row');
+                }
+            });
+        });
+    </script>
+@endsection
 

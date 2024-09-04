@@ -21,3 +21,11 @@
 .order-view-link:visited {
     color: inherit;
 }
+
+tbody tr:hover {
+    background-color: #DEE2E6;
+}
+
+.marked-row {
+    background-color: #DEE2E6;
+}

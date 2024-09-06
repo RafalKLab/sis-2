@@ -59,13 +59,25 @@ class TableService
         }
 
         $representationFieldType = ConfigDefaultInterface::INVOICE_AND_REPRESENTED_SUM_MAP[$identifier];
-        $representationField = self::getFieldByType($representationFieldType);
-        $amount = OrderService::getOrderDataFor($representationField->id, $orderId)?->value;
-        $formattedAmount = number_format($amount, 2, '.', '');
+        if (is_array($representationFieldType)) {
+            $amount = 0.0;
+            $representationFieldName = '';
+            foreach ($representationFieldType as $fieldType) {
+                $representationField = self::getFieldByType($fieldType);
+                $amount += OrderService::getOrderDataFor($representationField->id, $orderId)?->value;
+                $representationFieldName .= sprintf(' + %s', $representationField->name);
+            }
+            $formattedAmount = number_format($amount, 2, '.', '');
+        } else {
+            $representationField = self::getFieldByType($representationFieldType);
+            $amount = OrderService::getOrderDataFor($representationField->id, $orderId)?->value;
+            $formattedAmount = number_format($amount, 2, '.', '');
+            $representationFieldName = $representationField->name;
+        }
 
         return [
             'exists' => true,
-            'represented_field' => $representationField->name,
+            'represented_field' => $representationFieldName,
             'amount' => $formattedAmount
         ];
     }

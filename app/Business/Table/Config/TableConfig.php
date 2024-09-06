@@ -159,11 +159,13 @@ class TableConfig implements TableConfigInterface
                 'name' => 'Muitas 7%',
                 'type' => 'duty 7',
                 'group' => 'APSKAITA',
+                'identifier' => 'duty_7',
             ],
             [
                 'name' => 'Antidem 15,8%',
                 'type' => 'duty 15',
                 'group' => 'APSKAITA',
+                'identifier' => 'duty_15',
             ],
             [
                 'name' => 'Brokeris',
@@ -230,6 +232,12 @@ class TableConfig implements TableConfigInterface
                 'type' => 'invoice',
                 'group' => 'SĄSKAITOS FAKTŪROS',
                 'identifier' => 'sales_invoice',
+            ],
+            [
+                'name' => 'SF. Pirk',
+                'type' => 'invoice',
+                'group' => 'SĄSKAITOS FAKTŪROS',
+                'identifier' => 'invoice_purchase',
             ],
             [
                 'name' => 'P-SF. Pirk.',

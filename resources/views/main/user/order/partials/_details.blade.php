@@ -547,7 +547,12 @@
                                         <tr>
                                             <th scope="row">{{ $data['field_name'] }}</th>
                                             <td>@if($data['value']) <b>Nr: </b> @endif{{ $data['value'] }} </td>
-                                            <td><b>Suma:</b> {{ $data['additional_data']['sum'] }}</td>
+                                            <td>
+                                                <b>Suma:</b> {{ $data['additional_data']['sum'] }}
+                                                @if($data['additional_data']['auto_calculated_sum']['exists'] && $data['additional_data']['auto_calculated_sum']['amount'] !== $data['additional_data']['sum'])
+                                                    <span class="text-warning"><i title="Suma nėra lygi susieto lauko sumai" class="fa-solid fa-triangle-exclamation"></i></span>
+                                                @endif
+                                            </td>
                                             @if ($data['additional_data']['pay_until_date'])
                                                 <td>
                                                     <div class="{{ $data['additional_data']['display_class']}}">

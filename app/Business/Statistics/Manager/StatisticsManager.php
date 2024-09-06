@@ -371,6 +371,11 @@ class StatisticsManager
                 continue;
             }
 
+            // Keep only expense invoices
+            $orderInvoices = array_filter($orderInvoices, function($invoice) {
+                return in_array($invoice['identifier'], ConfigDefaultInterface::EXPENSE_INVOICES);
+            });
+
             $totalDebts += count($orderInvoices);
             $orderDebts = [
                 'order_id' => $orderId,
@@ -401,6 +406,11 @@ class StatisticsManager
             if (empty($orderInvoices)) {
                 continue;
             }
+
+            // Keep only expense invoices
+            $orderInvoices = array_filter($orderInvoices, function($invoice) {
+                return in_array($invoice['identifier'], ConfigDefaultInterface::EXPENSE_INVOICES);
+            });
 
             $orderDebts = [
                 'order_id' => $orderId,

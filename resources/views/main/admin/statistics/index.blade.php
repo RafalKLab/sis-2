@@ -261,7 +261,7 @@
                                                                         {{$debt['invoice_name']}}: {{$debt['invoice_number']}}
                                                                     </td>
                                                                     <td>
-                                                                        {{$debt['sum']}}
+                                                                        <span class="text-danger">{{$debt['sum']}}</span>
                                                                     </td>
                                                                     </tr>
                                                                 @endforeach
@@ -312,7 +312,7 @@
                                                                         {{ $expenseData['invoice_name'] ?: $expenseData['customer'] }}: {{$expenseData['invoice_number']}}
                                                                     </td>
                                                                     <td>
-                                                                        {{$expenseData['sum']}}
+                                                                        <span class="text-danger">{{$expenseData['sum']}}</span>
                                                                     </td>
                                                                 </tr>
                                                             @endforeach

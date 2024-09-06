@@ -130,7 +130,6 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_FACTORING = 'factoring';
     public const FIELD_TYPE_PROFIT = 'profit';
     public const FIELD_TYPE_INVOICE = 'invoice';
-
     public const FIELD_IDENTIFIER_ITEM_NAME = 'item_name';
     public const FIELD_IDENTIFIER_CARRIER = 'carrier';
     public const FIELD_IDENTIFIER_ITEM_SELLER = 'item_seller';
@@ -145,6 +144,7 @@ interface ConfigDefaultInterface
     public const FIELD_IDENTIFIER_INVOICE_WAREHOUSE = 'invoice_warehouse';
     public const FIELD_IDENTIFIER_INVOICE_AGENT = 'invoice_agent';
     public const FIELD_IDENTIFIER_INVOICE_FACTORING = 'invoice_factoring';
+    public const FIELD_IDENTIFIER_INVOICE_PURCHASE = 'invoice_purchase';
 
     public const INVOICE_AND_REPRESENTED_SUM_MAP = [
         self::FIELD_IDENTIFIER_SALES_INVOICE => self::FIELD_TYPE_TOTAL_SALES_SUM,
@@ -152,10 +152,24 @@ interface ConfigDefaultInterface
         self::FIELD_IDENTIFIER_INVOICE_TRANSPORT_2 => self::FIELD_TYPE_TRANSPORT_PRICE_2,
         self::FIELD_IDENTIFIER_INVOICE_OTHER_COSTS => self::FIELD_TYPE_OTHER_COSTS,
         self::FIELD_IDENTIFIER_INVOICE_DEFECT => self::FIELD_TYPE_FLAW,
-//        self::FIELD_IDENTIFIER_INVOICE_CUSTOMS => '',
+        self::FIELD_IDENTIFIER_INVOICE_CUSTOMS => [self::FIELD_TYPE_DUTY_7, self::FIELD_TYPE_DUTY_15],
         self::FIELD_IDENTIFIER_INVOICE_WAREHOUSE => self::FIELD_TYPE_WAREHOUSES,
         self::FIELD_IDENTIFIER_INVOICE_AGENT => self::FIELD_TYPE_AGENT,
         self::FIELD_IDENTIFIER_INVOICE_FACTORING => self::FIELD_TYPE_FACTORING,
+        self::FIELD_IDENTIFIER_INVOICE_PURCHASE => self::FIELD_TYPE_TOTAL_PURCHASE_SUM,
+
+    ];
+
+    public const EXPENSE_INVOICES = [
+        self::FIELD_IDENTIFIER_INVOICE_FACTORING,
+        self::FIELD_IDENTIFIER_INVOICE_TRANSPORT_1,
+        self::FIELD_IDENTIFIER_INVOICE_TRANSPORT_2,
+        self::FIELD_IDENTIFIER_INVOICE_OTHER_COSTS,
+        self::FIELD_IDENTIFIER_INVOICE_DEFECT,
+        self::FIELD_IDENTIFIER_INVOICE_CUSTOMS,
+        self::FIELD_IDENTIFIER_INVOICE_AGENT,
+        self::FIELD_IDENTIFIER_INVOICE_WAREHOUSE,
+        self::FIELD_IDENTIFIER_INVOICE_PURCHASE
     ];
 
     public const INVOICE_STATUS_AWAITING = 'awaiting_payment';

@@ -59,10 +59,13 @@ class InvoiceService
             ->where('status', ConfigDefaultInterface::INVOICE_STATUS_AWAITING)->get();
 
         foreach ($invoiceEntities as $entity) {
+            $field = $entity->field_id ? TableService::getFieldById($entity->field_id) : null;
+
             $invoices[] = [
-                'invoice_name' => TableService::getFieldById($entity->field_id)->name,
+                'invoice_name' => $field->name ?? '',
                 'invoice_number' => $entity->invoice_number,
                 'sum' => number_format($entity->sum, 2, '.', ''),
+                'identifier' => $field->identifier ?? '',
             ];
         }
 
@@ -77,11 +80,14 @@ class InvoiceService
             ->where('status', ConfigDefaultInterface::INVOICE_STATUS_PAID)->get();
 
         foreach ($invoiceEntities as $entity) {
+            $field = $entity->field_id ? TableService::getFieldById($entity->field_id) : null;
+
             $invoices[] = [
-                'invoice_name' => $entity->field_id ? TableService::getFieldById($entity->field_id)->name : '',
+                'invoice_name' => $field->name ?? '',
                 'invoice_number' => $entity->invoice_number,
                 'sum' => number_format($entity->sum, 2, '.', ''),
                 'customer' => $entity->customer ? sprintf('SF. %s', $entity->customer) : '',
+                'identifier' => $field->identifier ?? '',
             ];
         }
 

@@ -9,7 +9,9 @@
 
 @section('content')
     <div class="container-fluid px-4">
-        <h6>Time: {{ $execution_time }}</h6>
+        @if(config('app.debug'))
+            <h6>Load time: {{ $execution_time }}</h6>
+        @endif
         <h4 class="mt-4">Orders view</h4>
         @if($tableData)
             <div class="card mb-4">

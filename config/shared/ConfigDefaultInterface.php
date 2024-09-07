@@ -134,6 +134,7 @@ interface ConfigDefaultInterface
     public const FIELD_IDENTIFIER_CARRIER = 'carrier';
     public const FIELD_IDENTIFIER_ITEM_SELLER = 'item_seller';
     public const FIELD_IDENTIFIER_ITEM_MEASUREMENTS = 'item_measurements';
+    public const FIELD_IDENTIFIER_ITEM_QUALITY = 'item_quality';
     public const FIELD_IDENTIFIER_SALES_INVOICE = 'sales_invoice';
     public const FIELD_IDENTIFIER_ORDER_DATE = 'order_date';
     public const FIELD_IDENTIFIER_INVOICE_TRANSPORT_1 = 'invoice_trans_1';

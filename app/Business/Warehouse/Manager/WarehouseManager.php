@@ -2,8 +2,10 @@
 
 namespace App\Business\Warehouse\Manager;
 
+use App\Models\Order\OrderData;
 use App\Models\Order\OrderItem;
 use App\Models\Order\OrderItemData;
+use App\Models\Table\FieldSettings;
 use App\Models\Table\TableField;
 use App\Models\Warehouse\Warehouse;
 use App\Service\TableService;
@@ -31,7 +33,9 @@ class WarehouseManager
             }
 
             $itemPrice = (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_NUMBER)?->value;
-            $itemWorth = $itemPrice * $itemAmount;
+            $itemPrimeCost = $this->calculateItemPrimeCost($itemPrice, $itemId);
+
+            $itemWorth = $itemPrimeCost * $itemAmount;
 
             $totalWorth += $itemWorth;
             $totalItemQuantity += $itemAmount;
@@ -47,6 +51,8 @@ class WarehouseManager
                 'seller' => $this->getItemFieldDataByIdentifier($itemId, ConfigDefaultInterface::FIELD_IDENTIFIER_ITEM_SELLER)?->value,
                 'order' => $this->getOrderDataByItemId($itemId),
                 'item_id' => $itemId,
+                'quality' => $this->getItemFieldDataByIdentifier($itemId, ConfigDefaultInterface::FIELD_IDENTIFIER_ITEM_QUALITY)?->value,
+                'prime_cost' => $itemPrimeCost
             ];
         }
 
@@ -80,6 +86,13 @@ class WarehouseManager
         return $data;
     }
 
+    protected function getOrderFieldDataByType(int $orderId, string $targetField): ?OrderData
+    {
+        $targetFieldId = TableField::where('type', $targetField)->first()?->id;
+
+        return OrderData::where('order_id', $orderId)->where('field_id', $targetFieldId)->first();
+    }
+
     protected function getItemFieldDataByType(int $orderItemId, string $targetField): ?OrderItemData
     {
         $targetFieldId = TableField::where('type', $targetField)->first()?->id;
@@ -102,5 +115,54 @@ class WarehouseManager
             'id' => $order->id,
             'key' => $order->getKeyField(),
         ];
+    }
+
+    private function calculateItemPrimeCost(float $itemPrice, int $itemId): string
+    {
+        $orderId = $this->getOrderDataByItemId($itemId)['id'];
+        $sum = 0.0;
+
+        // Calculate duty 7
+        $field = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_DUTY_7);
+        $calculationIsDisabled = FieldSettings::where('field_id', $field->id)
+            ->where('order_id', $orderId)
+            ->where('setting', ConfigDefaultInterface::AUTO_CALCULATION_SETTING)
+            ->first()?->value;
+        if (!$calculationIsDisabled) {
+            $sum += $itemPrice / 100 * 7;
+        }
+
+        // Calculate duty 15
+        $field = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_DUTY_15);
+        $calculationIsDisabled = FieldSettings::where('field_id', $field->id)
+            ->where('order_id', $orderId)
+            ->where('setting', ConfigDefaultInterface::AUTO_CALCULATION_SETTING)
+            ->first()?->value;
+        if (!$calculationIsDisabled) {
+            $sum += $itemPrice / 100 * 15.8;
+        }
+
+        // Apply item other costs
+        $sum += $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_ITEM_OTHER_COSTS)?->value;
+
+        // Apply additional costs like transportation
+        $costs = [
+            ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1,
+            ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_2,
+            ConfigDefaultInterface::FIELD_TYPE_BROKER,
+            ConfigDefaultInterface::FIELD_TYPE_WAREHOUSES,
+            ConfigDefaultInterface::FIELD_TYPE_BANK,
+            ConfigDefaultInterface::FIELD_TYPE_FLAW,
+            ConfigDefaultInterface::FIELD_TYPE_AGENT,
+            ConfigDefaultInterface::FIELD_TYPE_FACTORING,
+        ];
+
+        foreach ($costs as $cost) {
+            $sum += $this->getOrderFieldDataByType($orderId, $cost)?->value;
+        }
+
+        $primeCost = $itemPrice + $sum;
+
+        return number_format($primeCost, 2, '.', '');
     }
 }

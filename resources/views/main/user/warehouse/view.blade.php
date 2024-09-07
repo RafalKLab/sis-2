@@ -27,8 +27,10 @@
                                     <th scope="col">pavadinimas</th>
                                     <th scope="col">išmatavimai</th>
                                     <th scope="col">klijai</th>
+                                    <th scope="col">kokybė</th>
                                     <th scope="col">kiekis</th>
-                                    <th scope="col">pirkimo kaina</th>
+                                    <th scope="col">vieneto kaina</th>
+                                    <th scope="col">vieneto savikaina</th>
                                     <th scope="col">bendra vertė</th>
                                     <th scope="col">užsakymas</th>
                                 </tr>
@@ -40,8 +42,10 @@
                                         <td>{{ $item['name'] }}</td>
                                         <td>{{ $item['measurement'] }}</td>
                                         <td>{{ $item['glue'] }}</td>
+                                        <td>{{ $item['quality'] }}</td>
                                         <td>{{ $item['amount'] }} {{ $item['measurement_unit'] }}</td>
                                         <td>{{ $item['price'] }}</td>
+                                        <td>{{ $item['prime_cost'] }}</td>
                                         <td>{{ $item['total_price'] }}</td>
                                         <td>
                                             <a class="custom-link" href="{{ route('orders.view', ['id'=>$item['order']['id']]) }}">

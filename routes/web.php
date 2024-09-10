@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function () {
     /* Order item */
     Route::get('/orders/{id}/add-item', [OrderController::class, 'addItem'])->name('orders.add-item');
     Route::post('/orders/{id}/add-item', [OrderController::class, 'storeItem'])->name('orders.store-item');
+    Route::get('/orders/{id}/add-item-from-warehouse', [OrderController::class, 'addItemFromWarehouse'])->name('orders.add-item-from-warehouse');
+    Route::post('/orders/{id}/add-item-from-warehouse', [OrderController::class, 'storeItemFromWarehouse'])->name('orders.add-item-from-warehouse');
     Route::get('/orders/{orderId}/edit-item/{itemId}', [OrderController::class, 'editItem'])->name('orders.edit-item');
     Route::put('/orders/{orderId}/edit-item/{itemId}', [OrderController::class, 'updateItem'])->name('orders.update-item');
     Route::get('/orders/{orderId}/remove-item/{itemId}', [OrderController::class, 'removeItem'])->name('orders.remove-item');

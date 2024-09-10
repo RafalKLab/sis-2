@@ -145,7 +145,7 @@
                                     </div>
                                     <div class="col-md-1 d-flex justify-content-end">
                                         @if(Auth::user()->hasPermissionTo('Add order products'))
-{{--                                            <a href="" class="text-primary" title="Select product from warehouse"><i class="fa-solid fa-warehouse"></i></a> &nbsp;&nbsp;&nbsp;--}}
+                                            <a href="{{ route('orders.add-item-from-warehouse', ['id' => $orderData['id']]) }}" class="text-primary" title="Select product from warehouse"><i class="fa-solid fa-warehouse"></i></a> &nbsp;&nbsp;&nbsp;
                                             <a href="{{ route('orders.add-item', ['id' => $orderData['id']]) }}" class="text-primary" title="Add new product"><i class="fa-solid fa-plus"></i></a>
                                         @endif
                                     </div>

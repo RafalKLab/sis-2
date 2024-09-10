@@ -100,6 +100,12 @@ class ItemsTableConfig implements TableConfigInterface
                 'group' => 'PREKĖS IR LOGISTIKA',
             ],
             [
+                'name' => 'Kiekis iš sandėlio',
+                'type' => 'amount from warehouse',
+                'group' => 'APSKAITA',
+                'identifier' => 'amount from warehouse',
+            ],
+            [
                 'name' => 'Kiekis keliaujantis į sandėlį',
                 'type' => 'amount to warehouse',
                 'group' => 'PREKĖS IR LOGISTIKA',
@@ -115,9 +121,15 @@ class ItemsTableConfig implements TableConfigInterface
                 'group' => 'PREKĖS IR LOGISTIKA',
             ],
             [
-                'name' => 'Pirk 1 m3/m2 kaina',
+                'name' => 'Vnt. pirkimo kaina',
                 'type' => 'purchase number',
                 'group' => 'APSKAITA',
+            ],
+            [
+                'name' => 'Vnt. savikaina',
+                'type' => 'item prime cost',
+                'group' => 'APSKAITA',
+                'identifier' => 'item prime cost',
             ],
             [
                 'name' => 'Pirkimo suma',
@@ -125,7 +137,7 @@ class ItemsTableConfig implements TableConfigInterface
                 'group' => 'APSKAITA',
             ],
             [
-                'name' => 'Pardavimo kaina m3/m2',
+                'name' => 'Vnt. pardavimo kaina',
                 'type' => 'sales number',
                 'group' => 'APSKAITA',
             ],

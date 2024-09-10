@@ -16,7 +16,8 @@ class OrderItem extends Model
     protected $table = 'order_items';
 
     protected $fillable = [
-        'order_id'
+        'order_id',
+        'is_taken_from_warehouse'
     ];
 
     public function order()

@@ -106,6 +106,7 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_SELECT_TRANSPORT = 'select transport';
     public const FIELD_TYPE_DYNAMIC_SELECT = 'dynamic select';
     public const FIELD_TYPE_PURCHASE_SUM = 'purchase sum';
+    public const FIELD_TYPE_ITEM_PRIME_COST = 'item prime cost';
     public const FIELD_TYPE_TOTAL_PURCHASE_SUM = 'total purchase sum';
     public const FIELD_TYPE_SALES_SUM = 'sales sum';
     public const FIELD_TYPE_TOTAL_SALES_SUM = 'total sales sum';
@@ -122,6 +123,7 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_WAREHOUSES = 'warehouses';
     public const FIELD_TYPE_SELECT_WAREHOUSE = 'select warehouse';
     public const FIELD_TYPE_AMOUNT_TO_WAREHOUSE = 'amount to warehouse';
+    public const FIELD_TYPE_AMOUNT_FROM_WAREHOUSE = 'amount from warehouse';
     public const FIELD_TYPE_BANK = 'bank';
     public const FIELD_TYPE_OTHER_COSTS = 'other costs';
     public const FIELD_TYPE_ITEM_OTHER_COSTS = 'item other costs';
@@ -146,6 +148,34 @@ interface ConfigDefaultInterface
     public const FIELD_IDENTIFIER_INVOICE_AGENT = 'invoice_agent';
     public const FIELD_IDENTIFIER_INVOICE_FACTORING = 'invoice_factoring';
     public const FIELD_IDENTIFIER_INVOICE_PURCHASE = 'invoice_purchase';
+
+    public const EXCLUDED_FIELDS_WHEN_TAKING_FROM_WAREHOUSE = [
+        self::FIELD_TYPE_AMOUNT,
+        self::FIELD_TYPE_AMOUNT_TO_WAREHOUSE,
+        self::FIELD_TYPE_PURCHASE_NUMBER,
+        self::FIELD_TYPE_PURCHASE_SUM,
+    ];
+
+    public const EXCLUDED_FIELDS_FOR_NEW_ITEM = [
+        self::FIELD_TYPE_ITEM_PRIME_COST,
+        self::FIELD_TYPE_AMOUNT_FROM_WAREHOUSE,
+    ];
+
+    public const LOCKED_ITEM_FIELDS_WHEN_TAKING_FROM_WAREHOUSE = [
+        self::FIELD_IDENTIFIER_ITEM_SELLER,
+        self::FIELD_IDENTIFIER_ITEM_NAME,
+        self::FIELD_IDENTIFIER_ITEM_MEASUREMENTS,
+        self::FIELD_IDENTIFIER_ITEM_QUALITY,
+        self::FIELD_TYPE_AMOUNT_FROM_WAREHOUSE,
+        self::FIELD_TYPE_ITEM_PRIME_COST,
+    ];
+
+    public const DUPLICATE_FIELDS_WHEN_TAKING_FROM_WAREHOUSE = [
+        self::FIELD_TYPE_SELECT_WAREHOUSE,
+        self::FIELD_TYPE_SELECT_CERTIFICATION,
+        self::FIELD_TYPE_SELECT_GLUE,
+        self::FIELD_TYPE_SELECT_MEASUREMENT,
+    ];
 
     public const INVOICE_AND_REPRESENTED_SUM_MAP = [
         self::FIELD_IDENTIFIER_SALES_INVOICE => self::FIELD_TYPE_TOTAL_SALES_SUM,

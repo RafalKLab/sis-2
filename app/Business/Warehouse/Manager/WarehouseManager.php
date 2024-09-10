@@ -9,11 +9,22 @@ use App\Models\Table\FieldSettings;
 use App\Models\Table\TableField;
 use App\Models\Warehouse\Warehouse;
 use App\Service\TableService;
-use Illuminate\Database\Eloquent\Collection;
+
 use shared\ConfigDefaultInterface;
 
 class WarehouseManager
 {
+    public function collectAllWarehouseItems(): array
+    {
+        $warehouses = Warehouse::where('is_active', 1)->get();
+        $data = [];
+        foreach ($warehouses as $warehouse) {
+            $data[$warehouse->name] = $this->collectWarehouseItems($warehouse);
+        }
+
+        return $data;
+    }
+
     public function collectWarehouseItems(Warehouse $warehouse): array
     {
         $warehouseDataFieldId = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_SELECT_WAREHOUSE)->id;
@@ -86,38 +97,7 @@ class WarehouseManager
         return $data;
     }
 
-    protected function getOrderFieldDataByType(int $orderId, string $targetField): ?OrderData
-    {
-        $targetFieldId = TableField::where('type', $targetField)->first()?->id;
-
-        return OrderData::where('order_id', $orderId)->where('field_id', $targetFieldId)->first();
-    }
-
-    protected function getItemFieldDataByType(int $orderItemId, string $targetField): ?OrderItemData
-    {
-        $targetFieldId = TableField::where('type', $targetField)->first()?->id;
-
-        return OrderItemData::where('order_item_id', $orderItemId)->where('field_id', $targetFieldId)->first();
-    }
-
-    protected function getItemFieldDataByIdentifier(int $orderItemId, string $targetField): ?OrderItemData
-    {
-        $targetFieldId = TableField::where('identifier', $targetField)->first()?->id;
-
-        return OrderItemData::where('order_item_id', $orderItemId)->where('field_id', $targetFieldId)->first();
-    }
-
-    protected function getOrderDataByItemId(int $itemId): array
-    {
-        $order = OrderItem::find($itemId)->order;
-
-        return [
-            'id' => $order->id,
-            'key' => $order->getKeyField(),
-        ];
-    }
-
-    private function calculateItemPrimeCost(float $itemPrice, int $itemId): string
+    public function calculateItemPrimeCost(float $itemPrice, int $itemId): string
     {
         $orderId = $this->getOrderDataByItemId($itemId)['id'];
         $sum = 0.0;
@@ -164,5 +144,36 @@ class WarehouseManager
         $primeCost = $itemPrice + $sum;
 
         return number_format($primeCost, 2, '.', '');
+    }
+
+    protected function getOrderFieldDataByType(int $orderId, string $targetField): ?OrderData
+    {
+        $targetFieldId = TableField::where('type', $targetField)->first()?->id;
+
+        return OrderData::where('order_id', $orderId)->where('field_id', $targetFieldId)->first();
+    }
+
+    protected function getItemFieldDataByType(int $orderItemId, string $targetField): ?OrderItemData
+    {
+        $targetFieldId = TableField::where('type', $targetField)->first()?->id;
+
+        return OrderItemData::where('order_item_id', $orderItemId)->where('field_id', $targetFieldId)->first();
+    }
+
+    protected function getItemFieldDataByIdentifier(int $orderItemId, string $targetField): ?OrderItemData
+    {
+        $targetFieldId = TableField::where('identifier', $targetField)->first()?->id;
+
+        return OrderItemData::where('order_item_id', $orderItemId)->where('field_id', $targetFieldId)->first();
+    }
+
+    protected function getOrderDataByItemId(int $itemId): array
+    {
+        $order = OrderItem::find($itemId)->order;
+
+        return [
+            'id' => $order->id,
+            'key' => $order->getKeyField(),
+        ];
     }
 }

@@ -11,6 +11,7 @@ use App\Models\Order\OrderData;
 use App\Models\Order\OrderItem;
 use App\Models\Order\OrderItemData;
 use App\Models\Table\TableField;
+use App\Models\Warehouse\Warehouse;
 use App\Service\InvoiceService;
 use App\Service\OrderService;
 use App\Service\TableService;
@@ -270,8 +271,140 @@ class OrderController extends MainController
 
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
         $orderFormData = $this->factory()->createOrderManager()->getItemFormData();
+        $itemFromWarehouse = false;
+        $excludedFields = TableService::getExcludedItemFields($itemFromWarehouse);
+        $lockedFields = TableService::getLockedFields();
 
-        return view('main.user.order.add-item', compact('orderData', 'orderFormData'));
+        return view('main.user.order.add-item', compact('orderData', 'orderFormData', 'itemFromWarehouse', 'excludedFields', 'lockedFields'));
+    }
+
+    public function addItemFromWarehouse(int $orderId) {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_ADD_ORDER_PRODUCTS)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
+        }
+
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        $warehouseItems = $this->factory()->createWarehouseManager()->collectAllWarehouseItems();
+
+        $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
+        $orderFormData = $this->factory()->createOrderManager()->getItemFormData();
+
+        return view('main.user.order.add-item-from-warehouse', compact('orderData', 'orderFormData', 'warehouseItems'));
+    }
+
+    public function storeItemFromWarehouse(Request $request, int $orderId) {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_ADD_ORDER_PRODUCTS)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
+        }
+
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        // Initial Validation
+        $validator = Validator::make($request->all(), [
+            'warehouse' => 'required',
+            'item' => 'required',
+            'amount' => 'required|numeric|min:1',
+        ]);
+
+        // Check if the validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Additional Validation: Check if warehouse exists
+        $warehouse = Warehouse::where('name', $request->warehouse)->first();
+        if (!$warehouse) {
+            // Manually add an error to the validator for the warehouse field
+            $validator->errors()->add('warehouse', 'The selected warehouse does not exist');
+
+            // Redirect back with the new error
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $itemFromWarehouse = OrderItem::find($request->item);
+        if (!$itemFromWarehouse) {
+            // Manually add an error to the validator for the warehouse field
+            $validator->errors()->add('item', 'The selected item does not exist');
+
+            // Redirect back with the new error
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Check quantity in warehouse
+        $itemFromWarehouseAmount = $this->getItemFieldDataByType($request->item, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+        if ($request->amount > $itemFromWarehouseAmount) {
+            // Manually add an error to the validator for the warehouse field
+            $validator->errors()->add('amount', 'Insufficient product stock in warehouse');
+
+            // Redirect back with the new error
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $newItem = OrderItem::create([
+            'order_id' => $orderId,
+            'is_taken_from_warehouse' => true,
+        ]);
+
+
+        $lockedFields = TableService::getLockedFields();
+        $duplicateFields = TableService::getDuplicateFields();
+        foreach ($itemFromWarehouse->data as $itemData)
+        {
+            if (in_array($itemData->field_id, $lockedFields)) {
+                $newItem->data()->create([
+                    'value' => $itemData->value,
+                    'field_id' => $itemData->field_id,
+                ]);
+            }
+
+            if (in_array($itemData->field_id, $duplicateFields)) {
+                $newItem->data()->create([
+                    'value' => $itemData->value,
+                    'field_id' => $itemData->field_id,
+                ]);
+            }
+        }
+
+        // Set amount from warehouse
+        $amountFromWarehouseFieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_TYPE_AMOUNT_FROM_WAREHOUSE)->id;
+        $newItem->data()->create([
+            'value' => (int) $request->amount,
+            'field_id' => $amountFromWarehouseFieldId,
+        ]);
+
+        // Set item prime cost from warehouse
+        $itemPrice = (float) $this->getItemFieldDataByType($itemFromWarehouse->id, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_NUMBER)?->value;
+        $itemPrimeCost = $this->factory()->createWarehouseManager()->calculateItemPrimeCost($itemPrice, $itemFromWarehouse->id);
+
+        $itemPrimeCostFieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_TYPE_ITEM_PRIME_COST)->id;
+        $newItem->data()->create([
+            'value' => $itemPrimeCost,
+            'field_id' => $itemPrimeCostFieldId,
+        ]);
+
+        return redirect()->route('orders.edit-item', [
+            'orderId' => $orderId,
+            'itemId' => $newItem->id,
+        ]);
     }
 
     public function storeItem(Request $request, int $orderId) {
@@ -345,11 +478,16 @@ class OrderController extends MainController
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item not found');
         }
 
+        $itemFromWarehouse = $item->is_taken_from_warehouse;
         $isEdit = true;
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
         $orderFormData = $this->extractTargetItem($orderData, $itemId);
+        $excludedFields = TableService::getExcludedItemFields($itemFromWarehouse);
+        $lockedFields = TableService::getLockedFields();
 
-        return view('main.user.order.edit-item', compact('orderData', 'orderFormData', 'isEdit', 'itemId'));
+        return view('main.user.order.edit-item',
+            compact('orderData', 'orderFormData', 'isEdit', 'itemId', 'itemFromWarehouse', 'excludedFields', 'lockedFields'),
+        );
     }
 
     public function updateItem(Request $request, int $orderId, int $itemId)

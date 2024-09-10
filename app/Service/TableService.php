@@ -81,4 +81,31 @@ class TableService
             'amount' => $formattedAmount
         ];
     }
+
+    public static function getExcludedItemFields(bool $itemFromWarehouse): array
+    {
+        if ($itemFromWarehouse) {
+            return TableField::whereIn('type', ConfigDefaultInterface::EXCLUDED_FIELDS_WHEN_TAKING_FROM_WAREHOUSE)
+                ->pluck('id')
+                ->toArray();
+        } else {
+            return TableField::whereIn('type', ConfigDefaultInterface::EXCLUDED_FIELDS_FOR_NEW_ITEM)
+                ->pluck('id')
+                ->toArray();
+        }
+    }
+
+    public static function getLockedFields(): array
+    {
+        return TableField::whereIn('identifier', ConfigDefaultInterface::LOCKED_ITEM_FIELDS_WHEN_TAKING_FROM_WAREHOUSE)
+            ->pluck('id')
+            ->toArray();
+    }
+
+    public static function getDuplicateFields(): array
+    {
+        return TableField::whereIn('type', ConfigDefaultInterface::DUPLICATE_FIELDS_WHEN_TAKING_FROM_WAREHOUSE)
+            ->pluck('id')
+            ->toArray();
+    }
 }

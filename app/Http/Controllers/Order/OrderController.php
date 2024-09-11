@@ -391,6 +391,13 @@ class OrderController extends MainController
             'field_id' => $amountFromWarehouseFieldId,
         ]);
 
+        // Set available amount from warehouse
+        $amountFromWarehouseFieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)->id;
+        $newItem->data()->create([
+            'value' => (int) $request->amount,
+            'field_id' => $amountFromWarehouseFieldId,
+        ]);
+
         // Set item prime cost from warehouse
         $itemPrice = (float) $this->getItemFieldDataByType($itemFromWarehouse->id, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_NUMBER)?->value;
         $itemPrimeCost = $this->factory()->createWarehouseManager()->calculateItemPrimeCost($itemPrice, $itemFromWarehouse->id);
@@ -590,6 +597,11 @@ class OrderController extends MainController
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
         }
 
+        $item = OrderItem::find($itemId);
+        if (!$item) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item not found');
+        }
+
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
             if ($order->user_id !== Auth::user()->id) {
                 return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
@@ -598,7 +610,12 @@ class OrderController extends MainController
 
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
         $availableBuyers = ItemBuyer::query()->distinct()->pluck('name')->toArray();
-        $availableItemQuantity = $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+
+        if ($item->is_taken_from_warehouse) {
+            $availableItemQuantity = $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
+        } else {
+            $availableItemQuantity = $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+        }
 
         return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'availableItemQuantity'));
     }
@@ -622,8 +639,18 @@ class OrderController extends MainController
             'itemId' => 'required',
         ]);
 
+        $orderItem = OrderItem::find($validatedData['itemId']);
+        if (!$orderItem) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order item not found');
+        }
+
         // Available quantity check
-        $availableItemQuantity = (int)$this->getItemFieldDataByType($validatedData['itemId'], ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+        if ($orderItem->is_taken_from_warehouse) {
+            $availableItemQuantity = (int)$this->getItemFieldDataByType($validatedData['itemId'], ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
+        } else {
+            $availableItemQuantity = (int)$this->getItemFieldDataByType($validatedData['itemId'], ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+        }
+
         // Create a manual validator for the available quantity check
         $validator = Validator::make($validatedData, [
             'quantity' => [
@@ -640,11 +667,6 @@ class OrderController extends MainController
             return back()->withErrors($validator)->withInput();
         }
 
-
-        $orderItem = OrderItem::find($validatedData['itemId']);
-        if (!$orderItem) {
-            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order item not found');
-        }
         $orderItem->buyers()->create([
             'name' => $validatedData['buyer'],
             'quantity' => $validatedData['quantity'],
@@ -681,8 +703,16 @@ class OrderController extends MainController
         $isEdit = true;
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
         $availableBuyers = ItemBuyer::query()->distinct()->pluck('name')->toArray();
-        $availableItemQuantity = (int)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
-        $availableItemQuantity += $buyer->quantity;
+
+
+        // Available quantity check
+        if ($item->is_taken_from_warehouse) {
+            $availableItemQuantity = (int)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
+            $availableItemQuantity += $buyer->quantity;
+        } else {
+            $availableItemQuantity = (int)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+            $availableItemQuantity += $buyer->quantity;
+        }
 
         return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'isEdit', 'buyer', 'availableItemQuantity'));
     }
@@ -717,8 +747,15 @@ class OrderController extends MainController
             'itemId' => 'required',
         ]);
 
-        $availableItemQuantity = (int)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
-        $availableItemQuantity += $buyer->quantity;
+        // Available quantity check
+        if ($item->is_taken_from_warehouse) {
+            $availableItemQuantity = (int)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
+            $availableItemQuantity += $buyer->quantity;
+        } else {
+            $availableItemQuantity = (int)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+            $availableItemQuantity += $buyer->quantity;
+        }
+
         // Create a manual validator for the available quantity check
         $validator = Validator::make($validatedData, [
             'quantity' => [
@@ -957,6 +994,7 @@ class OrderController extends MainController
         $calculator->calculatePurchaseSumForItem($orderItem);
         $calculator->calculateSalesSumForItem($orderItem);
         $calculator->calculateQuantityGoingToWarehouse($orderItem);
+        $calculator->calculateAvailableQuantityFromWarehouse($orderItem);
 
         $this->executeOrderCalculations($orderItem->order);
     }

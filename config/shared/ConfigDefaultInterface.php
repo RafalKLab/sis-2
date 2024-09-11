@@ -123,6 +123,7 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_WAREHOUSES = 'warehouses';
     public const FIELD_TYPE_SELECT_WAREHOUSE = 'select warehouse';
     public const FIELD_TYPE_AMOUNT_TO_WAREHOUSE = 'amount to warehouse';
+    public const FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE = 'available amount from warehouse';
     public const FIELD_TYPE_AMOUNT_FROM_WAREHOUSE = 'amount from warehouse';
     public const FIELD_TYPE_BANK = 'bank';
     public const FIELD_TYPE_OTHER_COSTS = 'other costs';
@@ -159,6 +160,7 @@ interface ConfigDefaultInterface
     public const EXCLUDED_FIELDS_FOR_NEW_ITEM = [
         self::FIELD_TYPE_ITEM_PRIME_COST,
         self::FIELD_TYPE_AMOUNT_FROM_WAREHOUSE,
+        self::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE,
     ];
 
     public const LOCKED_ITEM_FIELDS_WHEN_TAKING_FROM_WAREHOUSE = [

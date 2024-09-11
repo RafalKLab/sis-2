@@ -349,6 +349,10 @@ class OrderDataCalculator
             return;
         }
 
+        if ($orderItem->is_taken_from_warehouse) {
+            return;
+        }
+
         // Check if warehouse is assigned
         $warehouseIsAssigned = (bool) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_SELECT_WAREHOUSE)?->value;
 
@@ -377,6 +381,27 @@ class OrderDataCalculator
 
             $orderItem->data()->create($data);
         }
+    }
+
+    public function calculateAvailableQuantityFromWarehouse(OrderItem $orderItem): void
+    {
+        if (!$orderItem->exists) {
+            return;
+        }
+
+        if (!$orderItem->is_taken_from_warehouse) {
+            return;
+        }
+
+        $quantityTakenFromWarehouse = (int) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_FROM_WAREHOUSE)?->value;
+        $totalSalesQuantity = (int) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_AMOUNT)?->value;
+        $value = $quantityTakenFromWarehouse - $totalSalesQuantity;
+
+        $availableQuantityDataEntity = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE);
+
+        $availableQuantityDataEntity->update([
+            'value' => $value,
+        ]);
     }
 
     protected function getOrderFieldData(Order $order, string $targetField): ?OrderData

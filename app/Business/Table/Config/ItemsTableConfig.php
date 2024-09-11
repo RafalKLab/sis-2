@@ -100,10 +100,16 @@ class ItemsTableConfig implements TableConfigInterface
                 'group' => 'PREKĖS IR LOGISTIKA',
             ],
             [
-                'name' => 'Kiekis iš sandėlio',
+                'name' => 'Kiekis paimtas iš sandėlio',
                 'type' => 'amount from warehouse',
                 'group' => 'APSKAITA',
                 'identifier' => 'amount from warehouse',
+            ],
+            [
+                'name' => 'Nepanaudotas kiekis',
+                'type' => 'available amount from warehouse',
+                'group' => 'PREKĖS IR LOGISTIKA',
+                'identifier' => 'available amount from warehouse'
             ],
             [
                 'name' => 'Kiekis keliaujantis į sandėlį',

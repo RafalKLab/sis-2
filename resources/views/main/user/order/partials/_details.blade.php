@@ -264,17 +264,35 @@
                                                                         @break
 
                                                                 @default
-                                                                    <tr>
-                                                                        <th scope="row">{{ $data['field_name'] }}</th>
-                                                                        <td>{{ $data['value'] }} </td>
-                                                                        @if($data['updated_by'])
-                                                                            <td><i>Atnaujino:</i> {{ $data['updated_by'] }}</td>
-                                                                            <td>{{ $data['updated_at'] }}</td>
-                                                                        @else
-                                                                            <td></td>
-                                                                            <td></td>
+                                                                    @if($data['is_from_warehouse'])
+                                                                        @if(!in_array($data['field_id'], $excludedFieldsForDetails['from_warehouse']))
+                                                                                <tr>
+                                                                                    <th scope="row">{{ $data['field_name'] }}</th>
+                                                                                    <td>{{ $data['value'] }} </td>
+                                                                                    @if($data['updated_by'])
+                                                                                        <td><i>Atnaujino:</i> {{ $data['updated_by'] }}</td>
+                                                                                        <td>{{ $data['updated_at'] }}</td>
+                                                                                    @else
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                    @endif
+                                                                                </tr>
                                                                         @endif
-                                                                    </tr>
+                                                                    @else
+                                                                        @if(!in_array($data['field_id'], $excludedFieldsForDetails['not_from_warehouse']))
+                                                                                <tr>
+                                                                                    <th scope="row">{{ $data['field_name'] }}</th>
+                                                                                    <td>{{ $data['value'] }} </td>
+                                                                                    @if($data['updated_by'])
+                                                                                        <td><i>Atnaujino:</i> {{ $data['updated_by'] }}</td>
+                                                                                        <td>{{ $data['updated_at'] }}</td>
+                                                                                    @else
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                    @endif
+                                                                                </tr>
+                                                                        @endif
+                                                                    @endif
                                                             @endswitch
                                                         @endforeach
                                                     </table>

@@ -201,6 +201,7 @@ class OrderManager
                         'updated_at' => $orderItemDataEntity->updated_at,
                         'updated_by' => $orderItemDataEntity->lastUpdatedBy?->name,
                         'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, ItemsTableConfig::TABLE_NAME),
+                        'is_from_warehouse' => $item->is_taken_from_warehouse,
                     ];
                 } else {
                     $itemData['details'][] = [
@@ -213,6 +214,7 @@ class OrderManager
                         'updated_at' => null,
                         'updated_by' => null,
                         'input_select' => $this->getInputSelectByFieldType($field->type, $field->id, ItemsTableConfig::TABLE_NAME),
+                        'is_from_warehouse' => $item->is_taken_from_warehouse,
                     ];
                 }
             }

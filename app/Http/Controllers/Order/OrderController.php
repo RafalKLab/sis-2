@@ -55,7 +55,12 @@ class OrderController extends MainController
 
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
 
-        return view('main.user.order.show', compact('orderData'));
+        $excludedFieldsForDetails = [
+            'from_warehouse' => TableService::getExcludedItemFields(1),
+            'not_from_warehouse' => TableService::getExcludedItemFields(0),
+        ];
+
+        return view('main.user.order.show', compact('orderData', 'excludedFieldsForDetails'));
     }
 
     public function edit(int $orderId)
@@ -82,7 +87,12 @@ class OrderController extends MainController
 
         $orderFormData['details'] = $filtered;
 
-        return view('main.user.order.edit', compact('orderData', 'orderFormData'));
+        $excludedFieldsForDetails = [
+            'from_warehouse' => TableService::getExcludedItemFields(1),
+            'not_from_warehouse' => TableService::getExcludedItemFields(0),
+        ];
+
+        return view('main.user.order.edit', compact('orderData', 'orderFormData', 'excludedFieldsForDetails'));
     }
 
     public function editField(int $orderId, int $fieldId) {
@@ -115,7 +125,12 @@ class OrderController extends MainController
             ];
         }
 
-        return view('main.user.order.edit', compact('orderData', 'orderFormData'));
+        $excludedFieldsForDetails = [
+            'from_warehouse' => TableService::getExcludedItemFields(1),
+            'not_from_warehouse' => TableService::getExcludedItemFields(0),
+        ];
+
+        return view('main.user.order.edit', compact('orderData', 'orderFormData', 'excludedFieldsForDetails'));
     }
 
     public function update(Request $request, int $orderId)
@@ -274,8 +289,16 @@ class OrderController extends MainController
         $itemFromWarehouse = false;
         $excludedFields = TableService::getExcludedItemFields($itemFromWarehouse);
         $lockedFields = TableService::getLockedFields();
+        $excludedFieldsForDetails = [
+            'from_warehouse' => TableService::getExcludedItemFields(1),
+            'not_from_warehouse' => TableService::getExcludedItemFields(0),
+        ];
 
-        return view('main.user.order.add-item', compact('orderData', 'orderFormData', 'itemFromWarehouse', 'excludedFields', 'lockedFields'));
+
+        return view(
+            'main.user.order.add-item',
+            compact('orderData', 'orderFormData', 'itemFromWarehouse', 'excludedFields', 'lockedFields','excludedFieldsForDetails'),
+        );
     }
 
     public function addItemFromWarehouse(int $orderId) {
@@ -298,8 +321,13 @@ class OrderController extends MainController
 
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
         $orderFormData = $this->factory()->createOrderManager()->getItemFormData();
+        $excludedFieldsForDetails = [
+            'from_warehouse' => TableService::getExcludedItemFields(1),
+            'not_from_warehouse' => TableService::getExcludedItemFields(0),
+        ];
 
-        return view('main.user.order.add-item-from-warehouse', compact('orderData', 'orderFormData', 'warehouseItems'));
+
+        return view('main.user.order.add-item-from-warehouse', compact('orderData', 'orderFormData', 'warehouseItems', 'excludedFieldsForDetails'));
     }
 
     public function storeItemFromWarehouse(Request $request, int $orderId) {
@@ -492,8 +520,13 @@ class OrderController extends MainController
         $excludedFields = TableService::getExcludedItemFields($itemFromWarehouse);
         $lockedFields = TableService::getLockedFields();
 
+        $excludedFieldsForDetails = [
+            'from_warehouse' => TableService::getExcludedItemFields(1),
+            'not_from_warehouse' => TableService::getExcludedItemFields(0),
+        ];
+
         return view('main.user.order.edit-item',
-            compact('orderData', 'orderFormData', 'isEdit', 'itemId', 'itemFromWarehouse', 'excludedFields', 'lockedFields'),
+            compact('orderData', 'orderFormData', 'isEdit', 'itemId', 'itemFromWarehouse', 'excludedFields', 'lockedFields', 'excludedFieldsForDetails'),
         );
     }
 
@@ -611,13 +644,18 @@ class OrderController extends MainController
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
         $availableBuyers = ItemBuyer::query()->distinct()->pluck('name')->toArray();
 
+        $excludedFieldsForDetails = [
+            'from_warehouse' => TableService::getExcludedItemFields(1),
+            'not_from_warehouse' => TableService::getExcludedItemFields(0),
+        ];
+
         if ($item->is_taken_from_warehouse) {
             $availableItemQuantity = $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
         } else {
             $availableItemQuantity = $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
         }
 
-        return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'availableItemQuantity'));
+        return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'availableItemQuantity', 'excludedFieldsForDetails'));
     }
 
     public function storeBuyer(Request $request, int $orderId) {
@@ -704,6 +742,10 @@ class OrderController extends MainController
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
         $availableBuyers = ItemBuyer::query()->distinct()->pluck('name')->toArray();
 
+        $excludedFieldsForDetails = [
+            'from_warehouse' => TableService::getExcludedItemFields(1),
+            'not_from_warehouse' => TableService::getExcludedItemFields(0),
+        ];
 
         // Available quantity check
         if ($item->is_taken_from_warehouse) {
@@ -714,7 +756,7 @@ class OrderController extends MainController
             $availableItemQuantity += $buyer->quantity;
         }
 
-        return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'isEdit', 'buyer', 'availableItemQuantity'));
+        return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'isEdit', 'buyer', 'availableItemQuantity', 'excludedFieldsForDetails'));
     }
 
     public function updateBuyer(Request $request, int $orderId, int $itemId, int $buyerId)
@@ -866,9 +908,14 @@ class OrderController extends MainController
             ];
         }
 
+        $excludedFieldsForDetails = [
+            'from_warehouse' => TableService::getExcludedItemFields(1),
+            'not_from_warehouse' => TableService::getExcludedItemFields(0),
+        ];
+
         $invoiceStatusSelect = ConfigDefaultInterface::AVAILABLE_INVOICE_STATUS_SELECT;
 
-        return view('main.user.order.edit-customer-invoice', compact('orderData', 'customer', 'invoiceData', 'invoiceStatusSelect', 'orderId'));
+        return view('main.user.order.edit-customer-invoice', compact('orderData', 'customer', 'invoiceData', 'invoiceStatusSelect', 'orderId', 'excludedFieldsForDetails'));
     }
 
     public function saveCustomerInvoice(Request $request, int $orderId, string $customer)

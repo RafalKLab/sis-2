@@ -17,7 +17,9 @@ class OrderItem extends Model
 
     protected $fillable = [
         'order_id',
-        'is_taken_from_warehouse'
+        'is_taken_from_warehouse',
+        'parent_item',
+        'is_locked',
     ];
 
     public function order()

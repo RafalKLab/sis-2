@@ -40,4 +40,13 @@ window.addEventListener('DOMContentLoaded', event => {
             paging: false
         });
     }
+
+    const warehouseOverviewTable = document.getElementById('warehouseOverviewTable');
+    if (warehouseOverviewTable) {
+        new simpleDatatables.DataTable(warehouseOverviewTable, {
+            perPage: 2,              // Set the number of records per page to 25.
+            perPageSelect: false,     // Disable the per-page select dropdown.
+            sortable: false
+        });
+    }
 });

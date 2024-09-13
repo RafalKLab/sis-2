@@ -61,41 +61,86 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <div class="col-md-6">
-                            <i class="fa-solid fa-warehouse"></i>
-                            {{ $warehouse->name }} <span class="text-danger">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <div class="col-md-6">
+                                    <i class="fa-solid fa-warehouse"></i>
+                                    {{ $warehouse->name }} <span class="text-danger">
                                 @if(!$warehouse->is_active)
-                                    Disabled
-                                @endif
+                                            Disabled
+                                        @endif
                             </span>
-                        </div>
-                        <div class="col-md-3 d-flex justify-content-end">
-                            <span class="text-primary"><i style="cursor: pointer" id="edit_warehouse" class="fa-solid fa-pen" onclick="showModal()"></i></span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card product-worth">
-                                    <div class="amount-block">
-                                        <span id="totalProducts" data-target="{{ $items['total_quantity'] }}">0</span>
+                                </div>
+                                <div class="col-md-3 d-flex justify-content-end">
+                                    <span class="text-primary"><i style="cursor: pointer" id="edit_warehouse" class="fa-solid fa-pen" onclick="showModal()"></i></span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card product-worth">
+                                            <div class="amount-block">
+                                                <span id="totalProducts" data-target="{{ $items['total_quantity'] }}">0</span>
+                                            </div>
+                                            <div class="label-block">
+                                                Prekių kiekis
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="label-block">
-                                        Prekių kiekis
+                                    <div class="col-md-6">
+                                        <div class="card product-worth">
+                                            <div class="amount-block">
+                                                €<span id="netWorth" data-target="{{ $items['total_worth'] }}">0.00</span>
+                                            </div>
+                                            <div class="label-block">
+                                                Bendra vertė
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="card product-worth">
-                                    <div class="amount-block">
-                                        €<span id="netWorth" data-target="{{ $items['total_worth'] }}">0.00</span>
-                                    </div>
-                                    <div class="label-block">
-                                        Bendra vertė
-                                    </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <div class="col-md-6">
+                                    <i title="Showing last 30 entries" class="fa-solid fa-arrow-right-arrow-left"></i>
+                                    Overview
                                 </div>
+                            </div>
+                            <div class="card-body">
+                                <row>
+                                    <div class="col-md-12">
+                                        <div class="">
+                                            <table class="table">
+                                                <tbody>
+                                                @foreach($warehouseStockOverview as $itemStock)
+                                                    <tr>
+                                                        <td>{{ $itemStock['item_name'] }} (id:{{ $itemStock['warehouse_item_id'] }})</td>
+                                                        <td>
+                                                            {{ $itemStock['quantity'] }}
+                                                            </br>
+                                                            @if($itemStock['type'] === 'incoming')
+                                                                <i class="fa-solid fa-arrow-left text-success "></i>
+                                                            @else
+                                                                <i class="fa-solid fa-arrow-right text-danger"></i>
+                                                            @endif
+                                                        </td>
+                                                        <td><a class="custom-link" href="{{ route('orders.view', ['id'=>$itemStock['order_id']]) }}">{{ $itemStock['order_key'] }}</a></td>
+                                                        <td>{{ $itemStock['date'] }}</td>
+                                                    </tr>
+                                                @endforeach
+                                                </tbody>
+                                            </table>
+                                            Showing 30 newest entries
+                                        </div>
+                                    </div>
+                                </row>
                             </div>
                         </div>
                     </div>

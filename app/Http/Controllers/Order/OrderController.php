@@ -15,6 +15,7 @@ use App\Models\Warehouse\Warehouse;
 use App\Service\InvoiceService;
 use App\Service\OrderService;
 use App\Service\TableService;
+use App\Service\WarehouseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -378,7 +379,9 @@ class OrderController extends MainController
         }
 
         // Check quantity in warehouse
-        $itemFromWarehouseAmount = $this->getItemFieldDataByType($request->item, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+        $warehouseId = $this->getItemFieldDataByType($request->item, ConfigDefaultInterface::FIELD_TYPE_SELECT_WAREHOUSE)?->value;
+        $itemFromWarehouseAmount = WarehouseService::getItemStock($itemFromWarehouse->id, $warehouseId);
+
         if ($request->amount > $itemFromWarehouseAmount) {
             // Manually add an error to the validator for the warehouse field
             $validator->errors()->add('amount', 'Insufficient product stock in warehouse');
@@ -390,6 +393,7 @@ class OrderController extends MainController
         $newItem = OrderItem::create([
             'order_id' => $orderId,
             'is_taken_from_warehouse' => true,
+            'parent_item' => $itemFromWarehouse->id,
         ]);
 
 
@@ -435,6 +439,12 @@ class OrderController extends MainController
             'value' => $itemPrimeCost,
             'field_id' => $itemPrimeCostFieldId,
         ]);
+
+        // Lock parent item
+        $itemFromWarehouse->is_locked = true;
+        $itemFromWarehouse->save();
+
+        WarehouseService::updateItemWarehouseStock($newItem);
 
         return redirect()->route('orders.edit-item', [
             'orderId' => $orderId,
@@ -494,6 +504,8 @@ class OrderController extends MainController
 
         $this->logItemAdded($order, $orderItem);
 
+        WarehouseService::updateItemWarehouseStock($orderItem);
+
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('New item was added to order'));
     }
 
@@ -511,6 +523,10 @@ class OrderController extends MainController
         $item = OrderItem::find($itemId);
         if (!$item) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item not found');
+        }
+
+        if ($item->is_locked) {
+            return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
         }
 
         $itemFromWarehouse = $item->is_taken_from_warehouse;
@@ -590,6 +606,12 @@ class OrderController extends MainController
 
         $this->executeItemCalculations($item);
 
+        $item->refresh();
+        if (!$item->is_taken_from_warehouse)
+        {
+            WarehouseService::updateItemWarehouseStock($item);
+        }
+
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item was updated '));
     }
 
@@ -606,6 +628,10 @@ class OrderController extends MainController
         $item = OrderItem::find($itemId);
         if (!$item) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item not found');
+        }
+
+        if ($item->is_locked) {
+            return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
         }
 
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
@@ -633,6 +659,10 @@ class OrderController extends MainController
         $item = OrderItem::find($itemId);
         if (!$item) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item not found');
+        }
+
+        if ($item->is_locked) {
+            return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
         }
 
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
@@ -712,6 +742,8 @@ class OrderController extends MainController
 
         $this->executeItemCalculations($orderItem);
 
+        WarehouseService::updateItemWarehouseStock($orderItem);
+
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was added '));
     }
 
@@ -731,6 +763,10 @@ class OrderController extends MainController
         $item = OrderItem::find($itemId);
         if (!$item) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order item not found');
+        }
+
+        if ($item->is_locked) {
+            return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
         }
 
         $buyer = ItemBuyer::find($buyerId);
@@ -821,6 +857,8 @@ class OrderController extends MainController
 
         $this->executeItemCalculations($item);
 
+        WarehouseService::updateItemWarehouseStock($item);
+
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was updated '));
     }
 
@@ -846,6 +884,10 @@ class OrderController extends MainController
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order item not found');
         }
 
+        if ($item->is_locked) {
+            return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
+        }
+
         $buyer = ItemBuyer::find($buyerId);
         if (!$buyer) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item buyer not found');
@@ -861,6 +903,8 @@ class OrderController extends MainController
         $buyer->delete();
 
         $this->executeItemCalculations($item);
+
+        WarehouseService::updateItemWarehouseStock($item);
 
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was removed '));
     }

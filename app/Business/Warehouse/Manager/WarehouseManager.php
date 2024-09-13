@@ -8,8 +8,11 @@ use App\Models\Order\OrderItemData;
 use App\Models\Table\FieldSettings;
 use App\Models\Table\TableField;
 use App\Models\Warehouse\Warehouse;
+use App\Models\Warehouse\WarehouseStock;
+use App\Service\OrderService;
 use App\Service\TableService;
 
+use App\Service\WarehouseService;
 use shared\ConfigDefaultInterface;
 
 class WarehouseManager
@@ -38,7 +41,14 @@ class WarehouseManager
         $totalWorth = 0.00;
         $items = [];
         foreach ($itemIds as $itemId) {
-            $itemAmount = (int) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+
+            $item = OrderItem::find($itemId);
+            if ($item->is_taken_from_warehouse) {
+                continue;
+            }
+
+            $itemAmount = WarehouseService::getItemStock($itemId, $warehouse->id);
+
             if (!$itemAmount) {
                 continue;
             }
@@ -87,7 +97,12 @@ class WarehouseManager
                 ->pluck('order_item_id')
                 ->toArray();
             foreach ($itemIds as $itemId) {
-                $itemAmount = (int)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+                $item = OrderItem::find($itemId);
+                if ($item->is_taken_from_warehouse) {
+                    continue;
+                }
+
+                $itemAmount = WarehouseService::getItemStock($itemId, $warehouseId);
                 $totalItemQuantity += $itemAmount;
             }
 
@@ -175,5 +190,23 @@ class WarehouseManager
             'id' => $order->id,
             'key' => $order->getKeyField(),
         ];
+    }
+
+    public function collectWarehouseStockOverview(int $warehouseId): array
+    {
+        $warehouseStockEntities = WarehouseStock::where('warehouse_id', $warehouseId)
+            ->orderBy('date', 'desc')
+            ->limit(30)
+            ->get()
+            ->toArray();
+
+        // Populate with additional data
+        foreach ($warehouseStockEntities as &$stockEntity) {
+            $stockEntity['order_key'] = OrderService::getKeyFieldFrom($stockEntity['order_id'])->value;
+            $stockEntity['item_name'] = OrderItem::find($stockEntity['warehouse_item_id'])?->getNameField();
+        }
+        unset($stockEntity);
+
+        return $warehouseStockEntities;
     }
 }

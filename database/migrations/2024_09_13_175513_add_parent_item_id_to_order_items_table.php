@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('order_items', function (Blueprint $table) {
-            $table->boolean('is_taken_from_warehouse')->default(0)->after('order_id');
+            $table->integer('parent_item')->nullable()->after('is_taken_from_warehouse');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('order_items', function (Blueprint $table) {
-            $table->dropColumn('is_taken_from_warehouse');
+            $table->dropColumn('parent_item');
         });
     }
 };

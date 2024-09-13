@@ -36,8 +36,9 @@ class WarehouseController extends MainController
         }
 
         $items = $this->factory()->createWarehouseManager()->collectWarehouseItems($warehouse);
+        $warehouseStockOverview = $this->factory()->createWarehouseManager()->collectWarehouseStockOverview($warehouse->id);
 
-        return view('main.user.warehouse.view', compact('warehouse', 'items'));
+        return view('main.user.warehouse.view', compact('warehouse', 'items', 'warehouseStockOverview'));
     }
 
     public function create(Request $request)

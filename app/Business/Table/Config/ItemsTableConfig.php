@@ -47,6 +47,7 @@ class ItemsTableConfig implements TableConfigInterface
                 'name' => 'Klijai',
                 'type' => 'select glue',
                 'group' => 'PREKĖS IR LOGISTIKA',
+                'identifier' => 'item_glue',
             ],
             [
                 'name' => 'Bendras pirkimo kiekis',
@@ -88,11 +89,13 @@ class ItemsTableConfig implements TableConfigInterface
                 'name' => 'Trans. nr.',
                 'type' => 'text',
                 'group' => 'PREKĖS IR LOGISTIKA',
+                'identifier' => 'trans_number',
             ],
             [
                 'name' => 'Muitinė',
                 'type' => 'dynamic select',
                 'group' => 'PREKĖS IR LOGISTIKA',
+                'identifier' => 'customs_name',
             ],
             [
                 'name' => 'Sandėlis',

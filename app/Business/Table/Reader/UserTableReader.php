@@ -4,10 +4,14 @@ namespace App\Business\Table\Reader;
 
 use App\Business\Table\Config\TableConfig;
 use App\Models\Order\Invoice;
+use App\Models\Order\ItemBuyer;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
+use App\Models\Order\OrderItem;
+use App\Models\Order\OrderItemData;
 use App\Models\Table\Table;
 use App\Models\Table\TableField;
+use App\Models\Warehouse\Warehouse;
 use App\Service\InvoiceService;
 use App\Service\TableService;
 use Illuminate\Support\Facades\Auth;
@@ -161,6 +165,9 @@ class UserTableReader implements TableReaderInterface
 
     protected function formatOrdersData($orders): array
     {
+        // Get item fields
+        $itemFields = TableService::getItemFields();
+
         // Assuming $orders is a collection of Order models
         $fileFieldName = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_FILE)->name;
 
@@ -195,7 +202,17 @@ class UserTableReader implements TableReaderInterface
             return $data;
         });
 
-        return $ordersData->all();
+        $data = $ordersData->all();
+
+
+        // populate with order items data
+        foreach ($data as &$order) {
+            $order['items']['fields'] = $itemFields;
+            $order['items']['data'] = $this->collectOrderItemsData($order['id'], $itemFields);
+        }
+        unset($order);
+
+        return $data;
     }
 
     protected function getStatusColorClass(TableField $field, ?OrderData $orderDataEntity): string
@@ -222,5 +239,50 @@ class UserTableReader implements TableReaderInterface
         }
 
         return ConfigDefaultInterface::ORDER_STATUS_MAP[$status];
+    }
+
+    private function collectOrderItemsData(int $id, array $itemFields): array
+    {
+        $warehouses = Warehouse::all()->pluck('name', 'id')->toArray();
+
+        $data = [];
+        $items = OrderItem::where('order_id', $id)->get();
+        foreach ($items as $item) {
+            $itemData = [];
+            foreach ($itemFields as $field) {
+                $value = OrderItemData::where('order_item_id', $item->id)->where('field_id', $field['id'])->first()?->value;
+
+                if ($field['type'] === ConfigDefaultInterface::FIELD_TYPE_SELECT_WAREHOUSE) {
+                    $value = $warehouses[$value];
+                }
+
+                if ($field['type'] == ConfigDefaultInterface::FIELD_ITEM_LOAD_DATE && $value) {
+                    $value = sprintf('<div class="order-field-status-yellow">%s</div>', $value);
+                }
+
+                if ($field['type'] == ConfigDefaultInterface::FIELD_ITEM_DELIVERY_DATE && $value) {
+                    $value = sprintf('<div class="order-field-status-green">%s</div>', $value);
+                }
+
+                $itemData[] = $value;
+            }
+
+            $data[] = [
+                'details' => $itemData,
+                'buyers' => $this->collectOrderItemBuyers($item->id),
+            ];
+        }
+
+        return $data;
+    }
+
+    private function collectOrderItemBuyers(int $id): string
+    {
+        $buyerNames = [];
+        foreach (ItemBuyer::where('order_item_id', $id)->get() as $buyer) {
+            $buyerNames[] = $buyer->name;
+        }
+
+        return implode(', ', $buyerNames);
     }
 }

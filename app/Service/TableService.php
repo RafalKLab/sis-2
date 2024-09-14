@@ -108,4 +108,25 @@ class TableService
             ->pluck('id')
             ->toArray();
     }
+
+    public static function getItemFields(): array
+    {
+        $fields = [];
+
+        foreach (ConfigDefaultInterface::ITEM_TABLE_FIELDS as $field => $selector) {
+            switch ($selector) {
+                case 'type':
+                    $fieldEntity = TableService::getFieldByType($field);
+
+                    break;
+                case 'identifier':
+                    $fieldEntity = TableService::getFieldByIdentifier($field);
+                    break;
+            }
+
+            $fields[] = $fieldEntity->toArray();
+        }
+
+        return $fields;
+    }
 }

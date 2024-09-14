@@ -83,6 +83,22 @@ interface ConfigDefaultInterface
         ],
     ];
 
+    // Order view table items list
+    public const ITEM_TABLE_FIELDS = [
+        self::FIELD_IDENTIFIER_ITEM_NAME => 'identifier',
+        self::FIELD_IDENTIFIER_ITEM_MEASUREMENTS => 'identifier',
+        self::FIELD_IDENTIFIER_ITEM_QUALITY => 'identifier',
+        self::FIELD_IDENTIFIER_ITEM_GLUE => 'identifier',
+        self::FIELD_TYPE_AMOUNT => 'type',
+        self::FIELD_TYPE_AMOUNT_FROM_WAREHOUSE => 'type',
+        self::FIELD_TYPE_SELECT_WAREHOUSE => 'type',
+        self::FIELD_IDENTIFIER_CARRIER => 'identifier',
+        self::FIELD_IDENTIFIER_ITEM_TRANS_NUMBER => 'identifier',
+        self::FIELD_IDENTIFIER_ITEM_CUSTOMS_NAME => 'identifier',
+        self::FIELD_ITEM_LOAD_DATE => 'type',
+        self::FIELD_ITEM_DELIVERY_DATE => 'type',
+    ];
+
     /* Filesystem */
     public const FILE_SYSTEM_PRIVATE = 'private';
 
@@ -133,11 +149,16 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_FACTORING = 'factoring';
     public const FIELD_TYPE_PROFIT = 'profit';
     public const FIELD_TYPE_INVOICE = 'invoice';
+    public const FIELD_ITEM_LOAD_DATE = 'load date';
+    public const FIELD_ITEM_DELIVERY_DATE = 'delivery date';
     public const FIELD_IDENTIFIER_ITEM_NAME = 'item_name';
     public const FIELD_IDENTIFIER_CARRIER = 'carrier';
     public const FIELD_IDENTIFIER_ITEM_SELLER = 'item_seller';
     public const FIELD_IDENTIFIER_ITEM_MEASUREMENTS = 'item_measurements';
     public const FIELD_IDENTIFIER_ITEM_QUALITY = 'item_quality';
+    public const FIELD_IDENTIFIER_ITEM_GLUE = 'item_glue';
+    public const FIELD_IDENTIFIER_ITEM_TRANS_NUMBER = 'trans_number';
+    public const FIELD_IDENTIFIER_ITEM_CUSTOMS_NAME = 'customs_name';
     public const FIELD_IDENTIFIER_SALES_INVOICE = 'sales_invoice';
     public const FIELD_IDENTIFIER_ORDER_DATE = 'order_date';
     public const FIELD_IDENTIFIER_INVOICE_TRANSPORT_1 = 'invoice_trans_1';

@@ -29,3 +29,8 @@ tbody tr:hover {
 .marked-row {
     background-color: #DEE2E6;
 }
+
+.items-table {
+    min-width: 150px !important;
+    font-size: 11px;
+}

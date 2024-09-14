@@ -43,7 +43,13 @@
                             <thead>
                             <tr>
                                 <th>Užregistravo</th>
-                                @foreach($tableData['fields'] as $field)
+                                @foreach($tableData['fields'] as $index => $field)
+                                    @can('See order products')
+                                        @if($index == 2)
+                                            <th>Prekių sąrašas</th>
+                                        @endif
+                                    @endcan
+
                                     <th style="background-color: {{$field['color']}};">{{$field['name']}}</th>
                                 @endforeach
                                 <th></th>
@@ -53,7 +59,40 @@
                             @foreach($tableData['orders']['data'] as $order)
                                 <tr class>
                                     <td>{{ $order['user'] }}</td>
-                                    @foreach($tableData['fields'] as $field)
+                                    @foreach($tableData['fields'] as $index => $field)
+                                        @can('See order products')
+                                            @if($index == 2)
+                                                <td>
+                                                    <table class="items-table">
+                                                        <thead>
+                                                        <tr>
+                                                            @foreach($order['items']['fields'] as $index => $itemField)
+                                                                @if($index == 7)
+                                                                    <th>Pirkėjai</th>
+                                                                @endif
+                                                                <th>{{ $itemField['name'] }}</th>
+                                                            @endforeach
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach($order['items']['data'] as $itemData)
+                                                            <tr>
+                                                                @foreach($itemData['details'] as $index => $itemDatum)
+                                                                    @if($index == 7)
+                                                                        <td>
+                                                                            {{ $itemData['buyers'] }}
+                                                                        </td>
+                                                                    @endif
+                                                                    <td>{!! $itemDatum !!}</td>
+                                                                @endforeach
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            @endif
+                                        @endcan
+
                                         @if(array_key_exists($field['name'], $order))
                                             @switch($field['type'])
                                                 @case('id')

@@ -742,7 +742,10 @@ class OrderController extends MainController
 
         $this->executeItemCalculations($orderItem);
 
-        WarehouseService::updateItemWarehouseStock($orderItem);
+
+        if (!$orderItem->is_taken_from_warehouse) {
+            WarehouseService::updateItemWarehouseStock($orderItem);
+        }
 
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was added '));
     }
@@ -857,7 +860,9 @@ class OrderController extends MainController
 
         $this->executeItemCalculations($item);
 
-        WarehouseService::updateItemWarehouseStock($item);
+        if (!$item->is_taken_from_warehouse) {
+            WarehouseService::updateItemWarehouseStock($item);
+        }
 
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was updated '));
     }

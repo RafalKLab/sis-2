@@ -253,7 +253,7 @@ class UserTableReader implements TableReaderInterface
                 $value = OrderItemData::where('order_item_id', $item->id)->where('field_id', $field['id'])->first()?->value;
 
                 if ($field['type'] === ConfigDefaultInterface::FIELD_TYPE_SELECT_WAREHOUSE) {
-                    $value = $warehouses[$value];
+                    $value = $warehouses[$value] ?? null;
                 }
 
                 if ($field['type'] == ConfigDefaultInterface::FIELD_ITEM_LOAD_DATE && $value) {

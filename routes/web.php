@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Carrier\CarrierController;
 use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\Feedback\FeedbackController;
 use App\Http\Controllers\FieldSettings\FieldSettingsController;
 use App\Http\Controllers\File\FileController;
 use App\Http\Controllers\Invoice\InvoiceController;
@@ -17,15 +18,21 @@ use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Statistics\StatisticsController;
 use App\Http\Controllers\Statistics\UserStatisticsController;
 use App\Http\Controllers\Warehouse\WarehouseController;
+use App\Models\Dashboard\Feedback;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
 Route::get('/dashboard', function () {
-    return view('main.dashboard');
+    $feedback = Feedback::orderBy('created_at', 'desc')->get();
+
+    return view('main.dashboard', compact('feedback'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    /* Dashboard/feedback */
+    Route::post('/feedback', [FeedbackController::class, 'create'])->name('feedback.create');
+
     /* Profile */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

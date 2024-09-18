@@ -27,6 +27,7 @@ function initializeUserPerformanceBarChart(labels, data) {
                         display: false
                     },
                     ticks: {
+                        autoSkip: false,
                         maxTicksLimit: 6
                     }
                 }],

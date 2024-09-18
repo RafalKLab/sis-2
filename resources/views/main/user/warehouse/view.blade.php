@@ -23,16 +23,16 @@
                             <table class="table" id="datatablesSimple">
                                 <thead>
                                 <tr>
-                                    <th scope="col">id</th>
-                                    <th scope="col">pavadinimas</th>
-                                    <th scope="col">išmatavimai</th>
-                                    <th scope="col">klijai</th>
-                                    <th scope="col">kokybė</th>
-                                    <th scope="col">kiekis</th>
-                                    <th scope="col">vieneto kaina</th>
-                                    <th scope="col">vieneto savikaina</th>
-                                    <th scope="col">bendra vertė</th>
-                                    <th scope="col">užsakymas</th>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Pavadinimas</th>
+                                    <th scope="col">Išmatavimai</th>
+                                    <th scope="col">Klijai</th>
+                                    <th scope="col">Kokybė</th>
+                                    <th scope="col">Kiekis</th>
+                                    <th scope="col">Vieneto kaina</th>
+                                    <th scope="col">Vieneto savikaina</th>
+                                    <th scope="col">Vendra vertė</th>
+                                    <th scope="col">Užsakymas</th>
                                 </tr>
                                 </thead>
                                 <tbody>

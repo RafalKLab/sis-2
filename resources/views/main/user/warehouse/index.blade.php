@@ -20,11 +20,11 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th scope="col">id</th>
-                                <th scope="col">name</th>
-                                <th scope="col">address</th>
-                                <th scope="col">products in stock</th>
-                                <th scope="col">status</th>
+                                <th scope="col">Id</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Address</th>
+                                <th scope="col">Products in stock</th>
+                                <th scope="col">Status</th>
                             </tr>
                             </thead>
                             <tbody>

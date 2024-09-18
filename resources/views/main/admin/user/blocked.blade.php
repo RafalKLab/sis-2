@@ -14,10 +14,10 @@
                     <table class="table" id="datatablesSimple">
                         <thead>
                         <tr>
-                            <th>id</th>
-                            <th>full name</th>
-                            <th>email</th>
-                            <th>role</th>
+                            <th>Id</th>
+                            <th>Full name</th>
+                            <th>Email</th>
+                            <th>Role</th>
                             <th>actions</th>
                         </tr>
                         </thead>

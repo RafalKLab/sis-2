@@ -56,11 +56,11 @@
                                                 <table class="table">
                                                     <thead>
                                                     <tr>
-                                                        <th scope="col">#</th>
-                                                        <th scope="col">vardas</th>
-                                                        <th scope="col">el-paštas</th>
-                                                        <th scope="col">atlikti užsakymai</th>
-                                                        <th scope="col">gautas pelnas</th>
+                                                        <th scope="col">Vieta</th>
+                                                        <th scope="col">Vardas</th>
+                                                        <th scope="col">El-paštas</th>
+                                                        <th scope="col">Atlikti užsakymai</th>
+                                                        <th scope="col">Gautas pelnas</th>
                                                         <th scope="col"></th>
                                                     </tr>
                                                     </thead>

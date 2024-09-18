@@ -17,11 +17,11 @@
                     <table class="table" id="datatablesSimple">
                         <thead>
                         <tr>
-                            <th>id</th>
-                            <th>full name</th>
-                            <th>email</th>
-                            <th>role</th>
-                            <th>actions</th>
+                            <th>Id</th>
+                            <th>Full name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>

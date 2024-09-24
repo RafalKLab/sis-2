@@ -71,6 +71,7 @@ class TableService
         } else {
             $representationField = self::getFieldByType($representationFieldType);
             $amount = OrderService::getOrderDataFor($representationField->id, $orderId)?->value;
+            $amount = (float) $amount;
             $formattedAmount = number_format($amount, 2, '.', '');
             $representationFieldName = $representationField->name;
         }

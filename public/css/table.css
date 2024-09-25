@@ -34,3 +34,10 @@ tbody tr:hover {
     min-width: 150px !important;
     font-size: 11px;
 }
+
+.scrollbar-mirror {
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+    /* Mirror any custom scrollbar styles here */
+}

@@ -38,6 +38,7 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="scrollbar-mirror" id="top-scrollbar"></div>
                     <div class="table-responsive">
                         <table class="table" id="orders-table-admin">
                             <thead>
@@ -189,6 +190,24 @@
                     target.classList.toggle('marked-row');
                 }
             });
+
+
+            var tableContainer = document.querySelector('.table-responsive');
+            var topScrollbar = document.getElementById('top-scrollbar');
+
+            // Create a dummy div inside the top scrollbar container that matches the width of the table
+            var scrollContent = document.createElement('div');
+            scrollContent.style.width = `${tableContainer.scrollWidth}px`;
+            scrollContent.style.height = '1px'; // Invisible but necessary for scrolling
+            topScrollbar.appendChild(scrollContent);
+
+            // Function to sync scroll positions
+            topScrollbar.onscroll = function() {
+                tableContainer.scrollLeft = this.scrollLeft;
+            };
+            tableContainer.onscroll = function() {
+                topScrollbar.scrollLeft = this.scrollLeft;
+            };
         });
     </script>
 @endsection

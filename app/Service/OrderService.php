@@ -50,9 +50,19 @@ class OrderService
 
     public static function generateKeyField(int $orderId): string
     {
-        $orderId = (string) $orderId;
+        $lastOrderWithoutParent = Order::where('parent_id', NULL)->where('id', '!=', $orderId)->orderBy('created_at', 'desc')->limit(1)->get();
+        if ($lastOrderWithoutParent->isEmpty()) {
+            $intValue = 1;
+        } else {
+            $lastOrderWithoutParent = $lastOrderWithoutParent[0];
+            $numericValue = preg_replace('/\D/', '', $lastOrderWithoutParent->getKeyField());
+            $intValue = (int) $numericValue;
+            $intValue++;
+        }
 
-        return 'KP-' . str_pad($orderId, 6, '0', STR_PAD_LEFT);
+        $stringValue = (string) $intValue;
+
+        return 'KP-' . str_pad($stringValue, 6, '0', STR_PAD_LEFT);
     }
 
     public static function generateKeyFieldForChild(int $orderId): string

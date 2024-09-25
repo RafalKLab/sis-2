@@ -49,6 +49,7 @@ class OrderItem extends Model
         $purchaseSumFieldId = TableField::where('type', ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM)->first()->id;
 
         $sum = OrderItemData::where('field_id', $purchaseSumFieldId)->where('order_item_id', $this->id)->first()?->value;
+        $sum = (float) $sum;
         $sum = number_format($sum, 2, '.', '');
 
         return $sum;
@@ -59,6 +60,7 @@ class OrderItem extends Model
         $salesNumberFieldId = TableField::where('type', ConfigDefaultInterface::FIELD_TYPE_SALES_NUMBER)->first()->id;
 
         $salesNumber = OrderItemData::where('field_id', $salesNumberFieldId)->where('order_item_id', $this->id)->first()?->value;
+        $salesNumber = (float) $salesNumber;
         $salesNumber = number_format($salesNumber, 2, '.', '');
 
         return $salesNumber;
@@ -69,6 +71,7 @@ class OrderItem extends Model
         $purchaseSumFieldId = TableField::where('type', ConfigDefaultInterface::FIELD_TYPE_SALES_SUM)->first()->id;
 
         $sum = OrderItemData::where('field_id', $purchaseSumFieldId)->where('order_item_id', $this->id)->first()?->value;
+        $sum = (float) $sum;
         $sum = number_format($sum, 2, '.', '');
 
         return $sum;

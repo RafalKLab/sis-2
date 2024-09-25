@@ -15,9 +15,9 @@ class OrderDataCalculator
 {
     public function calculateTotalPurchaseSum(Order $order): void
     {
-        $sum = 0;
+        $sum = 0.0;
         foreach ($order->items as $item) {
-            $sum += $item->getPurchaseSum();
+            $sum += (float) $item->getPurchaseSum();
         }
 
         $formattedResult = number_format($sum, 2, '.', '');
@@ -40,12 +40,12 @@ class OrderDataCalculator
     public function calculateDuty7(Order $order): void
     {
         // 1 collect needed fields purchase number and amount
-        $purchaseSum = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TOTAL_PURCHASE_SUM)?->value;
+        $purchaseSum = (float) $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TOTAL_PURCHASE_SUM)?->value;
         if (!$purchaseSum) {
             $purchaseSum = 0.0;
         }
 
-        $transportPrice1 = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1)?->value;
+        $transportPrice1 = (float) $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1)?->value;
         if (!$transportPrice1) {
             $transportPrice1 = 0.0;
         }
@@ -87,12 +87,12 @@ class OrderDataCalculator
     public function calculateDuty15(Order $order): void
     {
         // 1 collect needed fields purchase number and amount
-        $purchaseSum = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TOTAL_PURCHASE_SUM)?->value;
+        $purchaseSum = (float) $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TOTAL_PURCHASE_SUM)?->value;
         if (!$purchaseSum) {
             $purchaseSum = 0.0;
         }
 
-        $transportPrice1 = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1)?->value;
+        $transportPrice1 = (float) $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1)?->value;
         if (!$transportPrice1) {
             $transportPrice1 = 0.0;
         }
@@ -176,9 +176,9 @@ class OrderDataCalculator
     }
 
     public function calculateTotalSalesSum(Order $order): void {
-        $sum = 0;
+        $sum = 0.0;
         foreach ($order->items as $item) {
-            $sum += $item->getSalesSum();
+            $sum += (float) $item->getSalesSum();
         }
 
         $formattedResult = number_format($sum, 2, '.', '');
@@ -201,12 +201,12 @@ class OrderDataCalculator
     public function calculateTotalProfit(Order $order): void
     {
         // 1 collect needed fields purchase number and amount
-        $totalSalesSum = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_SUM)?->value;
+        $totalSalesSum = (float) $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_SUM)?->value;
         if (!$totalSalesSum) {
             $totalSalesSum = 0.0;
         }
 
-        $primeCost = $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PRIME_COST)?->value;
+        $primeCost = (float) $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_PRIME_COST)?->value;
         if (!$primeCost) {
             $primeCost = 0.0;
         }
@@ -331,11 +331,11 @@ class OrderDataCalculator
         $totalItemSalesAmount = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_AMOUNT);
         if ($totalItemSalesAmount !== null) {
             $totalItemSalesAmount->update([
-                'value' => $totalAmount,
+                'value' => (float) $totalAmount,
             ]);
         } else {
             $data = [
-                'value' => $totalAmount,
+                'value' => (float) $totalAmount,
                 'field_id' => TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_AMOUNT)->id,
             ];
 
@@ -356,8 +356,8 @@ class OrderDataCalculator
         // Check if warehouse is assigned
         $warehouseIsAssigned = (bool) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_SELECT_WAREHOUSE)?->value;
 
-        $availableQuantity = (int) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_AMOUNT)?->value;
-        $totalSalesQuantity = (int) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_AMOUNT)?->value;
+        $availableQuantity = (float) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_AMOUNT)?->value;
+        $totalSalesQuantity = (float) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_AMOUNT)?->value;
         $value = $availableQuantity - $totalSalesQuantity;
 
         if ($value < 0) {
@@ -393,8 +393,8 @@ class OrderDataCalculator
             return;
         }
 
-        $quantityTakenFromWarehouse = (int) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_FROM_WAREHOUSE)?->value;
-        $totalSalesQuantity = (int) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_AMOUNT)?->value;
+        $quantityTakenFromWarehouse = (float) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_FROM_WAREHOUSE)?->value;
+        $totalSalesQuantity = (float) $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_TOTAL_SALES_AMOUNT)?->value;
         $value = $quantityTakenFromWarehouse - $totalSalesQuantity;
 
         $availableQuantityDataEntity = $this->getItemFieldData($orderItem, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE);

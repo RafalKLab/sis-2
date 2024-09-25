@@ -138,7 +138,7 @@ class WarehouseManager
         }
 
         // Apply item other costs
-        $sum += $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_ITEM_OTHER_COSTS)?->value;
+        $sum += (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_ITEM_OTHER_COSTS)?->value;
 
         // Apply additional costs like transportation
         $costs = [

@@ -89,6 +89,7 @@ interface ConfigDefaultInterface
         self::FIELD_IDENTIFIER_ITEM_MEASUREMENTS => 'identifier',
         self::FIELD_IDENTIFIER_ITEM_QUALITY => 'identifier',
         self::FIELD_IDENTIFIER_ITEM_GLUE => 'identifier',
+        self::FIELD_TYPE_SELECT_MEASUREMENT => 'type',
         self::FIELD_TYPE_AMOUNT => 'type',
         self::FIELD_TYPE_AMOUNT_FROM_WAREHOUSE => 'type',
         self::FIELD_TYPE_SELECT_WAREHOUSE => 'type',

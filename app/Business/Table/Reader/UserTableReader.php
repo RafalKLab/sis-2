@@ -98,7 +98,7 @@ class UserTableReader implements TableReaderInterface
             } else {
                 $orders = Order::where('user_id', Auth::user()->id)
                     ->whereIn('id', $searchedOrderIds)
-                    ->orderBy('updated_at', 'desc')
+                    ->orderBy('created_at', 'desc')
                     ->paginate(self::PAGINATION_ITEMS_PER_PAGE);
             }
         } else {

@@ -79,6 +79,8 @@ class OrderItem extends Model
         $itemOtherCosts = TableField::where('type', ConfigDefaultInterface::FIELD_TYPE_ITEM_OTHER_COSTS)->first()->id;
 
         $costs = OrderItemData::where('field_id', $itemOtherCosts)->where('order_item_id', $this->id)->first()?->value;
+        $costs = (float) $costs;
+
         $costs = number_format($costs, 2, '.', '');
 
         return $costs;

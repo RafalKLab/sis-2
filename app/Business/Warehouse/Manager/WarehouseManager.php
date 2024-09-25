@@ -153,7 +153,7 @@ class WarehouseManager
         ];
 
         foreach ($costs as $cost) {
-            $sum += $this->getOrderFieldDataByType($orderId, $cost)?->value;
+            $sum += (float) $this->getOrderFieldDataByType($orderId, $cost)?->value;
         }
 
         $primeCost = $itemPrice + $sum;

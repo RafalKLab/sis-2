@@ -37,7 +37,7 @@ class WarehouseManager
             ->pluck('order_item_id')
             ->toArray();
 
-        $totalItemQuantity = 0;
+        $totalItemQuantity = 0.0;
         $totalWorth = 0.00;
         $items = [];
         foreach ($itemIds as $itemId) {
@@ -91,7 +91,7 @@ class WarehouseManager
 
         $data = [];
         foreach ($warehouseIds as $warehouseId) {
-            $totalItemQuantity = 0;
+            $totalItemQuantity = 0.0;
             $itemIds = OrderItemData::where('field_id', $warehouseDataFieldId)
                 ->where('value', $warehouseId)
                 ->pluck('order_item_id')

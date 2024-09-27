@@ -97,7 +97,7 @@ class WarehouseService
         }
     }
 
-    public static function getItemStock(int $itemId, int $warehouseId): int
+    public static function getItemStock(int $itemId, int $warehouseId): float
     {
         $netQuantity = WarehouseStock::where('warehouse_item_id', $itemId)
             ->where('warehouse_id', $warehouseId)
@@ -107,6 +107,6 @@ class WarehouseService
             ')
             ->value('net_quantity');
 
-        return (int) $netQuantity;
+        return round((float) $netQuantity, 3);
     }
 }

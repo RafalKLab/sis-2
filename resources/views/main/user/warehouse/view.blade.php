@@ -31,7 +31,7 @@
                                     <th scope="col">Kiekis</th>
                                     <th scope="col">Vieneto kaina</th>
                                     <th scope="col">Vieneto savikaina</th>
-                                    <th scope="col">Vendra vertė</th>
+                                    <th scope="col">Bendra vertė</th>
                                     <th scope="col">Užsakymas</th>
                                 </tr>
                                 </thead>
@@ -239,7 +239,7 @@
             const totalProductsTarget = parseInt(totalProductsSpan.getAttribute('data-target'));
             const netWorthTarget = parseFloat(netWorthSpan.getAttribute('data-target'));
 
-            animateValue(totalProductsSpan, 0, totalProductsTarget, 1500); // No decimals for total products
+            animateValue(totalProductsSpan, 0, totalProductsTarget, 1500, 2); // No decimals for total products
             animateValue(netWorthSpan, 0, netWorthTarget, 1500, 2); // Two decimals for net worth
 
             // Check if there are any validation errors and show the modal if there are

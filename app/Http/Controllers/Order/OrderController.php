@@ -351,7 +351,7 @@ class OrderController extends MainController
         $validator = Validator::make($request->all(), [
             'warehouse' => 'required',
             'item' => 'required',
-            'amount' => 'required|numeric|min:1',
+            'amount' => 'required|numeric|min:1|integer',
         ]);
 
         // Check if the validation fails
@@ -419,14 +419,14 @@ class OrderController extends MainController
         // Set amount from warehouse
         $amountFromWarehouseFieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_TYPE_AMOUNT_FROM_WAREHOUSE)->id;
         $newItem->data()->create([
-            'value' => (int) $request->amount,
+            'value' => (float) $request->amount,
             'field_id' => $amountFromWarehouseFieldId,
         ]);
 
         // Set available amount from warehouse
         $amountFromWarehouseFieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)->id;
         $newItem->data()->create([
-            'value' => (int) $request->amount,
+            'value' => (float) $request->amount,
             'field_id' => $amountFromWarehouseFieldId,
         ]);
 
@@ -680,9 +680,9 @@ class OrderController extends MainController
         ];
 
         if ($item->is_taken_from_warehouse) {
-            $availableItemQuantity = $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
+            $availableItemQuantity = (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
         } else {
-            $availableItemQuantity = $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+            $availableItemQuantity = (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
         }
 
         return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'availableItemQuantity', 'excludedFieldsForDetails'));
@@ -703,7 +703,7 @@ class OrderController extends MainController
         // Validation rules
         $validatedData = $request->validate([
             'buyer' => 'required',
-            'quantity' => 'required|numeric|min:1', // Ensure quantity is a number and at least 1
+            'quantity' => 'required|numeric|gt:0|integer', // Ensure quantity is a number and at least 1
             'itemId' => 'required',
         ]);
 
@@ -714,9 +714,9 @@ class OrderController extends MainController
 
         // Available quantity check
         if ($orderItem->is_taken_from_warehouse) {
-            $availableItemQuantity = (int)$this->getItemFieldDataByType($validatedData['itemId'], ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
+            $availableItemQuantity = (float)$this->getItemFieldDataByType($validatedData['itemId'], ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
         } else {
-            $availableItemQuantity = (int)$this->getItemFieldDataByType($validatedData['itemId'], ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+            $availableItemQuantity = (float)$this->getItemFieldDataByType($validatedData['itemId'], ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
         }
 
         // Create a manual validator for the available quantity check
@@ -788,10 +788,10 @@ class OrderController extends MainController
 
         // Available quantity check
         if ($item->is_taken_from_warehouse) {
-            $availableItemQuantity = (int)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
+            $availableItemQuantity = (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
             $availableItemQuantity += $buyer->quantity;
         } else {
-            $availableItemQuantity = (int)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+            $availableItemQuantity = (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
             $availableItemQuantity += $buyer->quantity;
         }
 
@@ -824,16 +824,16 @@ class OrderController extends MainController
         // Validation rules
         $validatedData = $request->validate([
             'buyer' => 'required',
-            'quantity' => 'required|numeric|min:1', // Ensure quantity is a number and at least 1
+            'quantity' => 'required|numeric|min:1|integer',
             'itemId' => 'required',
         ]);
 
         // Available quantity check
         if ($item->is_taken_from_warehouse) {
-            $availableItemQuantity = (int)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
+            $availableItemQuantity = (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
             $availableItemQuantity += $buyer->quantity;
         } else {
-            $availableItemQuantity = (int)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+            $availableItemQuantity = (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
             $availableItemQuantity += $buyer->quantity;
         }
 
@@ -904,12 +904,13 @@ class OrderController extends MainController
             return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_ERROR, sprintf('Can not delete buyer that has invoice assigned'));
         }
 
-        // TODO Implement permissions and check invoice
         $buyer->delete();
 
         $this->executeItemCalculations($item);
 
-        WarehouseService::updateItemWarehouseStock($item);
+        if (!$item->is_taken_from_warehouse) {
+            WarehouseService::updateItemWarehouseStock($item);
+        }
 
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was removed '));
     }

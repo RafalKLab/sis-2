@@ -22,6 +22,21 @@
         <div class="row mt-3 mb-5">
             <div class="col-xl-12 col-md-12 mb-3">
                 <div class="card">
+                    <div class="card-body bg-primary text-white"><b>Pataisų užrašai</b> <i>2024-09-30</i></div>
+                    <div class="card-footer align-items-center justify-content-between">
+
+                        <h6>Ištaisytos klaidos:</h6>
+                        <ul>
+                            <li>Užsakymo numerio blogas eiliškumas, kai prieš tai užsakymas turėjo susietą užsakymą.</li>
+                            <li>Pirkimo/pardavimo kiekis suapvalintas iki sveikojo skaičiaus.</li>
+                            <li>Pakoreguotas klijų pavadinimas: WBP</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-12 col-md-12 mb-3">
+                <div class="card">
                     <div class="card-body bg-primary text-white"><b>Pataisų užrašai</b> <i>2024-09-25</i></div>
                     <div class="card-footer align-items-center justify-content-between">
                         <h6>Jūsų informacijai:</h6>

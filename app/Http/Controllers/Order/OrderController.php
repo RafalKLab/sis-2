@@ -351,7 +351,7 @@ class OrderController extends MainController
         $validator = Validator::make($request->all(), [
             'warehouse' => 'required',
             'item' => 'required',
-            'amount' => 'required|numeric|min:1|integer',
+            'amount' => 'required|numeric|gt:0',
         ]);
 
         // Check if the validation fails
@@ -703,7 +703,7 @@ class OrderController extends MainController
         // Validation rules
         $validatedData = $request->validate([
             'buyer' => 'required',
-            'quantity' => 'required|numeric|gt:0|integer', // Ensure quantity is a number and at least 1
+            'quantity' => 'required|numeric|gt:0', // Ensure quantity is a number and at least 1
             'itemId' => 'required',
         ]);
 
@@ -824,7 +824,7 @@ class OrderController extends MainController
         // Validation rules
         $validatedData = $request->validate([
             'buyer' => 'required',
-            'quantity' => 'required|numeric|min:1|integer',
+            'quantity' => 'required|numeric|min:1',
             'itemId' => 'required',
         ]);
 

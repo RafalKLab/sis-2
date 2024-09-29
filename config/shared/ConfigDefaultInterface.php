@@ -273,7 +273,7 @@ interface ConfigDefaultInterface
 
     public const ORDER_GLUE_MAP = [
         'MR',
-        'WPB',
+        'WBP',
     ];
 
     public const ORDER_MEASUREMENT_MAP = [

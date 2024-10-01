@@ -45,14 +45,14 @@ class OrderDataCalculator
             $purchaseSum = 0.0;
         }
 
-        $transportPrice1 = (float) $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1)?->value;
-        if (!$transportPrice1) {
-            $transportPrice1 = 0.0;
+        $transportPrice1BeforeEs = (float) $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1_BEFORE_ES)?->value;
+        if (!$transportPrice1BeforeEs) {
+            $transportPrice1BeforeEs = 0.0;
         }
 
         // Convert strings to floats
         $firstNumber = (float) $purchaseSum;
-        $secondNumber = (float) $transportPrice1;
+        $secondNumber = (float) $transportPrice1BeforeEs;
 
         $result = ($firstNumber + $secondNumber) * 0.07;
         $formattedResult = number_format($result, 2, '.', '');
@@ -92,14 +92,14 @@ class OrderDataCalculator
             $purchaseSum = 0.0;
         }
 
-        $transportPrice1 = (float) $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1)?->value;
-        if (!$transportPrice1) {
-            $transportPrice1 = 0.0;
+        $transportPrice1BeforeEs = (float) $this->getOrderFieldData($order, ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1_BEFORE_ES)?->value;
+        if (!$transportPrice1BeforeEs) {
+            $transportPrice1BeforeEs = 0.0;
         }
 
         // Convert strings to floats
         $firstNumber = (float) $purchaseSum;
-        $secondNumber = (float) $transportPrice1;
+        $secondNumber = (float) $transportPrice1BeforeEs;
 
         $result = ($firstNumber + $secondNumber) * 0.158;
         $formattedResult = number_format($result, 2, '.', '');
@@ -135,10 +135,12 @@ class OrderDataCalculator
     {
         $primeCostComponents = [
             ConfigDefaultInterface::FIELD_TYPE_TOTAL_PURCHASE_SUM,
+            ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1_BEFORE_ES,
             ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1,
             ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_2,
             ConfigDefaultInterface::FIELD_TYPE_DUTY_7,
             ConfigDefaultInterface::FIELD_TYPE_DUTY_15,
+            ConfigDefaultInterface::FIELD_TYPE_TAX_DIFF,
             ConfigDefaultInterface::FIELD_TYPE_BROKER,
             ConfigDefaultInterface::FIELD_TYPE_WAREHOUSES,
             ConfigDefaultInterface::FIELD_TYPE_BANK,

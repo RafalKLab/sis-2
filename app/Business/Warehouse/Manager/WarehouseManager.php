@@ -143,6 +143,7 @@ class WarehouseManager
         // Apply additional costs like transportation
         $costs = [
             ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1,
+            ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1_BEFORE_ES,
             ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_2,
             ConfigDefaultInterface::FIELD_TYPE_BROKER,
             ConfigDefaultInterface::FIELD_TYPE_WAREHOUSES,

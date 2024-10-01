@@ -161,7 +161,7 @@ class AdminFieldController extends MainController
         ]);
 
         $tableId = $this->getTableFromContext()->id;
-        $order = TableField::all()->count() + 1;
+        $order = TableField::where('table_id', $tableId)->count() + 1;
 
         $field = TableField::create([
             'order' => $order,

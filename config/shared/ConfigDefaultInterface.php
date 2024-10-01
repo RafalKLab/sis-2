@@ -133,6 +133,8 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_SALES_NUMBER = 'sales number';
     public const FIELD_TYPE_DUTY_7 = 'duty 7';
     public const FIELD_TYPE_DUTY_15 = 'duty 15';
+    public const FIELD_TYPE_TAX_DIFF = 'tax difference';
+    public const FIELD_TYPE_TRANSPORT_PRICE_1_BEFORE_ES = 'transport price 1 before es';
     public const FIELD_TYPE_TRANSPORT_PRICE_1 = 'transport price 1';
     public const FIELD_TYPE_TRANSPORT_PRICE_2 = 'transport price 2';
     public const FIELD_TYPE_PRIME_COST = 'prime cost';
@@ -203,7 +205,7 @@ interface ConfigDefaultInterface
 
     public const INVOICE_AND_REPRESENTED_SUM_MAP = [
         self::FIELD_IDENTIFIER_SALES_INVOICE => self::FIELD_TYPE_TOTAL_SALES_SUM,
-        self::FIELD_IDENTIFIER_INVOICE_TRANSPORT_1 => self::FIELD_TYPE_TRANSPORT_PRICE_1,
+        self::FIELD_IDENTIFIER_INVOICE_TRANSPORT_1 => [self::FIELD_TYPE_TRANSPORT_PRICE_1_BEFORE_ES, self::FIELD_TYPE_TRANSPORT_PRICE_1],
         self::FIELD_IDENTIFIER_INVOICE_TRANSPORT_2 => self::FIELD_TYPE_TRANSPORT_PRICE_2,
         self::FIELD_IDENTIFIER_INVOICE_OTHER_COSTS => self::FIELD_TYPE_OTHER_COSTS,
         self::FIELD_IDENTIFIER_INVOICE_DEFECT => self::FIELD_TYPE_FLAW,
@@ -212,7 +214,6 @@ interface ConfigDefaultInterface
         self::FIELD_IDENTIFIER_INVOICE_AGENT => self::FIELD_TYPE_AGENT,
         self::FIELD_IDENTIFIER_INVOICE_FACTORING => self::FIELD_TYPE_FACTORING,
         self::FIELD_IDENTIFIER_INVOICE_PURCHASE => self::FIELD_TYPE_TOTAL_PURCHASE_SUM,
-
     ];
 
     public const EXPENSE_INVOICES = [

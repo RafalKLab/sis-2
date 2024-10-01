@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Admin;
 
+use App\Business\BusinessFactory;
 use App\Models\Table\TableField;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -59,13 +60,26 @@ class CreateUsers extends Command
 
     private function createUsers(): void
     {
+        // Field map
+        $fieldNameIdMap = [];
+        $tableId = (new BusinessFactory())->createTableManagerAdmin()->getMainTable()->id;
+
+        $fields = TableField::where('table_id', $tableId)->get();
+        foreach ($fields as $field) {
+            $fieldNameIdMap[$field->name] = $field->id;
+        }
+
         // Create user
         foreach ($this->users as $userData) {
-            $user = User::create([
-                'name' => $userData['name'],
-                'email' => $userData['email'],
-                'password' => Hash::make($userData['password']),
-            ]);
+            $user = User::where('email', $userData['email'])->first();
+
+            if (!$user) {
+                $user = User::create([
+                    'name' => $userData['name'],
+                    'email' => $userData['email'],
+                    'password' => Hash::make($userData['password']),
+                ]);
+            }
 
             // Assign roles if needed
             foreach ($userData['roles'] as $role) {
@@ -82,7 +96,12 @@ class CreateUsers extends Command
                 $fieldIds = TableField::where('table_id', '1')->pluck('id')->toArray();
                 $user->fields()->sync($fieldIds);
             } else {
-                $user->fields()->sync($userData['fields']);
+                $mappedFields = array_map(function ($fieldName) use ($fieldNameIdMap) {
+                    // Return the ID corresponding to the field name, or null if not found
+                    return $fieldNameIdMap[$fieldName] ?? null;
+                }, $userData['fields']);
+
+                $user->fields()->sync($mappedFields);
             }
         }
     }

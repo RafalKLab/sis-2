@@ -36,7 +36,12 @@ class TableConfig implements TableConfigInterface
                 'group' => 'APSKAITA',
             ],
             [
-                'name' => 'Trans. kaina 1',
+                'name' => 'Trans. kaina 1 (iki ES)',
+                'type' => 'transport price 1 before es',
+                'group' => 'APSKAITA',
+            ],
+            [
+                'name' => 'Trans. kaina 1 (ES viduje)',
                 'type' => 'transport price 1',
                 'group' => 'APSKAITA',
             ],
@@ -56,6 +61,12 @@ class TableConfig implements TableConfigInterface
                 'type' => 'duty 15',
                 'group' => 'APSKAITA',
                 'identifier' => 'duty_15',
+            ],
+            [
+                'name' => 'Mokesčių skirtumas',
+                'type' => 'tax difference',
+                'group' => 'APSKAITA',
+                'identifier' => 'tax_difference',
             ],
             [
                 'name' => 'Brokeris',

@@ -224,6 +224,7 @@ class OrderManager
             $itemData['settings']['purchase_sum_field_name'] = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_PURCHASE_SUM)->name;
             $itemData['settings']['sales_sum'] = $item->getSalesSum();
             $itemData['settings']['sales_sum_field_name'] = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_SALES_SUM)->name;
+            $itemData['settings']['is_locked'] = $item->is_locked;
 
             $itemData['buyers'] = $this->collectItemBuyers($item);
 

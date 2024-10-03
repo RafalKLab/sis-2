@@ -169,6 +169,10 @@
                                                 <td>
                                                     {{ $name }}
                                                     <i class="fa-solid fa-chevron-down"></i>
+                                                    @if($item['settings']['is_locked'])
+                                                        <span title="This item is used in other orders and cannot be edited." class="locked-item-icon"><i class="fa-solid fa-lock"></i></span>
+                                                    @endif
+
                                                 </td>
                                                 <td>
                                                     {{$item['settings']['purchase_sum_field_name']}}: {{$item['settings']['purchase_sum']}}

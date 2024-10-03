@@ -30,6 +30,13 @@
                     @endif
                 </div>
 
+                <div class="form-group mb-2">
+                    <input name="copy_related_order" class="form-check-input" type="checkbox" id="copyRelatedOrder" >
+                    <label class="form-check-label" for="copyRelatedOrder">
+                        Copy related order data
+                    </label>
+                </div>
+
                 <button type="submit" class="btn btn-primary mt-4">Confirm</button>
             </form>
         </div>

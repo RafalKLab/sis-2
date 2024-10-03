@@ -236,6 +236,30 @@ class OrderController extends MainController
             'user_id' => auth()->user()->id,
         ]);
 
+        $copyRelatedOrder = $request->copy_related_order;
+
+        if ($parentOrder && $copyRelatedOrder) {
+
+            // Copy related order items
+            $parentItems = $parentOrder->items;
+
+            foreach ($parentItems as $parentItem) {
+
+                $newItem = OrderItem::create([
+                    'order_id' => $newOrder->id,
+                ]);
+
+                foreach ($parentItem->data as $parentItemData) {
+                    $newItem->data()->create([
+                        'value' => $parentItemData->value,
+                        'field_id' => $parentItemData->field_id,
+                    ]);
+                }
+
+            }
+
+        }
+
         return redirect()->route('orders.view', ['id' => $newOrder->id])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Order registered');
     }
 

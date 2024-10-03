@@ -303,6 +303,7 @@ class OrderManager
 
         foreach ($order->items as $item) {
             $itemSellPrice = OrderItemData::where('order_item_id', $item->id)->where('field_id', $itemSellPriceFieldId)->first()?->value;
+            $itemSellPrice = (float) $itemSellPrice;
 
             foreach ($item->buyers as $buyer) {
                 $buyers[$buyer->name]['price_for_items'][] = $itemSellPrice * $buyer->quantity;

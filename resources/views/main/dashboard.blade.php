@@ -22,6 +22,22 @@
         <div class="row mt-3 mb-5">
             <div class="col-xl-12 col-md-12 mb-3">
                 <div class="card">
+                    <div class="card-body bg-primary text-white"><b>Pataisų užrašai</b> <i>2024-10-03</i></div>
+                    <div class="card-footer align-items-center justify-content-between">
+
+                        <h6>Jūsų informacijai:</h6>
+                        <ul>
+                            <li>Pridėtas naujas transporto kainos iki ES sienos langelis, kuris naudojamas skaičiuojant mokesčius.</li>
+                            <li>Pridėtas naujas langelis mokesčių skirtumas</li>
+                            <li>Transporto kaina 1 (ES viduje) neturi įtakos mokesčių skaičiavimui.</li>
+                            <li>Pridėta galimybė kopijuoti susietus užsakymo produktus kuriant naują užsakymą.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-12 col-md-12 mb-3">
+                <div class="card">
                     <div class="card-body bg-primary text-white"><b>Pataisų užrašai</b> <i>2024-09-30</i></div>
                     <div class="card-footer align-items-center justify-content-between">
 

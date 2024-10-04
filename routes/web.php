@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{orderId}/remove-item/{itemId}', [OrderController::class, 'removeItem'])->name('orders.remove-item');
 
     /* Item buyer */
+    Route::get('/orders/{orderId}/item/{itemId}/unlock', [OrderController::class, 'unlockItem'])->name('orders.unlock-item');
     Route::get('/orders/{orderId}/item/{itemId}/add-buyer', [OrderController::class, 'addBuyer'])->name('orders.add-item-buyer');
     Route::post('/orders/{orderId}/item/{itemId}/add-buyer', [OrderController::class, 'storeBuyer'])->name('orders.store-item-buyer');
     Route::get('/orders/{orderId}/item/{itemId}/edit-buyer/{buyerId}', [OrderController::class, 'editBuyer'])->name('orders.edit-item-buyer');

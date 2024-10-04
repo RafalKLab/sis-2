@@ -181,7 +181,10 @@
                                                     {{$item['settings']['sales_sum_field_name']}}: {{$item['settings']['sales_sum']}}
                                                 </td>
                                                 <td class="text-end">
-                                                    <a title="Add buyer" href="{{route('orders.add-item-buyer', ['orderId'=>$orderData['id'], 'itemId'=>$item['settings']['item_id']])}}"><i class="fa-solid fa-user-plus"></i></a>
+                                                    @if($item['settings']['is_locked'] && Auth::user()->hasPermissionTo('Unlock item'))
+                                                        <a href="{{ route('orders.unlock-item', ['orderId'=>$orderData['id'], 'itemId'=>$item['settings']['item_id']]) }}" class="text-primary" title="Unlock item" onclick="return confirm('Are you sure you want to unlock this item?')"><i class="fa-solid fa-lock-open text-warning"></i></a>
+                                                    @endif
+                                                    <a style="margin-left: 10px;" title="Add buyer" href="{{route('orders.add-item-buyer', ['orderId'=>$orderData['id'], 'itemId'=>$item['settings']['item_id']])}}"><i class="fa-solid fa-user-plus"></i></a>
                                                     @if(Auth::user()->hasPermissionTo('Edit order products'))
                                                         <a style="margin-left: 10px;" href="{{ route('orders.edit-item', ['orderId' => $orderData['id'], 'itemId' => $item['settings']['item_id']]) }}" title="Edit"><i class="fa-solid fa-pen"></i></a>
                                                     @endif

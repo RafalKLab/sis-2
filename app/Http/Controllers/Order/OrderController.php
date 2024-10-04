@@ -533,6 +533,38 @@ class OrderController extends MainController
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('New item was added to order'));
     }
 
+    public function unlockItem(int $orderId, int $itemId) {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_EDIT_ORDER_PRODUCTS)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_UNLOCK_ITEM)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
+        }
+
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        $item = OrderItem::find($itemId);
+        if (!$item) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item not found');
+        }
+
+        $item->is_locked = false;
+        $item->save();
+
+        $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
+
+        $excludedFieldsForDetails = [
+            'from_warehouse' => TableService::getExcludedItemFields(1),
+            'not_from_warehouse' => TableService::getExcludedItemFields(0),
+        ];
+
+        return view('main.user.order.show', compact('orderData', 'excludedFieldsForDetails'));
+    }
+
     public function editItem(int $orderId, int $itemId)
     {
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_EDIT_ORDER_PRODUCTS)) {

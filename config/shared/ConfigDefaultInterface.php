@@ -18,6 +18,7 @@ interface ConfigDefaultInterface
     public const PERMISSION_EDIT_ORDER_PRODUCTS = 'Edit order products';
     public const PERMISSION_REMOVE_ORDER_PRODUCTS = 'Remove order products';
     public const PERMISSION_REMOVE_ITEM_BUYER = 'Remove item buyer';
+    public const PERMISSION_UNLOCK_ITEM = 'Unlock item';
     public const PERMISSION_ACCESS_CUSTOMER_TABLE = 'Access customer table';
     public const PERMISSION_DELETE_CUSTOMER_NOTES = 'Delete customer notes';
     public const PERMISSION_MANAGE_INVOICE_TABLE = 'Manage invoice table';
@@ -48,6 +49,7 @@ interface ConfigDefaultInterface
         self::PERMISSION_MANAGE_WAREHOUSES,
         self::PERMISSION_ACCESS_CARRIER_TABLE,
         self::PERMISSION_DELETE_CARRIER_NOTES,
+        self::PERMISSION_UNLOCK_ITEM,
     ];
 
     public const PERMISSION_GROUPS = [
@@ -61,6 +63,7 @@ interface ConfigDefaultInterface
             self::PERMISSION_EDIT_ORDER_PRODUCTS,
             self::PERMISSION_REMOVE_ORDER_PRODUCTS,
             self::PERMISSION_REMOVE_ITEM_BUYER,
+            self::PERMISSION_UNLOCK_ITEM,
         ],
         'Document related permissions' => [
             self::PERMISSION_UPLOAD_FILE,

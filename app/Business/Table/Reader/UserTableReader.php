@@ -111,6 +111,7 @@ class UserTableReader implements TableReaderInterface
         }
 
         $ordersData = $this->formatOrdersData($orders);
+
         $ordersData = $this->flattenOrders($ordersData);
 
         return [
@@ -288,6 +289,10 @@ class UserTableReader implements TableReaderInterface
         foreach ($mainOrders as $order) {
             $ordersWithChildren[] = $order;
             $ordersWithChildren = array_merge($ordersWithChildren, $this->flattenOrdersWithChildren($order['id'], $childrenOrders));
+        }
+
+        if (empty($ordersWithChildren)) {
+            return $ordersData;
         }
 
         return $ordersWithChildren;

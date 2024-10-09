@@ -111,6 +111,7 @@ class UserTableReader implements TableReaderInterface
         }
 
         $ordersData = $this->formatOrdersData($orders);
+        $ordersData = $this->flattenOrders($ordersData);
 
         return [
             'data' => $ordersData,
@@ -125,27 +126,6 @@ class UserTableReader implements TableReaderInterface
         $userFields = $this->userFields
             ->pluck('id', 'type')
             ->toArray();
-
-        //TODO: Rework, tmp exact match is turned off
-//        // Check if user can see order key field
-//        if (array_key_exists('id', $userFields)) {
-//            $orderKeyFieldId = $userFields['id'];
-//        }
-//
-//        if ($orderKeyFieldId) {
-//            // First, attempt to find an exact match for the order ID
-//            $exactMatch = OrderData::where('field_id', $orderKeyFieldId)
-//                ->where('value', $search)
-//                ->pluck('order_id')
-//                ->toArray();
-//
-//            // If an exact match is found, return it
-//            if (!empty($exactMatch)) {
-//                $this->exactMatch = $exactMatch[0];
-//
-//                return $exactMatch;
-//            }
-//        }
 
         // Perform the broader search if no exact match was found
         $foundIds = OrderData::where('value', 'like', '%' . $search . '%')
@@ -184,6 +164,7 @@ class UserTableReader implements TableReaderInterface
                 'id' => $order->id,
                 'user' => $order->user->name,
                 'uploaded_files' => $order->files->count(),
+                'parent_order' => $order->parent_id,
                 $fileFieldName => '',
             ];
 
@@ -284,5 +265,46 @@ class UserTableReader implements TableReaderInterface
         }
 
         return implode(', ', $buyerNames);
+    }
+
+    private function flattenOrders(array $ordersData): array
+    {
+        $mainOrders = [];
+        $childrenOrders = [];
+        foreach ($ordersData as $order) {
+            if ($order['parent_order'] === null) {
+                $mainOrders[] = $order;
+            } else {
+                $childrenOrders[$order['parent_order']][] = $order;
+            }
+        }
+
+        // Reverse each set of child orders
+        foreach ($childrenOrders as $parentOrderId => $childOrders) {
+            $childrenOrders[$parentOrderId] = array_reverse($childOrders);
+        }
+
+        $ordersWithChildren = [];
+        foreach ($mainOrders as $order) {
+            $ordersWithChildren[] = $order;
+            $ordersWithChildren = array_merge($ordersWithChildren, $this->flattenOrdersWithChildren($order['id'], $childrenOrders));
+        }
+
+        return $ordersWithChildren;
+    }
+
+    function flattenOrdersWithChildren($orderId, &$childrenOrders): array
+    {
+        $flattenedOrders = [];
+
+        if (array_key_exists($orderId, $childrenOrders)) {
+            foreach ($childrenOrders[$orderId] as $childOrder) {
+                // Add the child order
+                $flattenedOrders[] = $childOrder;
+                $flattenedOrders = array_merge($flattenedOrders, $this->flattenOrdersWithChildren($childOrder['id'], $childrenOrders));
+            }
+        }
+
+        return $flattenedOrders;
     }
 }

@@ -119,3 +119,13 @@
     color: red;
     margin-left: 5px;
 }
+
+.related_order_links a {
+    color: black;
+    text-decoration: none;
+}
+
+.related_order_links a:hover {
+    color: black;
+    text-decoration: underline;
+}

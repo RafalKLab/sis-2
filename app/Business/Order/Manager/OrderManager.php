@@ -85,6 +85,9 @@ class OrderManager
                 'name' => $order->company?->name,
             ],
             'available_companies' => Company::all()->pluck('name', 'id')->toArray(),
+//            'related_order_hierarchy' => $this->getRelatedOrderHierarchy($order),
+            'related_order_parent_links' => $this->getRelatedOrderParentLinks($order),
+            'related_order_children_links' => $this->getRelatedOrderChildrenLinks($order),
         ];
 
         foreach (Auth::user()->getAssignedFields() as $field) {
@@ -374,5 +377,101 @@ class OrderManager
         }
 
         return $data;
+    }
+
+    private function getRelatedOrderHierarchy(Order $order): array
+    {
+        $selectedOrderId = $order->id;
+        $rootOrder = $this->findRootOrder($order);
+        $generations = $this->getGenerationalOrderHierarchy($rootOrder, $selectedOrderId);
+
+        return $generations;
+    }
+
+    private function findRootOrder(Order $order): Order
+    {
+        $rootOrder = $order;
+
+        if ($order->parent_id !== null) {
+            $rootOrder = $this->findRootOrder($order->parent);
+        };
+
+        return $rootOrder;
+    }
+
+    private function getGenerationalOrderHierarchy(Order $rootOrder, int $selectedOrderId): array {
+        $generationalHierarchy = [];
+
+        // Starts the process with the root order
+        $this->addOrderToGeneration($rootOrder, 0, $generationalHierarchy, $selectedOrderId);
+
+        return $generationalHierarchy;
+    }
+
+    private function addOrderToGeneration(Order $order, int $generation, array &$generationalHierarchy, $selectedOrderId): void {
+        // Initialize the array for the current generation if it doesn't exist
+        if (!isset($generationalHierarchy[$generation])) {
+            $generationalHierarchy[$generation] = [];
+        }
+
+        // Add the current order to the current generation
+        $selected = $selectedOrderId === $order->id;
+        $generationalHierarchy[$generation][] = [
+            'order_id' => $order->id,
+            'order_key' => $order->getKeyField(),
+            'selected' => $selected,
+        ];
+
+        // If there are children, increment the generation and add each child
+        foreach ($order->children as $childOrder) {
+            $this->addOrderToGeneration($childOrder, $generation + 1, $generationalHierarchy, $selectedOrderId);
+        }
+    }
+
+    private function getRelatedOrderParentLinks($order): array
+    {
+        $data = [];
+        if ($order->parent_id !== null) {
+            $this->getParentOrderLink($order->parent, $data);
+        }
+
+        $data[] = [
+            'order_id' => $order->id,
+            'order_key' => $order->getKeyField(),
+        ];
+
+
+        return $data;
+    }
+
+    private function getParentOrderLink(Order $order, array &$data): array
+    {
+        if ($order->parent_id !== null) {
+            $this->getParentOrderLink($order->parent, $data);
+        }
+
+        $data[] = [
+            'order_id' => $order->id,
+            'order_key' => $order->getKeyField(),
+        ];
+
+        return $data;
+    }
+
+    private function getRelatedOrderChildrenLinks(Order $order): array
+    {
+        $childrenData = [];
+        foreach ($order->children as $child) {
+            $childrenData[] = [
+                'order_id' => $child->id,
+                'order_key' => $child->getKeyField(),
+            ];
+        }
+
+        return [
+            'order_id' => $order->id,
+            'order_key' => $order->getKeyField(),
+            'children' => $childrenData,
+        ];
     }
 }

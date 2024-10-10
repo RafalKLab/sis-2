@@ -66,6 +66,32 @@
                                 <i title="Edit company context" onclick="showCompanyModal()" class="fa-solid fa-city text-primary" style="cursor: pointer"></i>
                             </td>
                         </tr>
+                        <tr>
+                            <th scope="row">Tėvų hierarchija</th>
+                            <td colspan="4">
+                                <span class="related_order_links">
+                                @foreach($orderData['related_order_parent_links'] as $order)
+                                        @if(!$loop->last)
+                                            <a href="{{ route('orders.view', ['id' => $order['order_id']]) }}">{{ $order['order_key'] }}</a>
+                                            &nbsp;<i class="fa-solid fa-angles-right"></i> &nbsp;
+                                        @else
+                                            <b><a href="{{ route('orders.view', ['id' => $order['order_id']]) }}">{{ $order['order_key'] }}</a></b>
+                                        @endif
+                                @endforeach
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Vaikų hierarchija</th>
+                            <td colspan="4">
+                                <span class="related_order_links">
+                                    @foreach($orderData['related_order_children_links']['children'] as $child)
+                                        <a href="{{ route('orders.view', ['id' => $child['order_id']]) }}">{{ $child['order_key'] }}</a>
+                                        <br>
+                                    @endforeach
+                                </span>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>

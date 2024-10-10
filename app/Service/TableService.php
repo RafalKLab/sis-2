@@ -64,7 +64,7 @@ class TableService
             $representationFieldName = '';
             foreach ($representationFieldType as $fieldType) {
                 $representationField = self::getFieldByType($fieldType);
-                $amount += OrderService::getOrderDataFor($representationField->id, $orderId)?->value;
+                $amount += (float) OrderService::getOrderDataFor($representationField->id, $orderId)?->value;
                 $representationFieldName .= sprintf(' + %s', $representationField->name);
             }
             $formattedAmount = number_format($amount, 2, '.', '');

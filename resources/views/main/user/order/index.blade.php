@@ -43,10 +43,12 @@
                         <table class="table" id="orders-table-admin">
                             <thead>
                             <tr>
-                                <th>Užregistravo</th>
-                                <th>Įmonės kontekstas</th>
                                 @foreach($tableData['fields'] as $index => $field)
                                     @can('See order products')
+                                        @if($index == 1)
+                                            <th>Užregistravo</th>
+                                            <th>Įmonės kontekstas</th>
+                                        @endif
                                         @if($index == 2)
                                             <th>Prekių sąrašas</th>
                                         @endif
@@ -60,9 +62,11 @@
                             <tbody>
                             @foreach($tableData['orders']['data'] as $order)
                                 <tr class>
-                                    <td>{{ $order['user'] }}</td>
-                                    <td>{{ $order['company'] }}</td>
                                     @foreach($tableData['fields'] as $index => $field)
+                                        @if($index == 1)
+                                            <td>{{ $order['user'] }}</td>
+                                            <td>{{ $order['company'] }}</td>
+                                        @endif
                                         @can('See order products')
                                             @if($index == 2)
                                                 <td>

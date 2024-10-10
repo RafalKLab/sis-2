@@ -225,9 +225,17 @@ class OrderController extends MainController
                 'exists:companies,id'
             ],
         ]);
+        $oldCompany = (string) $order->company?->name;
 
         $order->company_id = $validated['company'];
         $order->save();
+        $order->load('company');
+
+        $newCompany = $order->company?->name;
+        if ($oldCompany !== $newCompany) {
+            $this->logOrderCompanyChanged($order, $oldCompany, $newCompany);
+        }
+
 
         return redirect()->route('orders.view', ['id' => $order->id])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Order company context updated');
     }
@@ -1170,6 +1178,18 @@ class OrderController extends MainController
             ->setTitle(ActivityLogConstants::DANGER_LOG)
             ->setAction(ActivityLogConstants::ACTION_DELETE)
             ->setNewData(sprintf('item %s of order: %s', $orderItem->getNameField(), $order->getKeyField()));
+
+        $this->factory()->createActivityLogManager()->log($transfer);
+    }
+
+    protected function logOrderCompanyChanged(Order $order, string $oldCompany, string $newCompany): void
+    {
+        $transfer = $this->factory()
+            ->getActivityLogTransferObject()
+            ->setUser(Auth::user()->email)
+            ->setTitle(ActivityLogConstants::INFO_LOG)
+            ->setAction(ActivityLogConstants::ACTION_UPDATE)
+            ->setNewData(sprintf('Order %s company: %s to: %s', $order->getKeyField(), $oldCompany, $newCompany));
 
         $this->factory()->createActivityLogManager()->log($transfer);
     }

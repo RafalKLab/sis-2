@@ -25,6 +25,17 @@ use shared\ConfigDefaultInterface;
 
 class OrderController extends MainController
 {
+    public function orderTree(int $orderId) {
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->back();
+        }
+
+        $orderHierarchy  = $this->factory()->createOrderManager()->getRelatedOrderHierarchy($order);
+
+        return view('main.user.order.tree.tree', compact('orderHierarchy'));
+    }
+
     public function index(Request $request)
     {
         // Start time

@@ -1,3 +1,34 @@
+<!-- Modal -->
+<div class="modal fade" id="companyModal" tabindex="-1" aria-labelledby="companyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ route('orders.update-company', ['id' => $orderData['id']]) }}">
+                    @csrf
+                    <div class="form-group mb-2">
+                        <label for="company">Select company context</label>
+                        <select name="company" id="company" class="form-control {{ $errors->has('company') ? 'is-invalid' : '' }}">
+                            @foreach($orderData['available_companies'] as $id => $company)
+                                <option @if($orderData['company']['id'] === $id) selected @endif value="{{ $id }}">{{ $company }}</option>
+                            @endforeach
+                        </select>
+                        @if ($errors->has('company'))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('company') }}
+                            </div>
+                        @endif
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-4">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="col-md-6">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -25,6 +56,15 @@
                             <td>{{ $orderData['created_at'] }}</td>
                             <td></td>
                             <td></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Įmonės kontekstas:</th>
+                            <td>{{ $orderData['company']['name'] }}</td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <i title="Edit company context" onclick="showCompanyModal()" class="fa-solid fa-city text-primary" style="cursor: pointer"></i>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -622,6 +662,11 @@
 <script>
     function confirmAction() {
         return confirm('Are you sure you want to remove item?');
+    }
+
+    function showCompanyModal() {
+        var myModal = new bootstrap.Modal(document.getElementById('companyModal'), {});
+        myModal.show();
     }
 </script>
 <script>

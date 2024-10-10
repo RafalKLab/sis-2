@@ -2,6 +2,7 @@
 
 namespace App\Models\Order;
 
+use App\Models\Company\Company;
 use App\Models\User;
 use App\Service\OrderService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,6 +18,11 @@ class Order extends Model
         'user_id',
         'company_id',
     ];
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
 
     /**
      * Get the parent order if any

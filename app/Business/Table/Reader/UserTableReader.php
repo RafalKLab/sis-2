@@ -153,9 +153,10 @@ class UserTableReader implements TableReaderInterface
         $fileFieldName = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_FILE)->name;
 
         $orders->load([
-            'data.field', // Corrected relationship name
+            'data.field',
             'user',
-            'files'
+            'files',
+            'company',
         ]);
 
         $fieldsById = $this->userFields->keyBy('id');
@@ -164,6 +165,7 @@ class UserTableReader implements TableReaderInterface
             $data = [
                 'id' => $order->id,
                 'user' => $order->user->name,
+                'company' => $order->company?->name,
                 'uploaded_files' => $order->files->count(),
                 'parent_order' => $order->parent_id,
                 $fileFieldName => '',

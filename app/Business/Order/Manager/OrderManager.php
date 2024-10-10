@@ -4,6 +4,7 @@ namespace App\Business\Order\Manager;
 
 use App\Business\Table\Config\ItemsTableConfig;
 use App\Business\Table\Config\TableConfig;
+use App\Models\Company\Company;
 use App\Models\Order\Invoice;
 use App\Models\Order\Order;
 use App\Models\Order\OrderData;
@@ -79,6 +80,11 @@ class OrderManager
             'uploaded_files' => $order->files()->count(),
             'user' => $order->user->name,
             'items' => $this->getOrderItems($order),
+            'company' => [
+                'id' => $order->company?->id,
+                'name' => $order->company?->name,
+            ],
+            'available_companies' => Company::all()->pluck('name', 'id')->toArray(),
         ];
 
         foreach (Auth::user()->getAssignedFields() as $field) {

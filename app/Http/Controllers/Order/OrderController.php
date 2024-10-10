@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Order;
 
 use App\Business\ActivityLog\Config\ActivityLogConstants;
 use App\Http\Controllers\MainController;
+use App\Models\Company\Company;
 use App\Models\Order\Invoice;
 use App\Models\Order\ItemBuyer;
 use App\Models\Order\Order;
@@ -204,6 +205,33 @@ class OrderController extends MainController
         }
     }
 
+    public function updateCompany(Request $request, int $orderId)
+    {
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        $validated = $request->validate([
+            'company' => [
+                'required',
+                'numeric',
+                'exists:companies,id'
+            ],
+        ]);
+
+        $order->company_id = $validated['company'];
+        $order->save();
+
+        return redirect()->route('orders.view', ['id' => $order->id])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Order company context updated');
+    }
+
     public function register()
     {
         $user = auth()->user();
@@ -213,8 +241,9 @@ class OrderController extends MainController
 
         $orderKeyFieldId = OrderService::getKeyField()->id;
         $relatedOrders = OrderData::where('field_id', $orderKeyFieldId)->orderBy('value', 'desc')->pluck('value', 'order_id')->toArray();
+        $companies = Company::all()->pluck('name', 'id')->toArray();
 
-        return view('main.user.order.register', compact('relatedOrders'));
+        return view('main.user.order.register', compact('relatedOrders', 'companies'));
     }
 
     public function registerConfirm(Request $request)
@@ -227,6 +256,11 @@ class OrderController extends MainController
                     'exists:orders,id'
                 ]),
             ],
+            'company' => [
+                'required',
+                'numeric',
+                'exists:companies,id'
+            ],
         ]);
 
         $parentOrder = Order::find($validated['related_order']);
@@ -234,6 +268,7 @@ class OrderController extends MainController
         $newOrder = Order::create([
             'parent_id' => $parentOrder?->id,
             'user_id' => auth()->user()->id,
+            'company_id' => $validated['company'],
         ]);
 
         $copyRelatedOrder = $request->copy_related_order;

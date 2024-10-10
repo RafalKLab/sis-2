@@ -44,6 +44,7 @@
                             <thead>
                             <tr>
                                 <th>Užregistravo</th>
+                                <th>Įmonės kontekstas</th>
                                 @foreach($tableData['fields'] as $index => $field)
                                     @can('See order products')
                                         @if($index == 2)
@@ -60,6 +61,7 @@
                             @foreach($tableData['orders']['data'] as $order)
                                 <tr class>
                                     <td>{{ $order['user'] }}</td>
+                                    <td>{{ $order['company'] }}</td>
                                     @foreach($tableData['fields'] as $index => $field)
                                         @can('See order products')
                                             @if($index == 2)

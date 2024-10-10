@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\AdminFieldController;
 use App\Http\Controllers\Admin\AdminTableController;
 use App\Http\Controllers\Admin\BlockedUserController;
+use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Carrier\CarrierController;
@@ -125,6 +126,13 @@ Route::middleware('auth')->group(function () {
         /* Will be removed */
 //        Route::get('/admin/table', [AdminTableController::class, 'index'])->name('admin-table.index');
 
+        /* Companies */
+        Route::get('/admin/companies', [CompanyController::class, 'index'])->name('admin-companies.index');
+        Route::get('/admin/companies/create', [CompanyController::class, 'create'])->name('admin-companies.create');
+        Route::post('/admin/companies/create', [CompanyController::class, 'store'])->name('admin-companies.store');
+        Route::get('/admin/companies/edit/{id}', [CompanyController::class, 'edit'])->name('admin-companies.edit');
+        Route::post('/admin/companies/edit/{id}', [CompanyController::class, 'update'])->name('admin-companies.update');
+
         /* Admin table fields */
         Route::get('/admin/fields', [AdminFieldController::class, 'index'])->name('admin-fields.index');
         Route::post('/admin/fields', [AdminFieldController::class, 'index'])->name('admin-fields.change-table');
@@ -144,7 +152,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/statistics/users', [UserStatisticsController::class, 'index'])->name('statistics-user.index');
         Route::get('/statistics/users/{userId}/{year}/{month}', [UserStatisticsController::class, 'show'])->name('statistics-user.show');
         Route::post('/statistics/users/{userId}/{year}/{month}', [UserStatisticsController::class, 'show'])->name('statistics-user.show');
-
     });
 });
 

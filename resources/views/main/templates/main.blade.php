@@ -84,11 +84,6 @@
                         </a>
                     @endcan
 
-{{--                    <a class="disabled nav-link" href="">--}}
-{{--                        <div class="sb-nav-link-icon"><i class="fa-solid fa-industry"></i></div>--}}
-{{--                        Suppliers (in progress)--}}
-{{--                    </a>--}}
-
                     @can('Access carrier table')
                         <a class="nav-link" href="{{ route('carriers.index') }}">
                             <div class="sb-nav-link-icon"><i class="fa-solid fa-truck-moving"></i></div>
@@ -112,6 +107,12 @@
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                         Activity logs
                     </a>
+
+                    <a class="nav-link" href="{{ route('admin-companies.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-city"></i></div>
+                        Companies
+                    </a>
+
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseUserManagement" aria-expanded="false" aria-controls="collapseUserManagement">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
                         User management

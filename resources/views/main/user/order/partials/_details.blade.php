@@ -83,13 +83,19 @@
                         </tr>
                         <tr>
                             <th scope="row">Vaikų hierarchija</th>
-                            <td colspan="4">
+                            <td colspan="3">
                                 <span class="related_order_links">
                                     @foreach($orderData['related_order_children_links']['children'] as $child)
                                         <a href="{{ route('orders.view', ['id' => $child['order_id']]) }}">{{ $child['order_key'] }}</a>
                                         <br>
                                     @endforeach
                                 </span>
+                            </td>
+                            <td>
+                                <a target="_blank" href="{{ route('orders.tree', ['id'=> $order['order_id']]) }}">
+                                    <i style="transform: rotate(-90deg);" class="fa-solid fa-network-wired text-primary"></i>
+                                </a>
+
                             </td>
                         </tr>
                         </tbody>

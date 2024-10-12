@@ -71,7 +71,7 @@ class OrderManager
         return $orderData;
     }
 
-    public function getOrderDetailsWithGroups($order): array
+    public function getOrderDetailsWithGroups(Order $order): array
     {
         $orderData = [
             'id' => $order->id,
@@ -87,6 +87,7 @@ class OrderManager
             'available_companies' => Company::all()->pluck('name', 'id')->toArray(),
             'related_order_parent_links' => $this->getRelatedOrderParentLinks($order),
             'related_order_children_links' => $this->getRelatedOrderChildrenLinks($order),
+            'comments' => $this->retrieveOrderComments($order)
         ];
 
         foreach (Auth::user()->getAssignedFields() as $field) {
@@ -482,5 +483,20 @@ class OrderManager
             'order_key' => $order->getKeyField(),
             'children' => $childrenData,
         ];
+    }
+
+    private function retrieveOrderComments(Order $order): array
+    {
+        $comments = [];
+        foreach ($order->comments as $comment) {
+            $comments[] = [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'author' => $comment->user->name,
+                'created_at' => $comment->created_at->format('Y-m-d H:i'),
+            ];
+        }
+
+        return $comments;
     }
 }

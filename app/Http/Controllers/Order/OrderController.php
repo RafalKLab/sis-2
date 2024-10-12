@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Order;
 use App\Business\ActivityLog\Config\ActivityLogConstants;
 use App\Http\Controllers\MainController;
 use App\Models\Company\Company;
+use App\Models\Order\Comment;
 use App\Models\Order\Invoice;
 use App\Models\Order\ItemBuyer;
 use App\Models\Order\Order;
@@ -1156,6 +1157,48 @@ class OrderController extends MainController
         }
 
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, $returnMessage);
+    }
+
+    public function storeComment(Request $request, int $orderId)
+    {
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        $validated = $request->validate([
+            'content' => 'required|max:1000'
+        ]);
+
+        Comment::create([
+            'user_id' => Auth::user()->id,
+            'order_id' => $orderId,
+            'content' => $validated['content'],
+        ]);
+
+        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'New comment has been added');
+    }
+    public function deleteComment(Request $request, int $commentId)
+    {
+        $comment = Comment::find($commentId);
+        if (!$comment) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Comment not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_DELETE_ORDER_COMMENTS)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, ConfigDefaultInterface::ERROR_MISSING_PERMISSION);
+        }
+
+        $orderId = $comment->order_id;
+        $comment->delete();
+
+        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Comment has been deleted');
     }
 
     protected function extractTargetItem(array $orderData, int $itemId): array

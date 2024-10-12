@@ -100,6 +100,50 @@
                         </tr>
                         </tbody>
                     </table>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @if(count($orderData['comments']))
+                                <div class="card">
+                                    <div class="card-header">
+                                        Komentarai
+                                    </div>
+                                    <div class="card-body">
+                                        @foreach($orderData['comments'] as $comment)
+                                            <div class="row">
+                                                <div class="col-md-7">
+                                                    {{ $comment['content'] }}
+                                                </div>
+                                                <div class="col-md-5 d-flex justify-content-end align-items-center">
+                                                    <i style="color:#AAAAAA; font-size: 12px;">{{ $comment['author'] }} {{ $comment['created_at'] }}</i>
+                                                    @can('Delete order comments')
+                                                        <form action="{{ route('orders.delete-comment', ['id' => $comment['id']]) }}" method="POST">
+                                                            @method('DELETE')
+                                                            @csrf
+                                                            <button title="Delete comment" class="btn text-danger" type="submit" onclick="return confirm('Are you sure you want to delete this comment?')"><i class="fa-solid fa-trash"></i></button>
+                                                        </form>
+                                                    @endcan
+                                                </div>
+                                                <hr>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <form method="POST" action="{{ route('orders.store-comment', ['id'=>$order['order_id']]) }}">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" name="content" aria-describedby="" placeholder="Komentaras">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="submit" class="btn btn-primary" style="width: 100%">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
 

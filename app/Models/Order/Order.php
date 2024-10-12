@@ -45,6 +45,11 @@ class Order extends Model
         return $this->hasMany(File::class, 'order_id');
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'order_id')->orderBy('created_at', 'desc');
+    }
+
     public function items()
     {
         return $this->hasMany(OrderItem::class, 'order_id');

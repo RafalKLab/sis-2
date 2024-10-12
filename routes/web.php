@@ -82,6 +82,10 @@ Route::middleware('auth')->group(function () {
     /* order tree */
     Route::get('/orders/{id}/tree', [OrderController::class, 'orderTree'])->name('orders.tree');
 
+    /* order comments */
+    Route::post('/orders/{id}/comments', [OrderController::class, 'storeComment'])->name('orders.store-comment');
+    Route::delete('/orders/{id}/comments', [OrderController::class, 'deleteComment'])->name('orders.delete-comment');
+
 
     /* Customer invoices */
     Route::get('/orders/edit/{orderId}/customer-invoice/{customer}', [OrderController::class, 'editCustomerInvoice'])->name('orders.edit-customer-invoice');

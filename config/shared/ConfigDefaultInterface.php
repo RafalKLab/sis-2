@@ -27,6 +27,8 @@ interface ConfigDefaultInterface
     public const PERMISSION_ACCESS_CARRIER_TABLE = 'Access carrier table';
     public const PERMISSION_DELETE_CARRIER_NOTES = 'Delete carrier notes';
 
+    public const PERMISSION_DELETE_ORDER_COMMENTS = 'Delete order comments';
+
     public const AVAILABLE_ROLES = [
         self::ROLE_USER,
         self::ROLE_ADMIN,
@@ -50,6 +52,7 @@ interface ConfigDefaultInterface
         self::PERMISSION_ACCESS_CARRIER_TABLE,
         self::PERMISSION_DELETE_CARRIER_NOTES,
         self::PERMISSION_UNLOCK_ITEM,
+        self::PERMISSION_DELETE_ORDER_COMMENTS,
     ];
 
     public const PERMISSION_GROUPS = [
@@ -64,6 +67,7 @@ interface ConfigDefaultInterface
             self::PERMISSION_REMOVE_ORDER_PRODUCTS,
             self::PERMISSION_REMOVE_ITEM_BUYER,
             self::PERMISSION_UNLOCK_ITEM,
+            self::PERMISSION_DELETE_ORDER_COMMENTS,
         ],
         'Document related permissions' => [
             self::PERMISSION_UPLOAD_FILE,

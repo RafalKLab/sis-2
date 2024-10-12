@@ -4,14 +4,21 @@
 @endsection
 @section('content')
     <div class="container-fluid px-4">
-        <h4 class="mt-4">Statistics {{ $targetYear }} <span class="text-primary stats-change-year-link"><i class="fa-solid fa-chevron-down"></i></span></h4>
+        <h4 class="mt-4">Statistics {{ $targetYear }} {{ $targetCompany['name'] }} <span class="text-primary stats-change-year-link"><i class="fa-solid fa-chevron-down"></i></span></h4>
         <form class="mb-3" id="yearForm" style="display:none;" action="" method="POST">
             @csrf
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <select  class="form-control" id="yearInput" name="selectedYear" required>
                         @foreach($yearsSelect as $year)
                             <option value="{{ $year }}">{{ $year }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select  class="form-control" id="selectedCompany" name="selectedCompany" required>
+                        @foreach($companySelect as $company)
+                            <option value="{{ $company['id'] }}">{{ $company['name'] }}</option>
                         @endforeach
                     </select>
                 </div>

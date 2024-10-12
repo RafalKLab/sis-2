@@ -19,11 +19,11 @@ use shared\ConfigDefaultInterface;
 class StatisticsManager
 {
 
-    public function retrieveAnnualStatistics(string $targetYear): array
+    public function retrieveAnnualStatistics(string $targetYear, int $companyId): array
     {
         $months = $this->getMonths($targetYear);
 
-        $annualStatistics = $this->calculateAnnualStatistics($months);
+        $annualStatistics = $this->calculateAnnualStatistics($months, $companyId);
         $annualStatistics = $this->addMonthNames($annualStatistics);
 
         return $annualStatistics;
@@ -56,11 +56,11 @@ class StatisticsManager
         return $months;
     }
 
-    private function calculateAnnualStatistics(array $months): array
+    private function calculateAnnualStatistics(array $months, int $companyId): array
     {
         $statistics = [];
         foreach ($months as $month) {
-            $statistics[$month] = $this->calculateMonthStatistics($month);
+            $statistics[$month] = $this->calculateMonthStatistics($month, $companyId);
         }
 
         return $statistics;
@@ -80,10 +80,10 @@ class StatisticsManager
         return $statistics;
     }
 
-    private function calculateMonthStatistics(string $month): array
+    private function calculateMonthStatistics(string $month, int $companyId): array
     {
-        $orderIds = $this->getOrdersForMonth($month);
-
+        $orderIds = $this->getOrdersForMonth($month, $companyId);
+//        dd($orderIds);
         return [
             'orders' => $this->getOrderKeys($orderIds),
             'profit' => $this->calculateProfit($orderIds),
@@ -249,13 +249,16 @@ class StatisticsManager
         ];
     }
 
-    private function getOrdersForMonth(string $month): array
+    private function getOrdersForMonth(string $month, int $companyId): array
     {
         $orderDateFieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_IDENTIFIER_ORDER_DATE)->id;
         $monthPattern = $month . '%'; // Append a '%' wildcard to the month string
 
         return OrderData::where('field_id', $orderDateFieldId)
             ->where('value', 'LIKE', $monthPattern)
+            ->whereHas('order', function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })
             ->pluck('order_id')
             ->toArray();
     }

@@ -14,8 +14,8 @@ class StatisticsController extends MainController
         $targetYear = now()->year;
         $yearsSelect = range($targetYear, $targetYear - 9);
 
-        $targetCompany = Company::first()->toArray();
-        $companySelect = Company::all()->toArray();
+        $targetCompany = Company::first()?->toArray();
+        $companySelect = Company::all()?->toArray();
 
         if (empty($targetCompany)) {
             $targetCompany = [

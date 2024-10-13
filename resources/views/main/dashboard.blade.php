@@ -22,6 +22,22 @@
         <div class="row mt-3 mb-5">
             <div class="col-xl-12 col-md-12 mb-3">
                 <div class="card">
+                    <div class="card-body bg-primary text-white"><b>Pataisų užrašai</b> <i>2024-10-13</i></div>
+                    <div class="card-footer align-items-center justify-content-between">
+
+                        <h6>Jūsų informacijai:</h6>
+                        <ul>
+                            <li>Pridėta galimybė rašyti komentarus užsakymams.</li>
+                            <li>Pridėta galimybė žiūrėti tėvinių ir vaikinių užsakymų hierarchiją bei pilną hierarchijos medį.</li>
+                            <li>Pridėtas laukelis „Įmonės kontekstas“ bei galimybė kurti įmones administratoriams.</li>
+                            <li>Statistika nuo šiol vaizduojama atsižvelgiant į įmonės kontekstą.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-12 col-md-12 mb-3">
+                <div class="card">
                     <div class="card-body bg-primary text-white"><b>Pataisų užrašai</b> <i>2024-10-03</i></div>
                     <div class="card-footer align-items-center justify-content-between">
 

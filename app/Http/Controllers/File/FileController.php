@@ -24,7 +24,15 @@ class FileController extends MainController
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
         }
 
-        return view('main.user.order.file.index', compact('order'));
+        $fileSizes = [];
+        foreach ($order->files as $file) {
+            $fileSizes[$file->id] = [
+                'formatted' => $file->formatSize(),
+                'raw' => (int) $file->size,
+            ];
+        }
+
+        return view('main.user.order.file.index', compact('order', 'fileSizes'));
     }
 
     public function upload(int $orderId)
@@ -89,7 +97,8 @@ class FileController extends MainController
                         'order_id' => $orderId,
                         'user_id' => $userId,
                         'file_name' => $fileName,
-                        'file_path' => $path
+                        'file_path' => $path,
+                        'size' => $file->getSize(),
                     ]);
 
                     // Add to response

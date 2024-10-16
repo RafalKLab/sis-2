@@ -17,7 +17,8 @@ class File extends Model
         'order_id',
         'user_id',
         'file_name',
-        'file_path'
+        'file_path',
+        'size'
     ];
 
     use HasFactory;
@@ -30,6 +31,19 @@ class File extends Model
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id');
+    }
+
+    public function formatSize(): string
+    {
+        $size = (int) $this->size;
+
+        if ($size >= 1048576) {
+            $formattedSize = number_format($size / 1048576, 2) . ' MB';
+        } else {
+            $formattedSize = number_format($size / 1024, 2) . ' KB';
+        }
+
+        return $formattedSize;
     }
 
     protected static function boot()

@@ -24,9 +24,10 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th>name</th>
-                                    <th>uploaded by</th>
-                                    <th>uploaded at</th>
+                                    <th>Name</th>
+                                    <th>Size</th>
+                                    <th>Uploaded by</th>
+                                    <th>Uploaded at</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -35,6 +36,12 @@
                                     @foreach($order->files as $file)
                                         <tr>
                                             <td><i class="fa-regular fa-file"></i> {{$file->file_name}}</td>
+                                            <td>
+                                                {{ $fileSizes[$file->id]['formatted'] }}
+                                                @if($fileSizes[$file->id]['raw'] > 1000000)
+                                                    <i title="Preview may not be working due to file size" class="fa-solid fa-triangle-exclamation text-warning"></i>
+                                                @endif
+                                            </td>
                                             <td>{{$file->user->email}} (id: {{$file->user->id}})</td>
                                             <td>{{$file->created_at}}</td>
                                             <td>
@@ -61,6 +68,12 @@
                                         @if($file->user->id === Auth::user()->id)
                                             <tr>
                                                 <td><i class="fa-regular fa-file"></i> {{$file->file_name}}</td>
+                                                <td>
+                                                    {{ $fileSizes[$file->id]['formatted'] }}
+                                                    @if($fileSizes[$file->id]['raw'] > 1000000)
+                                                        <i title="Preview may not be working due to file size" class="fa-solid fa-triangle-exclamation text-warning"></i>
+                                                    @endif
+                                                </td>
                                                 <td>{{$file->user->email}} (id: {{$file->user->id}})</td>
                                                 <td>{{$file->created_at}}</td>
                                                 <td>

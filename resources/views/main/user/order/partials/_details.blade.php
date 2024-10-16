@@ -312,19 +312,21 @@
                                             <tr id="collapseItem_{{$item['settings']['collapse_id']}}" class="collapse">
                                                 <td colspan="4">
                                                     <table class="table">
-                                                        @foreach($item['buyers'] as $buyer)
-                                                            <tr>
-                                                                <th scope="row">Pirkėjas {{ $buyer['name'] }} kiekis:</th>
-                                                                <td>{{ $buyer['quantity'] }}</td>
-                                                                <td></td>
-                                                                <td class="text-end">
-                                                                    <a href="{{ route('orders.edit-item-buyer', ['orderId' => $orderData['id'], 'itemId' => $item['settings']['item_id'], 'buyerId' => $buyer['id']]) }}" title="Edit buyer"><i class="fa-solid fa-user-pen"></i></a>
-                                                                    @can('Remove item buyer')
-                                                                        <a class="text-danger" style="margin-left: 10px;" href="{{ route('orders.remove-item-buyer', ['orderId' => $orderData['id'], 'itemId' => $item['settings']['item_id'], 'buyerId' => $buyer['id']]) }}" title="Remove buyer"><i class="fa-solid fa-user-xmark"></i></a>
-                                                                    @endcan
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
+                                                        @can('See item buyer')
+                                                            @foreach($item['buyers'] as $buyer)
+                                                                <tr>
+                                                                    <th scope="row">Pirkėjas {{ $buyer['name'] }} kiekis:</th>
+                                                                    <td>{{ $buyer['quantity'] }}</td>
+                                                                    <td></td>
+                                                                    <td class="text-end">
+                                                                        <a href="{{ route('orders.edit-item-buyer', ['orderId' => $orderData['id'], 'itemId' => $item['settings']['item_id'], 'buyerId' => $buyer['id']]) }}" title="Edit buyer"><i class="fa-solid fa-user-pen"></i></a>
+                                                                        @can('Remove item buyer')
+                                                                            <a class="text-danger" style="margin-left: 10px;" href="{{ route('orders.remove-item-buyer', ['orderId' => $orderData['id'], 'itemId' => $item['settings']['item_id'], 'buyerId' => $buyer['id']]) }}" title="Remove buyer"><i class="fa-solid fa-user-xmark"></i></a>
+                                                                        @endcan
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        @endcan
 
                                                         @foreach($item['details'] as $data)
                                                             @switch($data['field_type'])
@@ -590,7 +592,8 @@
                         <table class="table">
                             <tbody>
                             @if(array_key_exists('SĄSKAITOS FAKTŪROS', $orderData['details']))
-                                @foreach($orderData['details']['PIRKĖJŲ SĄSKAITOS'] as $buyer => $data)
+                                @can('See item buyer')
+                                    @foreach($orderData['details']['PIRKĖJŲ SĄSKAITOS'] as $buyer => $data)
                                     <tr>
                                         <th scope="row">SF. {{ $buyer }}</th>
                                         <td>@if($data['invoice']['number']) <b>Nr: </b> @endif {{ $data['invoice']['number'] }}</td>
@@ -611,7 +614,7 @@
                                         <td><a href="{{ route('orders.edit-customer-invoice', ['orderId'=>$orderData['id'], 'customer'=>$buyer]) }}" title="Edit {{ $buyer }} invoice" class="text-primary"><i class="fa-solid fa-pen"></i></a></td>
                                     </tr>
                                 @endforeach
-
+                                @endcan
                                 @foreach($orderData['details']['SĄSKAITOS FAKTŪROS'] as $data)
                                 @switch($data['field_type'])
                                     @case('file')

@@ -17,6 +17,7 @@ interface ConfigDefaultInterface
     public const PERMISSION_ADD_ORDER_PRODUCTS = 'Add order products';
     public const PERMISSION_EDIT_ORDER_PRODUCTS = 'Edit order products';
     public const PERMISSION_REMOVE_ORDER_PRODUCTS = 'Remove order products';
+    public const PERMISSION_SEE_ITEM_BUYER = 'See item buyer';
     public const PERMISSION_REMOVE_ITEM_BUYER = 'Remove item buyer';
     public const PERMISSION_UNLOCK_ITEM = 'Unlock item';
     public const PERMISSION_ACCESS_CUSTOMER_TABLE = 'Access customer table';
@@ -53,6 +54,7 @@ interface ConfigDefaultInterface
         self::PERMISSION_DELETE_CARRIER_NOTES,
         self::PERMISSION_UNLOCK_ITEM,
         self::PERMISSION_DELETE_ORDER_COMMENTS,
+        self::PERMISSION_SEE_ITEM_BUYER,
     ];
 
     public const PERMISSION_GROUPS = [
@@ -65,6 +67,7 @@ interface ConfigDefaultInterface
             self::PERMISSION_ADD_ORDER_PRODUCTS,
             self::PERMISSION_EDIT_ORDER_PRODUCTS,
             self::PERMISSION_REMOVE_ORDER_PRODUCTS,
+            self::PERMISSION_SEE_ITEM_BUYER,
             self::PERMISSION_REMOVE_ITEM_BUYER,
             self::PERMISSION_UNLOCK_ITEM,
             self::PERMISSION_DELETE_ORDER_COMMENTS,

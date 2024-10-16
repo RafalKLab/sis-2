@@ -80,7 +80,10 @@
                                                             @foreach($order['items']['fields'] as $index => $itemField)
                                                                 <th>{{ $itemField['name'] }}</th>
                                                             @endforeach
-                                                                <th>Pirkėjai</th>
+                                                                @can('See item buyer')
+                                                                    <th>Pirkėjai</th>
+                                                                @endcan
+
                                                         </tr>
                                                         </thead>
                                                         <tbody>
@@ -89,9 +92,11 @@
                                                                 @foreach($itemData['details'] as $index => $itemDatum)
                                                                     <td>{!! $itemDatum !!}</td>
                                                                 @endforeach
-                                                                    <td>
-                                                                        {{ $itemData['buyers'] }}
-                                                                    </td>
+                                                                    @can('See item buyer')
+                                                                        <td>
+                                                                            {{ $itemData['buyers'] }}
+                                                                        </td>
+                                                                    @endcan
                                                             </tr>
                                                         @endforeach
                                                         </tbody>

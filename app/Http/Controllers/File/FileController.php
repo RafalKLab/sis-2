@@ -61,7 +61,7 @@ class FileController extends MainController
             foreach ($request->file('files') as $file) {
                 $validator = Validator::make(
                     ['file' => $file],
-                    ['file' => 'required|file|mimes:jpg,jpeg,png,gif,webp,pdf,psd|max:5120']
+                    ['file' => 'required|file|mimes:jpg,jpeg,png,gif,webp,pdf,psd,txt,svg,csv|max:40120']
                 );
 
                 if ($validator->fails()) {

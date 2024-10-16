@@ -51,10 +51,10 @@
                         paramName: "files", // The name that will be used to transfer the file
                         addRemoveLinks: true, // Show remove button
                         dictDefaultMessage: "Drop files here to upload (or click)", // Set default message
-                        maxFilesize: 5, // Set maximum file size in MB
+                        maxFilesize: 40, // Set maximum file size in MB
                         parallelUploads: 5, // Number of files process in parallel
                         uploadMultiple: true, // Allow multiple file uploads
-                        acceptedFiles: "image/*,application/pdf,.psd", // File type specific
+                        acceptedFiles: "image/*,application/pdf,.psd,.txt,image/svg+xml,text/csv",
                         autoProcessQueue: false, // Disable auto-processing to prevent AJAX submission
                         dictRemoveFile: '<i class="fa-solid fa-xmark"></i>',
                     });

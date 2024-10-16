@@ -44,12 +44,14 @@
                             <thead>
                             <tr>
                                 @foreach($tableData['fields'] as $index => $field)
-                                    @can('See order products')
-                                        @if($index == 1)
-                                            <th>Užregistravo</th>
+                                    @if($index == 1)
+                                        <th>Užregistravo</th>
+                                    @endif
+                                    @if($index == 3)
                                             <th>Įmonės kontekstas</th>
-                                        @endif
-                                        @if($index == 2)
+                                    @endif
+                                    @can('See order products')
+                                        @if($index == 3)
                                             <th>Prekių sąrašas</th>
                                         @endif
                                     @endcan
@@ -65,33 +67,31 @@
                                     @foreach($tableData['fields'] as $index => $field)
                                         @if($index == 1)
                                             <td>{{ $order['user'] }}</td>
-                                            <td>{{ $order['company'] }}</td>
                                         @endif
+                                            @if($index == 3)
+                                                <td>{{ $order['company'] }}</td>
+                                            @endif
                                         @can('See order products')
-                                            @if($index == 2)
+                                            @if($index == 3)
                                                 <td>
                                                     <table class="items-table">
                                                         <thead>
                                                         <tr>
                                                             @foreach($order['items']['fields'] as $index => $itemField)
-                                                                @if($index == 7)
-                                                                    <th>Pirkėjai</th>
-                                                                @endif
                                                                 <th>{{ $itemField['name'] }}</th>
                                                             @endforeach
+                                                                <th>Pirkėjai</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>
                                                         @foreach($order['items']['data'] as $itemData)
                                                             <tr>
                                                                 @foreach($itemData['details'] as $index => $itemDatum)
-                                                                    @if($index == 7)
-                                                                        <td>
-                                                                            {{ $itemData['buyers'] }}
-                                                                        </td>
-                                                                    @endif
                                                                     <td>{!! $itemDatum !!}</td>
                                                                 @endforeach
+                                                                    <td>
+                                                                        {{ $itemData['buyers'] }}
+                                                                    </td>
                                                             </tr>
                                                         @endforeach
                                                         </tbody>
@@ -136,6 +136,9 @@
                                                             </div>
                                                         @endif
                                                     </td>
+                                                    @break
+                                                @case('profit')
+                                                        <td style="font-size: 17px;"><b>{{ $order[$field['name']] }}</b></td>
                                                     @break
                                                 @case('load date')
                                                     <td>

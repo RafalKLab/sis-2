@@ -20,15 +20,15 @@ class TableConfig implements TableConfigInterface
                 'group' => 'PREKĖS IR LOGISTIKA',
             ],
             [
+                'name' => 'Užsakymo būsena',
+                'type' => 'select status',
+                'group' => 'PREKĖS IR LOGISTIKA',
+            ],
+            [
                 'name' => 'Užsakymo data',
                 'type' => 'date',
                 'group' => 'PREKĖS IR LOGISTIKA',
                 'identifier' => 'order_date',
-            ],
-            [
-                'name' => 'Užsakymo būsena',
-                'type' => 'select status',
-                'group' => 'PREKĖS IR LOGISTIKA',
             ],
             [
                 'name' => 'Bendra pirkimo suma',

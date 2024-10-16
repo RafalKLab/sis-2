@@ -145,6 +145,28 @@ class FileController extends MainController
         }
     }
 
+    public function download(int $fileId)
+    {
+        $file = File::find($fileId);
+        if (!$file) {
+            return response()->json(['success' => false, 'message' => 'File not found.'], 404);
+        }
+
+        $storageDisk = ConfigDefaultInterface::FILE_SYSTEM_PRIVATE;
+        $filePath = 'uploads/' . $file->order->getKeyField() . '/' . $file->file_name;
+
+        if (Storage::disk($storageDisk)->exists($filePath)) {
+            $fileType = Storage::disk($storageDisk)->mimeType($filePath);
+            $fileName = $file->file_name;
+
+            return Storage::disk($storageDisk)->download($filePath, $fileName, [
+                'Content-Type' => $fileType,
+            ]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'File not found.'], 404);
+        }
+    }
+
     public function delete(int $fileId) {
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_DELETE_UPLOADED_FILES)) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User do not has permission to upload files');

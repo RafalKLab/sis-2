@@ -47,7 +47,9 @@
 
                                                 <div class="btn-group" style="display: flex; width: 100%;">
                                                     <a href="#" title="View" class="btn btn-outline-info" onclick="openFilePreview({{ $file->id }});"><i class="fa-solid fa-magnifying-glass"></i></a>
-                                                    @if(Auth::user()->hasPermissionTo('Delete uploaded files'))
+                                                    <a href="{{ route('order-files.download', ['fileId' => $file->id]) }}" class="btn btn-outline-primary" title="Download"><i class="fa-solid fa-download"></i></a>
+
+                                                @if(Auth::user()->hasPermissionTo('Delete uploaded files'))
                                                         <button type="submit" class="btn btn-outline-danger" onclick="submitDeleteForm({{ $file->id }});" title="Remove"><i class="fa-solid fa-trash"></i></button>
                                                     @endif
                                                 </div>
@@ -71,6 +73,7 @@
 
                                                     <div class="btn-group" style="display: flex; width: 100%;">
                                                         <a href="#" title="View" class="btn btn-outline-info" onclick="openFilePreview({{ $file->id }});"><i class="fa-solid fa-magnifying-glass"></i></a>
+                                                        <a href="{{ route('order-files.download', ['fileId' => $file->id]) }}" class="btn btn-outline-primary" title="Download"><i class="fa-solid fa-download"></i></a>
                                                         @if(Auth::user()->hasPermissionTo('Delete uploaded files'))
                                                             <button type="submit" class="btn btn-outline-danger" onclick="submitDeleteForm({{ $file->id }});" title="Remove"><i class="fa-solid fa-trash"></i></button>
                                                         @endif

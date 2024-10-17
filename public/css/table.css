@@ -1,7 +1,7 @@
 #orders-table-admin th, td {
     border: 1px solid #D2D2D2;
     vertical-align: middle;
-    white-space: nowrap;
+    min-width: 140px;
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 10px;

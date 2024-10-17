@@ -40,7 +40,7 @@
                 <div class="card-body">
                     <div class="scrollbar-mirror" id="top-scrollbar"></div>
                     <div class="table-responsive">
-                        <table class="table items-table" id="orders-table-admin">
+                        <table class="table" id="orders-table-admin">
                             <thead>
                             <tr>
                                 @foreach($tableData['fields'] as $index => $field)

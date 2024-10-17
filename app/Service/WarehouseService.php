@@ -109,4 +109,18 @@ class WarehouseService
 
         return round((float) $netQuantity, 3);
     }
+
+    public static function getItemInitialStock(int $itemId): float
+    {
+        $stock = WarehouseStock::where('warehouse_item_id', $itemId)
+            ->where('type', 'incoming')->first();
+
+        if (!$stock) {
+            $amount = 1.0;
+        } else {
+            $amount = (float) $stock->quantity;
+        }
+
+        return $amount;
+    }
 }

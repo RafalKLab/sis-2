@@ -114,6 +114,8 @@ class WarehouseManager
 
     public function calculateItemPrimeCost(float $itemPrice, int $itemId): string
     {
+        $itemInitialStock = WarehouseService::getItemInitialStock($itemId);
+
         $orderId = $this->getOrderDataByItemId($itemId)['id'];
         $sum = 0.0;
 
@@ -140,7 +142,8 @@ class WarehouseManager
         // Apply item other costs
         $sum += (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_ITEM_OTHER_COSTS)?->value;
 
-        // Apply additional costs like transportation
+        $costsSum = 0.0;
+        // Apply additional costs like transportation and divide by amount
         $costs = [
             ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1,
             ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_1_BEFORE_ES,
@@ -154,10 +157,10 @@ class WarehouseManager
         ];
 
         foreach ($costs as $cost) {
-            $sum += (float) $this->getOrderFieldDataByType($orderId, $cost)?->value;
+            $costsSum += (float) $this->getOrderFieldDataByType($orderId, $cost)?->value;
         }
 
-        $primeCost = $itemPrice + $sum;
+        $primeCost = $itemPrice + $sum + ($costsSum / $itemInitialStock);
 
         return number_format($primeCost, 2, '.', '');
     }

@@ -40,7 +40,7 @@
                 <div class="card-body">
                     <div class="scrollbar-mirror" id="top-scrollbar"></div>
                     <div class="table-responsive">
-                        <table class="table" id="orders-table-admin" class="items-table">
+                        <table class="table items-table" id="orders-table-admin">
                             <thead>
                             <tr>
                                 @foreach($tableData['fields'] as $index => $field)
@@ -81,7 +81,7 @@
                                                                 <th>{{ $itemField['name'] }}</th>
                                                             @endforeach
                                                                 @can('See item buyer')
-                                                                    <th>Pirkėjai</th>
+                                                                    <th style="width: 100%">Pirkėjai</th>
                                                                 @endcan
 
                                                         </tr>

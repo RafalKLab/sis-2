@@ -44,6 +44,12 @@ class ItemsTableConfig implements TableConfigInterface
                 'identifier' => 'item_quality',
             ],
             [
+                'name' => 'Pakuočių skaičius',
+                'type' => 'item pallets',
+                'group' => 'PREKĖS IR LOGISTIKA',
+                'identifier' => 'item pallets',
+            ],
+            [
                 'name' => 'Klijai',
                 'type' => 'select glue',
                 'group' => 'PREKĖS IR LOGISTIKA',

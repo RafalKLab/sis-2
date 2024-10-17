@@ -9,7 +9,7 @@
                 <form method="POST" action="{{ route('orders.update-company', ['id' => $orderData['id']]) }}">
                     @csrf
                     <div class="form-group mb-2">
-                        <label for="company">Select company context</label>
+                        <label for="company">Select first buyer</label>
                         <select name="company" id="company" class="form-control {{ $errors->has('company') ? 'is-invalid' : '' }}">
                             @foreach($orderData['available_companies'] as $id => $company)
                                 <option @if($orderData['company']['id'] === $id) selected @endif value="{{ $id }}">{{ $company }}</option>
@@ -58,16 +58,16 @@
                             <td></td>
                         </tr>
                         <tr>
-                            <th scope="row">Įmonės kontekstas:</th>
+                            <th scope="row">Pirkėjas 1</th>
                             <td>{{ $orderData['company']['name'] }}</td>
                             <td></td>
                             <td></td>
                             <td>
-                                <i title="Edit company context" onclick="showCompanyModal()" class="fa-solid fa-city text-primary" style="cursor: pointer"></i>
+                                <i title="Edit first buyer" onclick="showCompanyModal()" class="fa-solid fa-city text-primary" style="cursor: pointer"></i>
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Tėvų hierarchija</th>
+                            <th scope="row">Užsakymo nr.</th>
                             <td colspan="4">
                                 <span class="related_order_links">
                                 @foreach($orderData['related_order_parent_links'] as $order)
@@ -82,7 +82,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Vaikų hierarchija</th>
+                            <th scope="row">Grandis</th>
                             <td colspan="3">
                                 <span class="related_order_links">
                                     @foreach($orderData['related_order_children_links']['children'] as $child)

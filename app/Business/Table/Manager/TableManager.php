@@ -63,7 +63,13 @@ class TableManager
         foreach ($this->config->getTableFields() as $index => $fieldData) {
             $fieldData['order'] = $index + 1;
 
-            $table->fields()->create($fieldData);
+            $fieldEntity = TableField::where('name', $fieldData['name'])->first();
+            if ($fieldEntity) {
+                $fieldEntity->order = $fieldData['order'];
+                $fieldEntity->save();
+            } else {
+                $table->fields()->create($fieldData);
+            }
         }
     }
 }

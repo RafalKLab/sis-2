@@ -15,7 +15,7 @@
             <form method="POST" action="{{ route('orders.register-confirm') }}">
                 @csrf
                 <div class="form-group mb-2">
-                    <label for="company">Select company context</label>
+                    <label for="company">Select first buyer</label>
                     <select name="company" id="company" class="form-control {{ $errors->has('company') ? 'is-invalid' : '' }}">
                         @foreach($companies as $id => $company)
                             <option value="{{ $id }}">{{ $company }}</option>

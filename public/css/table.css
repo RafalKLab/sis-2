@@ -1,6 +1,11 @@
 #orders-table-admin th, td {
-    min-width: 200px;
     border: 1px solid #D2D2D2;
+    vertical-align: middle;
+    white-space: nowrap;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 #orders-table-admin th {
@@ -31,7 +36,7 @@ tbody tr:hover {
 }
 
 .items-table {
-    min-width: 150px !important;
+    min-width: 140px !important;
     font-size: 11px;
 }
 

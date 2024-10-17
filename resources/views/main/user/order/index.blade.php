@@ -40,7 +40,7 @@
                 <div class="card-body">
                     <div class="scrollbar-mirror" id="top-scrollbar"></div>
                     <div class="table-responsive">
-                        <table class="table" id="orders-table-admin">
+                        <table class="table" id="orders-table-admin" class="items-table">
                             <thead>
                             <tr>
                                 @foreach($tableData['fields'] as $index => $field)
@@ -48,7 +48,7 @@
                                         <th>Užregistravo</th>
                                     @endif
                                     @if($index == 3)
-                                            <th>Įmonės kontekstas</th>
+                                            <th>Pirkėjas 1</th>
                                     @endif
                                     @can('See order products')
                                         @if($index == 3)

@@ -98,19 +98,20 @@ interface ConfigDefaultInterface
         self::FIELD_IDENTIFIER_ITEM_NAME => 'identifier',
         self::FIELD_IDENTIFIER_ITEM_MEASUREMENTS => 'identifier',
         self::FIELD_IDENTIFIER_ITEM_QUALITY => 'identifier',
+        self::FIELD_TYPE_ITEM_PALLETS => 'type',
         self::FIELD_IDENTIFIER_ITEM_GLUE => 'identifier',
         self::FIELD_TYPE_SELECT_MEASUREMENT => 'type',
         self::FIELD_TYPE_SELECT_CERTIFICATION => 'type',
         self::FIELD_TYPE_AMOUNT => 'type',
         self::FIELD_TYPE_PURCHASE_NUMBER => 'type',
-        self::FIELD_TYPE_TOTAL_SALES_AMOUNT => 'type',
-        self::FIELD_TYPE_SALES_NUMBER => 'type',
         self::FIELD_IDENTIFIER_CARRIER => 'identifier',
         self::FIELD_IDENTIFIER_ITEM_TRANS_NUMBER => 'identifier',
         self::FIELD_IDENTIFIER_ITEM_CUSTOMS_NAME => 'identifier',
         self::FIELD_ITEM_LOAD_DATE => 'type',
         self::FIELD_ITEM_DELIVERY_DATE => 'type',
         self::FIELD_TYPE_SELECT_WAREHOUSE => 'type',
+        self::FIELD_TYPE_TOTAL_SALES_AMOUNT => 'type',
+        self::FIELD_TYPE_SALES_NUMBER => 'type',
     ];
 
     /* Filesystem */
@@ -137,6 +138,7 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_DYNAMIC_SELECT = 'dynamic select';
     public const FIELD_TYPE_PURCHASE_SUM = 'purchase sum';
     public const FIELD_TYPE_ITEM_PRIME_COST = 'item prime cost';
+    public const FIELD_TYPE_ITEM_PALLETS = 'item pallets';
     public const FIELD_TYPE_TOTAL_PURCHASE_SUM = 'total purchase sum';
     public const FIELD_TYPE_SALES_SUM = 'sales sum';
     public const FIELD_TYPE_TOTAL_SALES_SUM = 'total sales sum';

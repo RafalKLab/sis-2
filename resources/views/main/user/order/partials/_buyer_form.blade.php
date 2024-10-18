@@ -64,6 +64,19 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group row mb-3">
+                        <label for="address" class="col-sm-3 col-form-label">Pristatymo adresas</label>
+                        <div class="col-sm-9">
+                            <input name="address" type="text" class="form-control" id="address" value="{{ isset($isEdit) ? $buyer->address : '' }}">
+                            @if ($errors->has('address'))
+                                <span class="text-danger" role="alert">
+                                 {{ $errors->first('address') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
                     <input type="hidden" name="itemId" value="{{$itemId}}">
                 </form>
         </div>

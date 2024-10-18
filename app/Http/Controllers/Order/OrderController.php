@@ -816,6 +816,7 @@ class OrderController extends MainController
             'buyer' => 'required',
             'quantity' => 'required|numeric|gt:0', // Ensure quantity is a number and at least 1
             'itemId' => 'required',
+            'address' => 'max:255',
         ]);
 
         $orderItem = OrderItem::find($validatedData['itemId']);
@@ -849,6 +850,7 @@ class OrderController extends MainController
         $orderItem->buyers()->create([
             'name' => $validatedData['buyer'],
             'quantity' => $validatedData['quantity'],
+            'address' => $validatedData['address'],
         ]);
 
         $this->executeItemCalculations($orderItem);
@@ -937,6 +939,7 @@ class OrderController extends MainController
             'buyer' => 'required',
             'quantity' => 'required|numeric|min:1',
             'itemId' => 'required',
+            'address' => 'max:255',
         ]);
 
         // Available quantity check
@@ -967,6 +970,7 @@ class OrderController extends MainController
         $buyer->update([
             'name' => $validatedData['buyer'],
             'quantity' => $validatedData['quantity'],
+            'address' => $validatedData['address'],
         ]);
 
         $this->executeItemCalculations($item);

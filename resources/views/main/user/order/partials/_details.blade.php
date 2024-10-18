@@ -357,9 +357,11 @@
                                                         @can('See item buyer')
                                                             @foreach($item['buyers'] as $buyer)
                                                                 <tr>
-                                                                    <th scope="row">Pirkėjas {{ $buyer['name'] }} kiekis:</th>
-                                                                    <td>{{ $buyer['quantity'] }}</td>
-                                                                    <td></td>
+                                                                    <th scope="row">Pirkėjas {{ $buyer['name'] }} </th>
+                                                                    <td colspan="2">
+                                                                        <b>Kiekis:</b> {{ $buyer['quantity'] }} <br>
+                                                                        <b>Pristatymo adresas:</b> {{ $buyer['address'] }}
+                                                                    </td>
                                                                     <td class="text-end">
                                                                         <a href="{{ route('orders.edit-item-buyer', ['orderId' => $orderData['id'], 'itemId' => $item['settings']['item_id'], 'buyerId' => $buyer['id']]) }}" title="Edit buyer"><i class="fa-solid fa-user-pen"></i></a>
                                                                         @can('Remove item buyer')

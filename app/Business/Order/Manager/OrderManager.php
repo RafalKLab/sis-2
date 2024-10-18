@@ -282,6 +282,7 @@ class OrderManager
                 'id' => $buyer->id,
                 'name' => $buyer->name,
                 'quantity' => $buyer->quantity,
+                'address' => $buyer->address,
             ];
         }
 

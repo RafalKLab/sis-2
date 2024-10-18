@@ -10,7 +10,8 @@ class ItemBuyer extends Model
     protected $fillable = [
         'order_item_id',
         'name',
-        'quantity'
+        'quantity',
+        'address',
     ];
 
     use HasFactory;

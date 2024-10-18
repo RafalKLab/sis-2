@@ -76,6 +76,12 @@
                                          @case('delivery date')
                                              <input name="field_{{$data['field_id'] }}" type="date" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
                                              @break
+                                         @case('load date from warehouse')
+                                             <input name="field_{{$data['field_id'] }}" type="date" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
+                                             @break
+                                         @case('delivery date to buyer')
+                                             <input name="field_{{$data['field_id'] }}" type="date" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
+                                             @break
                                          @case('file')
                                              <input disabled type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $orderFormData['uploaded_files'] }}">
                                              @break

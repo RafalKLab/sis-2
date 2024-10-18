@@ -131,8 +131,18 @@ class ItemsTableConfig implements TableConfigInterface
                 'group' => 'PREKĖS IR LOGISTIKA',
             ],
             [
-                'name' => 'Pristatymo data',
+                'name' => 'Pristatymo data į sandelį',
                 'type' => 'delivery date',
+                'group' => 'PREKĖS IR LOGISTIKA',
+            ],
+            [
+                'name' => 'Pasikrovimo data iš sandelio',
+                'type' => 'load date from warehouse',
+                'group' => 'PREKĖS IR LOGISTIKA',
+            ],
+            [
+                'name' => 'Pristatymo data klientui',
+                'type' => 'delivery date to buyer',
                 'group' => 'PREKĖS IR LOGISTIKA',
             ],
             [

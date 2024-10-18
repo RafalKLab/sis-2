@@ -109,6 +109,8 @@ interface ConfigDefaultInterface
         self::FIELD_IDENTIFIER_ITEM_CUSTOMS_NAME => 'identifier',
         self::FIELD_ITEM_LOAD_DATE => 'type',
         self::FIELD_ITEM_DELIVERY_DATE => 'type',
+        self::FIELD_ITEM_LOAD_DATE_FROM_WAREHOUSE => 'type',
+        self::FIELD_ITEM_DELIVERY_DATE_TO_BUYER => 'type',
         self::FIELD_TYPE_SELECT_WAREHOUSE => 'type',
         self::FIELD_TYPE_TOTAL_SALES_AMOUNT => 'type',
         self::FIELD_TYPE_SALES_NUMBER => 'type',
@@ -169,6 +171,8 @@ interface ConfigDefaultInterface
     public const FIELD_TYPE_INVOICE = 'invoice';
     public const FIELD_ITEM_LOAD_DATE = 'load date';
     public const FIELD_ITEM_DELIVERY_DATE = 'delivery date';
+    public const FIELD_ITEM_LOAD_DATE_FROM_WAREHOUSE = 'load date from warehouse';
+    public const FIELD_ITEM_DELIVERY_DATE_TO_BUYER = 'delivery date to buyer';
     public const FIELD_IDENTIFIER_ITEM_NAME = 'item_name';
     public const FIELD_IDENTIFIER_CARRIER = 'carrier';
     public const FIELD_IDENTIFIER_ITEM_SELLER = 'item_seller';

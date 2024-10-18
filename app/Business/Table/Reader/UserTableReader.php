@@ -240,13 +240,21 @@ class UserTableReader implements TableReaderInterface
                     $value = $warehouses[$value] ?? null;
                 }
 
-                if ($field['type'] == ConfigDefaultInterface::FIELD_ITEM_LOAD_DATE && $value) {
-                    $value = sprintf('<div class="order-field-status-yellow">%s</div>', $value);
-                }
-
-                if ($field['type'] == ConfigDefaultInterface::FIELD_ITEM_DELIVERY_DATE && $value) {
-                    $value = sprintf('<div class="order-field-status-green">%s</div>', $value);
-                }
+//                if ($field['type'] == ConfigDefaultInterface::FIELD_ITEM_LOAD_DATE && $value) {
+//                    $value = sprintf('<div class="order-field-status-yellow">%s</div>', $value);
+//                }
+//
+//                if ($field['type'] == ConfigDefaultInterface::FIELD_ITEM_DELIVERY_DATE && $value) {
+//                    $value = sprintf('<div class="order-field-status-brown">%s</div>', $value);
+//                }
+//
+//                if ($field['type'] == ConfigDefaultInterface::FIELD_ITEM_LOAD_DATE_FROM_WAREHOUSE && $value) {
+//                    $value = sprintf('<div class="order-field-status-green">%s</div>', $value);
+//                }
+//
+//                if ($field['type'] == ConfigDefaultInterface::FIELD_ITEM_DELIVERY_DATE_TO_BUYER && $value) {
+//                    $value = sprintf('<div class="order-field-status-purple">%s</div>', $value);
+//                }
 
                 $itemData[] = $value;
             }

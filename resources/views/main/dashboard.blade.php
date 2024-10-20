@@ -20,80 +20,80 @@
         </form>
 
         <div class="row mt-3 mb-5">
-            <div class="col-xl-12 col-md-12 mb-3">
-                <div class="card">
-                    <div class="card-body bg-primary text-white"><b>Pataisų užrašai</b> <i>2024-10-13</i></div>
-                    <div class="card-footer align-items-center justify-content-between">
+{{--            <div class="col-xl-12 col-md-12 mb-3">--}}
+{{--                <div class="card">--}}
+{{--                    <div class="card-body bg-primary text-white"><b>Pataisų užrašai</b> <i>2024-10-13</i></div>--}}
+{{--                    <div class="card-footer align-items-center justify-content-between">--}}
 
-                        <h6>Jūsų informacijai:</h6>
-                        <ul>
-                            <li>Pridėta galimybė rašyti komentarus užsakymams.</li>
-                            <li>Pridėta galimybė žiūrėti tėvinių ir vaikinių užsakymų hierarchiją bei pilną hierarchijos medį.</li>
-                            <li>Pridėtas laukelis „Įmonės kontekstas“ bei galimybė kurti įmones administratoriams.</li>
-                            <li>Statistika nuo šiol vaizduojama atsižvelgiant į įmonės kontekstą.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+{{--                        <h6>Jūsų informacijai:</h6>--}}
+{{--                        <ul>--}}
+{{--                            <li>Pridėta galimybė rašyti komentarus užsakymams.</li>--}}
+{{--                            <li>Pridėta galimybė žiūrėti tėvinių ir vaikinių užsakymų hierarchiją bei pilną hierarchijos medį.</li>--}}
+{{--                            <li>Pridėtas laukelis „Įmonės kontekstas“ bei galimybė kurti įmones administratoriams.</li>--}}
+{{--                            <li>Statistika nuo šiol vaizduojama atsižvelgiant į įmonės kontekstą.</li>--}}
+{{--                        </ul>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
-            <div class="col-xl-12 col-md-12 mb-3">
-                <div class="card">
-                    <div class="card-body bg-primary text-white"><b>Pataisų užrašai</b> <i>2024-10-03</i></div>
-                    <div class="card-footer align-items-center justify-content-between">
+{{--            <div class="col-xl-12 col-md-12 mb-3">--}}
+{{--                <div class="card">--}}
+{{--                    <div class="card-body bg-primary text-white"><b>Pataisų užrašai</b> <i>2024-10-03</i></div>--}}
+{{--                    <div class="card-footer align-items-center justify-content-between">--}}
 
-                        <h6>Jūsų informacijai:</h6>
-                        <ul>
-                            <li>Pridėtas naujas transporto kainos iki ES sienos langelis, kuris naudojamas skaičiuojant mokesčius.</li>
-                            <li>Pridėtas naujas langelis mokesčių skirtumas</li>
-                            <li>Transporto kaina 1 (ES viduje) neturi įtakos mokesčių skaičiavimui.</li>
-                            <li>Pridėta galimybė kopijuoti susietus užsakymo produktus kuriant naują užsakymą.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+{{--                        <h6>Jūsų informacijai:</h6>--}}
+{{--                        <ul>--}}
+{{--                            <li>Pridėtas naujas transporto kainos iki ES sienos langelis, kuris naudojamas skaičiuojant mokesčius.</li>--}}
+{{--                            <li>Pridėtas naujas langelis mokesčių skirtumas</li>--}}
+{{--                            <li>Transporto kaina 1 (ES viduje) neturi įtakos mokesčių skaičiavimui.</li>--}}
+{{--                            <li>Pridėta galimybė kopijuoti susietus užsakymo produktus kuriant naują užsakymą.</li>--}}
+{{--                        </ul>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
-            <div class="col-xl-12 col-md-12 mb-3">
-                <div class="card">
-                    <div class="card-body bg-primary text-white"><b>Pataisų užrašai</b> <i>2024-09-30</i></div>
-                    <div class="card-footer align-items-center justify-content-between">
+{{--            <div class="col-xl-12 col-md-12 mb-3">--}}
+{{--                <div class="card">--}}
+{{--                    <div class="card-body bg-primary text-white"><b>Pataisų užrašai</b> <i>2024-09-30</i></div>--}}
+{{--                    <div class="card-footer align-items-center justify-content-between">--}}
 
-                        <h6>Ištaisytos klaidos:</h6>
-                        <ul>
-                            <li>Užsakymo numerio blogas eiliškumas, kai prieš tai užsakymas turėjo susietą užsakymą.</li>
-                            <li>Pirkimo/pardavimo kiekis suapvalintas iki sveikojo skaičiaus.</li>
-                            <li>Pakoreguotas klijų pavadinimas: WBP</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+{{--                        <h6>Ištaisytos klaidos:</h6>--}}
+{{--                        <ul>--}}
+{{--                            <li>Užsakymo numerio blogas eiliškumas, kai prieš tai užsakymas turėjo susietą užsakymą.</li>--}}
+{{--                            <li>Pirkimo/pardavimo kiekis suapvalintas iki sveikojo skaičiaus.</li>--}}
+{{--                            <li>Pakoreguotas klijų pavadinimas: WBP</li>--}}
+{{--                        </ul>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
-            <div class="col-xl-12 col-md-12 mb-3">
-                <div class="card">
-                    <div class="card-body bg-primary text-white"><b>Pataisų užrašai</b> <i>2024-09-25</i></div>
-                    <div class="card-footer align-items-center justify-content-between">
-                        <h6>Jūsų informacijai:</h6>
-                        <ul>
-                            <li>Kai norite įrašyti tikslųjį skaičių, naudokite tašką, o ne kablelį, pavyzdžiui, 7.5 o ne 7,5.</li>
-                            <li>Sumažintas šriftas sandėlio bendros vertės atvaizdavime.</li>
-                            <li>Pridėtas papildomas <i>scroll bar</i> užsakymų apžvalgos lentelės viršuje.</li>
-                            <li>Pridėtas prekės matavimo vieneto laukelis užsakymų apžvalgos lentelėje.</li>
-                            <li>Nustatytas užsakymų apžvalgos lentelės eiliškumas pagal užsakymo sukūrimo datą.</li>
-                        </ul>
+{{--            <div class="col-xl-12 col-md-12 mb-3">--}}
+{{--                <div class="card">--}}
+{{--                    <div class="card-body bg-primary text-white"><b>Pataisų užrašai</b> <i>2024-09-25</i></div>--}}
+{{--                    <div class="card-footer align-items-center justify-content-between">--}}
+{{--                        <h6>Jūsų informacijai:</h6>--}}
+{{--                        <ul>--}}
+{{--                            <li>Kai norite įrašyti tikslųjį skaičių, naudokite tašką, o ne kablelį, pavyzdžiui, 7.5 o ne 7,5.</li>--}}
+{{--                            <li>Sumažintas šriftas sandėlio bendros vertės atvaizdavime.</li>--}}
+{{--                            <li>Pridėtas papildomas <i>scroll bar</i> užsakymų apžvalgos lentelės viršuje.</li>--}}
+{{--                            <li>Pridėtas prekės matavimo vieneto laukelis užsakymų apžvalgos lentelėje.</li>--}}
+{{--                            <li>Nustatytas užsakymų apžvalgos lentelės eiliškumas pagal užsakymo sukūrimo datą.</li>--}}
+{{--                        </ul>--}}
 
-                        <h6>Ištaisytos klaidos:</h6>
-                        <ul>
-                            <li>Klaida, kai neteisingai ivestas skaičius naudojant kablelį, mesdavo klaidą.</li>
-                            <li>Klaida, kai sandėlio pavadinime galėjo atsirasti /, kuris metė klaidą.</li>
-                        </ul>
+{{--                        <h6>Ištaisytos klaidos:</h6>--}}
+{{--                        <ul>--}}
+{{--                            <li>Klaida, kai neteisingai ivestas skaičius naudojant kablelį, mesdavo klaidą.</li>--}}
+{{--                            <li>Klaida, kai sandėlio pavadinime galėjo atsirasti /, kuris metė klaidą.</li>--}}
+{{--                        </ul>--}}
 
-                        <h6>Žinomos klaidos, kurios dar neišspręstos:</h6>
-                        <ul>
-                            <li>Užsakymo numerio blogas eiliškumas, kai prieš tai užsakymas turėjo susietą užsakymą.</li>
-                            <li>Pirkimo/pardavimo kiekis suapvalintas iki sveikojo skaičiaus.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+{{--                        <h6>Žinomos klaidos, kurios dar neišspręstos:</h6>--}}
+{{--                        <ul>--}}
+{{--                            <li>Užsakymo numerio blogas eiliškumas, kai prieš tai užsakymas turėjo susietą užsakymą.</li>--}}
+{{--                            <li>Pirkimo/pardavimo kiekis suapvalintas iki sveikojo skaičiaus.</li>--}}
+{{--                        </ul>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
             @foreach($feedback as $entry)
                 <div class="col-xl-12 col-md-12 mb-3">

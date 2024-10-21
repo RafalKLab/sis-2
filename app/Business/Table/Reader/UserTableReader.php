@@ -157,6 +157,7 @@ class UserTableReader implements TableReaderInterface
             'user',
             'files',
             'company',
+            'comments'
         ]);
 
         $fieldsById = $this->userFields->keyBy('id');
@@ -169,6 +170,7 @@ class UserTableReader implements TableReaderInterface
                 'uploaded_files' => $order->files->count(),
                 'parent_order' => $order->parent_id,
                 $fileFieldName => '',
+                'comment' => $order->comments->first()?->content,
             ];
 
             // Using the correct relationship name 'data' instead of 'orderDataEntities'

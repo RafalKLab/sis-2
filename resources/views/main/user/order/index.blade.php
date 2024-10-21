@@ -45,6 +45,7 @@
                             <tr>
                                 @foreach($tableData['fields'] as $index => $field)
                                     @if($index == 1)
+                                        <th>Komentarai</th>
                                         <th>Užregistravo</th>
                                     @endif
                                     @if($index == 3)
@@ -66,6 +67,7 @@
                                 <tr class>
                                     @foreach($tableData['fields'] as $index => $field)
                                         @if($index == 1)
+                                            <td>{{ $order['comment'] }}</td>
                                             <td>{{ $order['user'] }}</td>
                                         @endif
                                             @if($index == 3)

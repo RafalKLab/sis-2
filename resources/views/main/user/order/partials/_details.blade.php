@@ -360,7 +360,11 @@
                                                                     <th scope="row">Pirkėjas {{ $buyer['name'] }} </th>
                                                                     <td colspan="2">
                                                                         <b>Kiekis:</b> {{ $buyer['quantity'] }} <br>
-                                                                        <b>Pristatymo adresas:</b> {{ $buyer['address'] }}
+                                                                        <b>Pristatymo adresas:</b> {{ $buyer['address'] }}<br>
+                                                                        <b>Pask. Šalis:</b> {{ $buyer['last_country'] }}<br>
+                                                                        <b>Išskr. Šalis:</b> {{ $buyer['dep_country'] }}<br>
+                                                                        <b>Vežėjas:</b> {{ $buyer['carrier'] }}<br>
+                                                                        <b>Trans. nr.:</b> {{ $buyer['trans_number'] }}<br>
                                                                     </td>
                                                                     <td class="text-end">
                                                                         <a href="{{ route('orders.edit-item-buyer', ['orderId' => $orderData['id'], 'itemId' => $item['settings']['item_id'], 'buyerId' => $buyer['id']]) }}" title="Edit buyer"><i class="fa-solid fa-user-pen"></i></a>

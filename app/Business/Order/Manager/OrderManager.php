@@ -171,7 +171,7 @@ class OrderManager
         return $inputSelect;
     }
 
-    protected function getDynamicSelectOptionsByField(int $fieldId, string $tableScope): array
+    public function getDynamicSelectOptionsByField(int $fieldId, string $tableScope): array
     {
         return match($tableScope) {
             TableConfig::MAIN_TABLE_NAME => OrderData::where('field_id', $fieldId)
@@ -283,6 +283,10 @@ class OrderManager
                 'name' => $buyer->name,
                 'quantity' => $buyer->quantity,
                 'address' => $buyer->address,
+                'last_country' => $buyer->last_country,
+                'dep_country' => $buyer->dep_country,
+                'carrier' => $buyer->carrier,
+                'trans_number' => $buyer->trans_number,
             ];
         }
 

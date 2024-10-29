@@ -77,6 +77,73 @@
                         </div>
                     </div>
 
+                    <div class="form-group row mb-3">
+                        <label for="last_country" class="col-sm-3 col-form-label">Pask. Šalis</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" id="last_country" name="last_country">
+                                @foreach($countryMap as $country)
+                                    <option value="{{ $country }}"
+                                        {{ isset($isEdit) && $buyer->last_country === $country ? 'selected' : '' }}
+                                    > {{ $country }}</option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('last_country'))
+                                <span class="text-danger" role="alert">
+                                 {{ $errors->first('last_country') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="form-group row mb-3">
+                        <label for="dep_country" class="col-sm-3 col-form-label">Išskr. Šalis</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" id="dep_country" name="dep_country">
+                                @foreach($countryMap as $country)
+                                    <option value="{{ $country }}"
+                                        {{ isset($isEdit) && $buyer->dep_country === $country ? 'selected' : '' }}
+                                    >{{ $country }}</option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('dep_country'))
+                                <span class="text-danger" role="alert">
+                                 {{ $errors->first('dep_country') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="form-group row mb-3">
+                        <label for="carrier" class="col-sm-3 col-form-label">Vežėjas</label>
+                        <div class="col-sm-9">
+                            <select class="form-control select-with-search" id="carrier" name="carrier">
+                                <option>-</option>
+                                @foreach($carriers as $carrier)
+                                    <option value="{{ $carrier }}"
+                                        {{ isset($isEdit) && $buyer->carrier === $carrier ? 'selected' : '' }}
+                                    > {{ $carrier }}</option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('carrier'))
+                                <span class="text-danger" role="alert">
+                                 {{ $errors->first('carrier') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="form-group row mb-3">
+                        <label for="trans_number" class="col-sm-3 col-form-label">Trans. nr.</label>
+                        <div class="col-sm-9">
+                            <input name="trans_number" type="text" class="form-control" id="trans_number" value="{{ isset($isEdit) ? $buyer->trans_number : '' }}">
+                            @if ($errors->has('trans_number'))
+                                <span class="text-danger" role="alert">
+                                 {{ $errors->first('trans_number') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
                     <input type="hidden" name="itemId" value="{{$itemId}}">
                 </form>
         </div>

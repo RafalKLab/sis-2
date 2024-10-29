@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Order;
 
 use App\Business\ActivityLog\Config\ActivityLogConstants;
+use App\Business\Table\Config\ItemsTableConfig;
 use App\Http\Controllers\MainController;
 use App\Models\Company\Company;
 use App\Models\Order\Comment;
@@ -796,7 +797,19 @@ class OrderController extends MainController
             $availableItemQuantity = (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
         }
 
-        return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'availableItemQuantity', 'excludedFieldsForDetails'));
+        $countryMap = ConfigDefaultInterface::ORDER_COUNTRY_MAP;
+
+        // Retrieve carriers
+        $fieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_IDENTIFIER_CARRIER)->id;
+        $itemCarriers = $this->factory()->createOrderManager()->getDynamicSelectOptionsByField($fieldId, ItemsTableConfig::TABLE_NAME);
+        $buyerCarriers = ItemBuyer::whereNotNull('carrier')->pluck('carrier')->unique()->toArray();
+        $carriers = array_merge($itemCarriers, $buyerCarriers);
+        $carriers = array_unique($carriers);
+
+        return view(
+            'main.user.order.add-buyer',
+            compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'availableItemQuantity', 'excludedFieldsForDetails', 'countryMap', 'carriers'),
+        );
     }
 
     public function storeBuyer(Request $request, int $orderId) {
@@ -817,6 +830,10 @@ class OrderController extends MainController
             'quantity' => 'required|numeric|gt:0', // Ensure quantity is a number and at least 1
             'itemId' => 'required',
             'address' => 'max:255',
+            'carrier' => 'max:255',
+            'trans_number' => 'max:255',
+            'last_country' => 'max:255',
+            'dep_country' => 'max:255',
         ]);
 
         $orderItem = OrderItem::find($validatedData['itemId']);
@@ -851,6 +868,10 @@ class OrderController extends MainController
             'name' => $validatedData['buyer'],
             'quantity' => $validatedData['quantity'],
             'address' => $validatedData['address'],
+            'carrier' => $validatedData['carrier'],
+            'trans_number' => $validatedData['trans_number'],
+            'last_country' => $validatedData['last_country'],
+            'dep_country' => $validatedData['dep_country'],
         ]);
 
         $this->executeItemCalculations($orderItem);
@@ -908,7 +929,19 @@ class OrderController extends MainController
             $availableItemQuantity += $buyer->quantity;
         }
 
-        return view('main.user.order.add-buyer', compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'isEdit', 'buyer', 'availableItemQuantity', 'excludedFieldsForDetails'));
+        $countryMap = ConfigDefaultInterface::ORDER_COUNTRY_MAP;
+
+        // Retrieve carriers
+        $fieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_IDENTIFIER_CARRIER)->id;
+        $itemCarriers = $this->factory()->createOrderManager()->getDynamicSelectOptionsByField($fieldId, ItemsTableConfig::TABLE_NAME);
+        $buyerCarriers = ItemBuyer::whereNotNull('carrier')->pluck('carrier')->unique()->toArray();
+        $carriers = array_merge($itemCarriers, $buyerCarriers);
+        $carriers = array_unique($carriers);
+
+        return view(
+            'main.user.order.add-buyer',
+            compact('orderData', 'itemId', 'orderId', 'availableBuyers', 'isEdit', 'buyer', 'availableItemQuantity', 'excludedFieldsForDetails', 'carriers', 'countryMap'),
+        );
     }
 
     public function updateBuyer(Request $request, int $orderId, int $itemId, int $buyerId)
@@ -940,6 +973,10 @@ class OrderController extends MainController
             'quantity' => 'required|numeric|min:1',
             'itemId' => 'required',
             'address' => 'max:255',
+            'carrier' => 'max:255',
+            'trans_number' => 'max:255',
+            'last_country' => 'max:255',
+            'dep_country' => 'max:255',
         ]);
 
         // Available quantity check
@@ -971,6 +1008,10 @@ class OrderController extends MainController
             'name' => $validatedData['buyer'],
             'quantity' => $validatedData['quantity'],
             'address' => $validatedData['address'],
+            'carrier' => $validatedData['carrier'],
+            'trans_number' => $validatedData['trans_number'],
+            'last_country' => $validatedData['last_country'],
+            'dep_country' => $validatedData['dep_country'],
         ]);
 
         $this->executeItemCalculations($item);

@@ -3,6 +3,7 @@
 namespace App\Business\Carrier\Manager;
 
 use App\Models\Note\Note;
+use App\Models\Order\ItemBuyer;
 use App\Models\Order\OrderItemData;
 use App\Service\TableService;
 use shared\ConfigDefaultInterface;
@@ -27,6 +28,8 @@ class CarrierManager
             $order = $carrier->orderItem->order;
             $data[$carrier->value]['orders'][$order->getKeyField()] = $order->id;
         }
+
+        $data = $this->collectBuyerCarriers($data);
 
         return $data;
     }
@@ -54,5 +57,24 @@ class CarrierManager
         unset($carrierData);
 
         return $carriers;
+    }
+
+    private function collectBuyerCarriers(array $data): array
+    {
+        $buyerCarriers = ItemBuyer::whereNotNull('carrier')->pluck('carrier')->unique()->toArray();
+        $buyerCarriersWithOrders = [];
+        foreach ($buyerCarriers as $carrier) {
+            $orders = [];
+            $buyers = ItemBuyer::where('carrier', $carrier)->get();
+            foreach ($buyers as $buyer) {
+                $orders[$buyer->item->order->getKeyField()] = $buyer->item->order->id;
+            }
+
+            $buyerCarriersWithOrders[$carrier]['orders'] = $orders;
+        }
+
+        $mergedArray = array_merge_recursive($buyerCarriersWithOrders, $data);
+
+        return $mergedArray;
     }
 }

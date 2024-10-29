@@ -12,6 +12,10 @@ class ItemBuyer extends Model
         'name',
         'quantity',
         'address',
+        'carrier',
+        'trans_number',
+        'last_country',
+        'dep_country',
     ];
 
     use HasFactory;

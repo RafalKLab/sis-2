@@ -8,7 +8,7 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid px-4">
+    <div class="container-fluid px-4 main-orders">
         @if(config('app.debug'))
             <h6>Load time: {{ $execution_time }}</h6>
         @endif
@@ -46,10 +46,10 @@
                                 @foreach($tableData['fields'] as $index => $field)
                                     @if($index == 1)
                                         <th>Komentarai</th>
-                                        <th>Užregistravo</th>
                                     @endif
                                     @if($index == 3)
-                                            <th>Pirkėjas 1</th>
+                                            <th>Užregistravo</th>
+{{--                                            <th>Pirkėjas / Tarpininkas</th>--}}
                                     @endif
                                     @can('See order products')
                                         @if($index == 3)
@@ -68,10 +68,10 @@
                                     @foreach($tableData['fields'] as $index => $field)
                                         @if($index == 1)
                                             <td>{{ $order['comment'] }}</td>
-                                            <td>{{ $order['user'] }}</td>
                                         @endif
                                             @if($index == 3)
-                                                <td>{{ $order['company'] }}</td>
+                                                <td>{{ $order['user'] }}</td>
+{{--                                                <td>{{ $order['company'] }}</td>--}}
                                             @endif
                                         @can('See order products')
                                             @if($index == 3)
@@ -79,26 +79,34 @@
                                                     <table class="items-table">
                                                         <thead>
                                                         <tr>
-                                                            @foreach($order['items']['fields'] as $index => $itemField)
+                                                            @can('See item buyer')
+{{--                                                                <th style="width: 100%">Pirkėjai</th>--}}
+                                                            @endcan
+                                                            @foreach($order['items']['fields'] as $itemIndex => $itemField)
                                                                 <th>{{ $itemField['name'] }}</th>
+                                                                    @if($itemIndex === 0)
+                                                                        <th>Pirkėjas / Tarpininkas</th>
+                                                                        @can('See item buyer')
+                                                                            <th style="width: 100%">Pirkėjai</th>
+                                                                        @endcan
+                                                                    @endif
                                                             @endforeach
-                                                                @can('See item buyer')
-                                                                    <th style="width: 100%">Pirkėjai</th>
-                                                                @endcan
-
                                                         </tr>
                                                         </thead>
                                                         <tbody>
                                                         @foreach($order['items']['data'] as $itemData)
                                                             <tr>
-                                                                @foreach($itemData['details'] as $index => $itemDatum)
+                                                                @foreach($itemData['details'] as $itemIndex => $itemDatum)
                                                                     <td>{!! $itemDatum !!}</td>
+                                                                        @if($itemIndex === 0)
+                                                                            <td>{{ $order['company'] }}</td>
+                                                                            @can('See item buyer')
+                                                                                <td>
+                                                                                    {{ $itemData['buyers'] }}
+                                                                                </td>
+                                                                            @endcan
+                                                                        @endif
                                                                 @endforeach
-                                                                    @can('See item buyer')
-                                                                        <td>
-                                                                            {{ $itemData['buyers'] }}
-                                                                        </td>
-                                                                    @endcan
                                                             </tr>
                                                         @endforeach
                                                         </tbody>

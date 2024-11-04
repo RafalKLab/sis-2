@@ -58,7 +58,7 @@
                             <td></td>
                         </tr>
                         <tr>
-                            <th scope="row">Pirkėjas 1</th>
+                            <th scope="row">Pirkėjas / Tarpininkas</th>
                             <td>{{ $orderData['company']['name'] }}</td>
                             <td></td>
                             <td></td>

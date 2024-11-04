@@ -74,11 +74,13 @@ class ItemsTableConfig implements TableConfigInterface
                 'name' => 'Pask. Šalis',
                 'type' => 'select country',
                 'group' => 'PREKĖS IR LOGISTIKA',
+                'identifier' => 'load_country',
             ],
             [
                 'name' => 'Išskr. Šalis',
                 'type' => 'select country',
                 'group' => 'PREKĖS IR LOGISTIKA',
+                'identifier' => 'dep_country',
             ],
             [
                 'name' => 'Trans. tipas',

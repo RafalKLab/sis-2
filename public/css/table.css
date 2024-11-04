@@ -1,7 +1,7 @@
 #orders-table-admin th, td {
     border: 1px solid #D2D2D2;
     vertical-align: middle;
-    min-width: 140px;
+    min-width: 100px;
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 10px;
@@ -44,4 +44,8 @@ tbody tr:hover {
     overflow-y: hidden;
     width: 100%;
     /* Mirror any custom scrollbar styles here */
+}
+
+.main-orders {
+    font-size: 10px;
 }

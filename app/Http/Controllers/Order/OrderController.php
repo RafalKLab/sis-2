@@ -62,10 +62,23 @@ class OrderController extends MainController
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
         }
 
+        $canSeeOrder = true;
+
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
             if ($order->user_id !== Auth::user()->id) {
-                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+                $canSeeOrder = false;
             }
+        }
+
+        if (Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_RELATED_ORDERS)) {
+            $rootOrder = OrderService::getRootOrder($orderId);
+            if ($rootOrder->user_id === Auth::user()->id) {
+                $canSeeOrder = true;
+            }
+        }
+
+        if (!$canSeeOrder) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
         }
 
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);

@@ -66,6 +66,7 @@ class TableManager
             $fieldEntity = TableField::where('name', $fieldData['name'])->first();
             if ($fieldEntity) {
                 $fieldEntity->order = $fieldData['order'];
+                $fieldEntity->identifier = $fieldData['identifier'] ?? null;
                 $fieldEntity->save();
             } else {
                 $table->fields()->create($fieldData);

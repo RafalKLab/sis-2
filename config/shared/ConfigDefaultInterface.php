@@ -13,6 +13,7 @@ interface ConfigDefaultInterface
     public const PERMISSION_SEE_UPLOADED_FILES = 'See uploaded files';
     public const PERMISSION_DELETE_UPLOADED_FILES = 'Delete uploaded files';
     public const PERMISSION_SEE_ALL_ORDERS = 'See all orders';
+    public const PERMISSION_SEE_RELATED_ORDERS = 'See related orders';
     public const PERMISSION_SEE_ORDER_PRODUCTS = 'See order products';
     public const PERMISSION_ADD_ORDER_PRODUCTS = 'Add order products';
     public const PERMISSION_EDIT_ORDER_PRODUCTS = 'Edit order products';
@@ -55,12 +56,15 @@ interface ConfigDefaultInterface
         self::PERMISSION_UNLOCK_ITEM,
         self::PERMISSION_DELETE_ORDER_COMMENTS,
         self::PERMISSION_SEE_ITEM_BUYER,
+        self::PERMISSION_SEE_RELATED_ORDERS,
     ];
 
     public const PERMISSION_GROUPS = [
         'Order related permissions' => [
             self::PERMISSION_REGISTER_ORDER,
             self::PERMISSION_SEE_ALL_ORDERS,
+            self::PERMISSION_SEE_RELATED_ORDERS,
+
         ],
         'Order product related permissions' => [
             self::PERMISSION_SEE_ORDER_PRODUCTS,
@@ -95,6 +99,13 @@ interface ConfigDefaultInterface
 
     // Order view table items list
     public const ITEM_TABLE_FIELDS = [
+        self::FIELD_IDENTIFIER_ITEM_SELLER => 'identifier',
+        self::FIELD_ITEM_LOAD_DATE => 'type',
+        self::FIELD_IDENTIFIER_LOAD_COUNTRY => 'identifier',
+        self::FIELD_ITEM_DELIVERY_DATE => 'type',
+        self::FIELD_IDENTIFIER_DEP_COUNTRY => 'identifier',
+        self::FIELD_ITEM_LOAD_DATE_FROM_WAREHOUSE => 'type',
+        self::FIELD_ITEM_DELIVERY_DATE_TO_BUYER => 'type',
         self::FIELD_IDENTIFIER_ITEM_NAME => 'identifier',
         self::FIELD_IDENTIFIER_ITEM_MEASUREMENTS => 'identifier',
         self::FIELD_IDENTIFIER_ITEM_QUALITY => 'identifier',
@@ -107,10 +118,6 @@ interface ConfigDefaultInterface
         self::FIELD_IDENTIFIER_CARRIER => 'identifier',
         self::FIELD_IDENTIFIER_ITEM_TRANS_NUMBER => 'identifier',
         self::FIELD_IDENTIFIER_ITEM_CUSTOMS_NAME => 'identifier',
-        self::FIELD_ITEM_LOAD_DATE => 'type',
-        self::FIELD_ITEM_DELIVERY_DATE => 'type',
-        self::FIELD_ITEM_LOAD_DATE_FROM_WAREHOUSE => 'type',
-        self::FIELD_ITEM_DELIVERY_DATE_TO_BUYER => 'type',
         self::FIELD_TYPE_SELECT_WAREHOUSE => 'type',
         self::FIELD_TYPE_TOTAL_SALES_AMOUNT => 'type',
         self::FIELD_TYPE_SALES_NUMBER => 'type',
@@ -192,6 +199,8 @@ interface ConfigDefaultInterface
     public const FIELD_IDENTIFIER_INVOICE_AGENT = 'invoice_agent';
     public const FIELD_IDENTIFIER_INVOICE_FACTORING = 'invoice_factoring';
     public const FIELD_IDENTIFIER_INVOICE_PURCHASE = 'invoice_purchase';
+    public const FIELD_IDENTIFIER_LOAD_COUNTRY = 'load_country';
+    public const FIELD_IDENTIFIER_DEP_COUNTRY = 'dep_country';
 
     public const EXCLUDED_FIELDS_WHEN_TAKING_FROM_WAREHOUSE = [
         self::FIELD_TYPE_AMOUNT,

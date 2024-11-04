@@ -79,4 +79,18 @@ class OrderService
     {
         return OrderData::where('field_id', $fieldId)->where('order_id', $orderId)->first();
     }
+
+    public static function getRootOrder(int $orderId): Order
+    {
+        $currentOrder = Order::find($orderId);
+
+        // Check if the current order has a parent
+        if ($currentOrder->parent) {
+            // If so, recursively call this method with the parent's ID
+            return self::getRootOrder($currentOrder->parent->id);
+        } else {
+            // If there is no parent, then this is the root order
+            return $currentOrder;
+        }
+    }
 }

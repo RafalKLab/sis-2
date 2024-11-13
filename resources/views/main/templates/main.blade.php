@@ -147,9 +147,9 @@
     <div id="layoutSidenav_content">
         <main>
             @if(config('app.debug'))
-                <div class="alert alert-warning">
-                    <strong>The application is in test mode</strong>
-                </div>
+{{--                <div class="alert alert-warning">--}}
+{{--                    <strong>The application is in test mode</strong>--}}
+{{--                </div>--}}
             @endif
 
             {{-- Check for a success message --}}

@@ -12,6 +12,20 @@
     background-color: #f2f2f2;
 }
 
+#orders-table-admin-sticky th, td {
+    border: 1px solid #D2D2D2;
+    vertical-align: middle;
+    min-width: 100px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#orders-table-admin-sticky th {
+    background-color: #f2f2f2;
+}
+
 .order-view-link {
     text-decoration: none;
     color: inherit;
@@ -49,3 +63,28 @@ tbody tr:hover {
 .main-orders {
     font-size: 10px;
 }
+
+.scroll-wrapper {
+    overflow: auto; /* Enables scrolling on the wrapper */
+}
+
+.inverted-scroll {
+    transform: scaleY(-1); /* Inverts the table-responsive */
+}
+
+.inverted-scroll .table {
+    transform: scaleY(-1); /* Inverts the contents of the table */
+}
+
+
+.scroll-wrapper {
+    position: sticky;
+    top: 50px;
+    z-index: 100; /* This keeps the header on top of other content */
+    background-color: white;
+}
+
+.pagination-nav {
+    margin-top: 20px;
+}
+

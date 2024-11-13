@@ -21,7 +21,7 @@ class UserTableReader implements TableReaderInterface
 {
     protected $userFields;
 
-    protected const PAGINATION_ITEMS_PER_PAGE = 50;
+    protected const PAGINATION_ITEMS_PER_PAGE = 20;
 
     protected bool $failedSearch = false;
     protected ?int $exactMatch = null;

@@ -5,8 +5,17 @@
     border: 1px solid #DEE2E6;
 }
 
+.order-field-status-grey {
+    background-color: #A9A5A6;
+    color: white;
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}
+
 .order-field-status-pink {
-    background-color: #F30B7E;
+    background-color: #FF99C8;
     color: white;
     text-align: center;
     padding: 1px;
@@ -15,7 +24,7 @@
 }
 
 .order-field-status-yellow {
-    background-color: #F4EC00;
+    background-color: #FFFF00;
     text-align: center;
     padding: 1px;
     border-radius: 5px;
@@ -23,7 +32,16 @@
 }
 
 .order-field-status-blue {
-    background-color: #518EF8;
+    background-color: #00B2EC;
+    color: white;
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}
+
+.order-field-status-aqua {
+    background-color: #4BDBC2;
     color: white;
     text-align: center;
     padding: 1px;
@@ -32,7 +50,16 @@
 }
 
 .order-field-status-green {
-    background-color: #00D800;
+    background-color: #3BE63F;
+    color: white;
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}
+
+.order-field-status-grass {
+    background-color: #528236;
     color: white;
     text-align: center;
     padding: 1px;
@@ -50,7 +77,7 @@
 }
 
 .order-field-status-brown {
-    background-color: #947557;
+    background-color: #993400;
     color: white;
     text-align: center;
     padding: 1px;
@@ -59,7 +86,16 @@
 }
 
 .order-field-status-orange {
-    background-color: #F48013;
+    background-color: #EC7F2A;
+    color: white;
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}
+
+.order-field-status-magenta {
+    background-color: #FF00FE;
     color: white;
     text-align: center;
     padding: 1px;
@@ -68,7 +104,7 @@
 }
 
 .order-field-status-purple {
-    background-color: #9C2FEA;
+    background-color: #AB7AD5;
     color: white;
     text-align: center;
     padding: 1px;
@@ -77,7 +113,16 @@
 }
 
 .order-field-status-red {
-    background-color: #E90018;
+    background-color: #FE0000;
+    color: white;
+    text-align: center;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #DEE2E6;
+}
+
+.order-field-status-black {
+    background-color: #000000;
     color: white;
     text-align: center;
     padding: 1px;

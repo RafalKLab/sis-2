@@ -280,24 +280,35 @@ interface ConfigDefaultInterface
     public const ORDER_STATUS_PAID = 'Apmokėta';
     public const ORDER_STATUS_READY = 'Paruošta';
     public const ORDER_STATUS_TRANSPORT_ORDERED = 'Užsk. Trans';
-    public const ORDER_STATUS_COMING = 'Važiuoja';
+    public const ORDER_STATUS_SWIM = 'Plaukia';
+    public const ORDER_STATUS_COMING = 'Važiuoja į sandelį';
+    public const ORDER_STATUS_WAREHOUSE_MT = 'Sandelyje MT';
     public const ORDER_STATUS_IN_CUSTOMS = 'Muitinėje';
-    public const ORDER_STATUS_CUSTOMIZED = 'Išmuitinta';
+    public const ORDER_STATUS_IN_MIDDLEMAN = 'Prist. tarpininkui';
+
+//    public const ORDER_STATUS_CUSTOMIZED = 'Išmuitinta';
     public const ORDER_STATUS_IN_WAREHOUSE = 'Sandėlyje';
+    public const ORDER_STATUS_PARTIAL_SALE = 'Dalinis pardavimas';
+    public const ORDER_STATUS_COMMING_TO_CUSTOMER = 'Važiuoja pas gavėją';
     public const ORDER_STATUS_DELIVERED = 'Pristatyta';
     public const ORDER_STATUS_CANCELED = 'Atšaukta';
 
     public const ORDER_STATUS_MAP = [
-        self::ORDER_STATUS_ORDERED => '',
+        self::ORDER_STATUS_ORDERED => 'grey',
         self::ORDER_STATUS_PAID => 'pink',
         self::ORDER_STATUS_READY => 'yellow',
         self::ORDER_STATUS_TRANSPORT_ORDERED => 'blue',
+        self::ORDER_STATUS_SWIM => 'aqua',
         self::ORDER_STATUS_COMING => 'green',
-        self::ORDER_STATUS_IN_CUSTOMS => 'gray',
-        self::ORDER_STATUS_CUSTOMIZED => 'brown',
+        self::ORDER_STATUS_WAREHOUSE_MT => 'brown',
+        self::ORDER_STATUS_IN_CUSTOMS => 'grass',
+        self::ORDER_STATUS_IN_MIDDLEMAN => '',
+//        self::ORDER_STATUS_CUSTOMIZED => 'brown',
         self::ORDER_STATUS_IN_WAREHOUSE => 'orange',
-        self::ORDER_STATUS_DELIVERED => 'purple',
-        self::ORDER_STATUS_CANCELED => 'red'
+        self::ORDER_STATUS_PARTIAL_SALE => 'magenta',
+        self::ORDER_STATUS_COMMING_TO_CUSTOMER => 'purple',
+        self::ORDER_STATUS_DELIVERED => 'red',
+        self::ORDER_STATUS_CANCELED => 'black'
     ];
 
     public const ORDER_GLUE_MAP = [

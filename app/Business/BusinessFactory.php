@@ -9,6 +9,7 @@ use App\Business\Carrier\Manager\CarrierManager;
 use App\Business\Customer\Manager\CustomerManager;
 use App\Business\Order\Calculator\OrderDataCalculator;
 use App\Business\Order\Manager\OrderManager;
+use App\Business\Order\Score\OrderScoreCalculator;
 use App\Business\Statistics\Manager\StatisticsManager;
 use App\Business\Table\Config\ItemsTableConfig;
 use App\Business\Table\Config\TableConfig;
@@ -83,6 +84,11 @@ class BusinessFactory
     public function createWarehouseManager(): WarehouseManager
     {
         return new WarehouseManager();
+    }
+
+    public function createOrderScoreCalculator(): OrderScoreCalculator
+    {
+        return new OrderScoreCalculator();
     }
 
     private function createTableConfig(): TableConfig

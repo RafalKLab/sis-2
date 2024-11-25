@@ -305,6 +305,8 @@ class OrderController extends MainController
             'company_id' => $validated['company'],
         ]);
 
+        $this->factory()->createOrderScoreCalculator()->calculateOrderScore($newOrder);
+
         $copyRelatedOrder = $request->copy_related_order;
 
         if ($parentOrder && $copyRelatedOrder) {

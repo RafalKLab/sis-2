@@ -93,12 +93,12 @@ class UserTableReader implements TableReaderInterface
         if ($searchedOrderIds) {
             if (Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
                 $orders = Order::whereIn('id', $searchedOrderIds)
-                    ->orderBy('created_at', 'desc')
+                    ->orderBy('score', 'desc')
                     ->paginate(self::PAGINATION_ITEMS_PER_PAGE);
             } else {
                 $orders = Order::where('user_id', Auth::user()->id)
                     ->whereIn('id', $searchedOrderIds)
-                    ->orderBy('created_at', 'desc')
+                    ->orderBy('score', 'desc')
                     ->paginate(self::PAGINATION_ITEMS_PER_PAGE);
             }
         } else {

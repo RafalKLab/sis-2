@@ -23,7 +23,7 @@
                             <table class="table" id="datatablesSimple">
                                 <thead>
                                 <tr>
-                                    <th scope="col">Id</th>
+                                    <th scope="col">Užsakymas</th>
                                     <th scope="col">Pavadinimas</th>
                                     <th scope="col">Išmatavimai</th>
                                     <th scope="col">Klijai</th>
@@ -32,13 +32,16 @@
                                     <th scope="col">Vieneto kaina</th>
                                     <th scope="col">Vieneto savikaina</th>
                                     <th scope="col">Bendra vertė</th>
-                                    <th scope="col">Užsakymas</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($items['items'] as $item)
                                     <tr>
-                                        <td>{{ $item['item_id'] }}</td>
+                                        <td>
+                                            <a class="custom-link" href="{{ route('orders.view', ['id'=>$item['order']['id']]) }}">
+                                                {{ $item['order']['key'] }}
+                                            </a>
+                                        </td>
                                         <td>{{ $item['name'] }}</td>
                                         <td>{{ $item['measurement'] }}</td>
                                         <td>{{ $item['glue'] }}</td>
@@ -47,11 +50,6 @@
                                         <td>{{ $item['price'] }}</td>
                                         <td>{{ $item['prime_cost'] }}</td>
                                         <td>{{ $item['total_price'] }}</td>
-                                        <td>
-                                            <a class="custom-link" href="{{ route('orders.view', ['id'=>$item['order']['id']]) }}">
-                                                {{ $item['order']['key'] }}
-                                            </a>
-                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>

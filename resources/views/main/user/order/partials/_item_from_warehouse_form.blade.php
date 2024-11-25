@@ -82,7 +82,7 @@
                 // Get items for selected warehouse and populate item select
                 const items = warehouseItems[selectedWarehouse]['items'];
                 items.forEach((item) => {
-                    const itemText = `Id:${item.item_id} ${item.name} - sandėlyje: ${item.amount}${item.measurement_unit} - klijai: ${item.glue} - išmatavimai: ${item.measurement} - kokybė: ${item.quality} - savikaina: ${item.prime_cost} - pardavėjas: ${item.seller}`;
+                    const itemText = `${item.order.key} ${item.name} - sandėlyje: ${item.amount}${item.measurement_unit} - klijai: ${item.glue} - išmatavimai: ${item.measurement} - kokybė: ${item.quality} - savikaina: ${item.prime_cost} - pardavėjas: ${item.seller}`;
                     const option = new Option(itemText, item.item_id); // assumes items have 'name' and 'id' properties
                     itemSelect.add(option);
                 });

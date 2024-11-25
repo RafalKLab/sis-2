@@ -78,7 +78,7 @@
                     </div>
 
                     <div class="form-group row mb-3">
-                        <label for="last_country" class="col-sm-3 col-form-label">Pask. Šalis</label>
+                        <label for="last_country" class="col-sm-3 col-form-label">Pakrovimo iš sandėlio šalis</label>
                         <div class="col-sm-9">
                             <select class="form-control" id="last_country" name="last_country">
                                 @foreach($countryMap as $country)
@@ -96,7 +96,7 @@
                     </div>
 
                     <div class="form-group row mb-3">
-                        <label for="dep_country" class="col-sm-3 col-form-label">Išskr. Šalis</label>
+                        <label for="dep_country" class="col-sm-3 col-form-label">Iškrovimo šalis pas pirkeją</label>
                         <div class="col-sm-9">
                             <select class="form-control" id="dep_country" name="dep_country">
                                 @foreach($countryMap as $country)

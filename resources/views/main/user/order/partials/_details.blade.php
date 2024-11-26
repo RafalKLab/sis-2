@@ -148,12 +148,12 @@
             </div>
 
             <div class="card mt-3">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center expandable-header" data-bs-toggle="collapse" data-bs-target="#collapseItems">
                     <div class="col-md-5">
                         Prekės ir logistika
                     </div>
                     <div class="col-md-1 d-flex justify-content-end">
-                        <button class="text-secondary" style="border: none; background-color: inherit" type="button" data-bs-toggle="collapse" data-bs-target="#collapseItems" aria-expanded="true" aria-controls="collapseContent">
+                        <button class="text-secondary" style="border: none; background-color: inherit" aria-expanded="true" aria-controls="collapseContent">
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                     </div>
@@ -523,12 +523,12 @@
             </div>
 
             <div class="card mt-3">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center expandable-header" data-bs-toggle="collapse" data-bs-target="#collapseAccounting">
                     <div class="col-md-5">
                         Apskaita
                     </div>
                     <div class="col-md-1 d-flex justify-content-end">
-                        <button class="text-secondary" style="border: none; background-color: inherit" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAccounting" aria-expanded="false" aria-controls="collapseContent">
+                        <button class="text-secondary" style="border: none; background-color: inherit" aria-expanded="false" aria-controls="collapseContent">
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                     </div>
@@ -664,13 +664,13 @@
             </div>
 
             <div class="card mt-3">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center expandable-header" data-bs-toggle="collapse" data-bs-target="#collapseInvoice">
                     <div class="col-md-8">
                         Sąskaitos faktūros
                         <span id="invoice-alert-block" class="invoice-alert"></span>
                     </div>
                     <div class="col-md-1 d-flex justify-content-end">
-                        <button class="text-secondary" style="border: none; background-color: inherit" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInvoice" aria-expanded="false" aria-controls="collapseContent">
+                        <button class="text-secondary" style="border: none; background-color: inherit" aria-expanded="false" aria-controls="collapseContent">
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                     </div>

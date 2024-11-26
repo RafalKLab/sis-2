@@ -174,3 +174,8 @@
     color: black;
     text-decoration: underline;
 }
+
+.expandable-header {
+    cursor: pointer;
+    user-select: none;
+}

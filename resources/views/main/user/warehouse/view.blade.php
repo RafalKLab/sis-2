@@ -77,26 +77,39 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card product-worth">
-                                            <div class="amount-block">
-                                                <span id="totalProducts" data-target="{{ $items['total_quantity'] }}">0</span>
-                                            </div>
-                                            <div class="label-block">
-                                                Prekių kiekis
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card product-worth">
-                                            <div class="amount-block">
-                                                €<span id="netWorth" data-target="{{ $items['total_worth'] }}">0.00</span>
-                                            </div>
-                                            <div class="label-block">
-                                                Bendra vertė
+
+                                    @foreach($warehouseItemsValueByName as $item => $itemData)
+                                        <div class="col-md-12">
+                                            <div class="card product-worth">
+                                                <div class="amount-block">
+                                                    {{ $item }}
+                                                    <span id="totalProducts" class="totalProducts" data-target="{{ $itemData['amount'] }}">0</span>
+                                                    {{ $itemData['unit'] }}
+                                                    €<span id="netWorth" class="netWorth" data-target="{{ $itemData['total_price'] }}">0.00</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    @endforeach
+{{--                                    <div class="col-md-6">--}}
+{{--                                        <div class="card product-worth">--}}
+{{--                                            <div class="amount-block">--}}
+{{--                                                <span id="totalProducts" data-target="{{ $items['total_quantity'] }}">0</span>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="label-block">--}}
+{{--                                                Prekių kiekis--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-md-6">--}}
+{{--                                        <div class="card product-worth">--}}
+{{--                                            <div class="amount-block">--}}
+{{--                                                €<span id="netWorth" data-target="{{ $items['total_worth'] }}">0.00</span>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="label-block">--}}
+{{--                                                Bendra vertė--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
                                 </div>
                             </div>
                         </div>
@@ -232,13 +245,18 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            const totalProductsSpan = document.getElementById('totalProducts');
-            const netWorthSpan = document.getElementById('netWorth');
-            const totalProductsTarget = parseInt(totalProductsSpan.getAttribute('data-target'));
-            const netWorthTarget = parseFloat(netWorthSpan.getAttribute('data-target'));
+            const totalProductsSpans = document.querySelectorAll('.totalProducts');
+            const netWorthSpans = document.querySelectorAll('.netWorth');
 
-            animateValue(totalProductsSpan, 0, totalProductsTarget, 1500, 2); // No decimals for total products
-            animateValue(netWorthSpan, 0, netWorthTarget, 1500, 2); // Two decimals for net worth
+            totalProductsSpans.forEach(span => {
+                const totalProductsTarget = parseFloat(span.getAttribute('data-target'));
+                animateValue(span, 0, totalProductsTarget, 1500, 2);
+            });
+
+            netWorthSpans.forEach(span => {
+                const netWorthTarget = parseFloat(span.getAttribute('data-target'));
+                animateValue(span, 0, netWorthTarget, 1500, 2);
+            });
 
             // Check if there are any validation errors and show the modal if there are
             @if($errors->any())

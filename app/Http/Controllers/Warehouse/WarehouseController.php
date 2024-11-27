@@ -38,7 +38,22 @@ class WarehouseController extends MainController
         $items = $this->factory()->createWarehouseManager()->collectWarehouseItems($warehouse);
         $warehouseStockOverview = $this->factory()->createWarehouseManager()->collectWarehouseStockOverview($warehouse->id);
 
-        return view('main.user.warehouse.view', compact('warehouse', 'items', 'warehouseStockOverview'));
+        $warehouseItemsValueByName = [];
+        foreach ($items['items'] as $item) {
+            if (array_key_exists($item['name'], $warehouseItemsValueByName)) {
+                $warehouseItemsValueByName[$item['name']]['total_price'] += $item['total_price'];
+                $warehouseItemsValueByName[$item['name']]['amount'] += $item['amount'];
+                $warehouseItemsValueByName[$item['name']]['unit'] = $item['measurement_unit'];
+            } else {
+                $warehouseItemsValueByName[$item['name']] = [
+                    'total_price' => $item['total_price'],
+                    'amount' => $item['amount'],
+                    'unit' => $item['measurement_unit'],
+                ];
+            }
+        }
+
+        return view('main.user.warehouse.view', compact('warehouse', 'items', 'warehouseStockOverview', 'warehouseItemsValueByName'));
     }
 
     public function create(Request $request)

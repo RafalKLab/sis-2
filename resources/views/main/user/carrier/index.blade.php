@@ -29,7 +29,11 @@
                                 <td>{{$carrier}}</td>
                                 <td style="min-width: 500px;">
                                     @foreach($data['orders'] as $orderKey => $orderId)
-                                        <a class="custom-link" href="{{ route('orders.view', ['id'=>$orderId]) }}">{{ $orderKey }}</a>
+                                        @if(is_array($orderId))
+                                            <a class="custom-link" href="{{ route('orders.view', ['id'=>$orderId[0]]) }}">{{ $orderKey }}</a>
+                                        @else
+                                            <a class="custom-link" href="{{ route('orders.view', ['id'=>$orderId]) }}">{{ $orderKey }}</a>
+                                        @endif
                                     @endforeach
                                 </td>
                                 <td>

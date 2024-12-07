@@ -849,6 +849,8 @@ class OrderController extends MainController
             'trans_number' => 'max:255',
             'last_country' => 'max:255',
             'dep_country' => 'max:255',
+            'delivery_date' => 'nullable|date',
+            'load_date' => 'nullable|date',
         ]);
 
         $orderItem = OrderItem::find($validatedData['itemId']);
@@ -887,6 +889,8 @@ class OrderController extends MainController
             'trans_number' => $validatedData['trans_number'],
             'last_country' => $validatedData['last_country'],
             'dep_country' => $validatedData['dep_country'],
+            'load_date' => $validatedData['load_date'],
+            'delivery_date' => $validatedData['delivery_date'],
         ]);
 
         $this->executeItemCalculations($orderItem);
@@ -992,6 +996,8 @@ class OrderController extends MainController
             'trans_number' => 'max:255',
             'last_country' => 'max:255',
             'dep_country' => 'max:255',
+            'delivery_date' => 'nullable|date',
+            'load_date' => 'nullable|date',
         ]);
 
         // Available quantity check
@@ -1027,6 +1033,8 @@ class OrderController extends MainController
             'trans_number' => $validatedData['trans_number'],
             'last_country' => $validatedData['last_country'],
             'dep_country' => $validatedData['dep_country'],
+            'load_date' => $validatedData['load_date'],
+            'delivery_date' => $validatedData['delivery_date'],
         ]);
 
         $this->executeItemCalculations($item);

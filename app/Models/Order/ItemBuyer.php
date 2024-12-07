@@ -16,6 +16,8 @@ class ItemBuyer extends Model
         'trans_number',
         'last_country',
         'dep_country',
+        'delivery_date',
+        'load_date',
     ];
 
     use HasFactory;

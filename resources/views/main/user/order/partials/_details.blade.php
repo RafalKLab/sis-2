@@ -360,9 +360,11 @@
                                                                     <th scope="row">Pirkėjas {{ $buyer['name'] }} </th>
                                                                     <td colspan="2">
                                                                         <b>Kiekis:</b> {{ $buyer['quantity'] }} <br>
+                                                                        <b>Pasik. šalis:</b> {{ $buyer['last_country'] }}<br>
+                                                                        <b>Pasik. data:</b> {{ $buyer['load_date'] }}<br>
+                                                                        <b>Išsik. šalis:</b> {{ $buyer['dep_country'] }}<br>
+                                                                        <b>Pristatymo data:</b> {{ $buyer['delivery_date'] }}<br>
                                                                         <b>Pristatymo adresas:</b> {{ $buyer['address'] }}<br>
-                                                                        <b>Pask. Šalis:</b> {{ $buyer['last_country'] }}<br>
-                                                                        <b>Išskr. Šalis:</b> {{ $buyer['dep_country'] }}<br>
                                                                         <b>Vežėjas:</b> {{ $buyer['carrier'] }}<br>
                                                                         <b>Trans. nr.:</b> {{ $buyer['trans_number'] }}<br>
                                                                     </td>

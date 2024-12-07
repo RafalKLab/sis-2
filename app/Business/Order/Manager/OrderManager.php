@@ -287,6 +287,8 @@ class OrderManager
                 'dep_country' => $buyer->dep_country,
                 'carrier' => $buyer->carrier,
                 'trans_number' => $buyer->trans_number,
+                'load_date' => $buyer->load_date,
+                'delivery_date' => $buyer->delivery_date,
             ];
         }
 

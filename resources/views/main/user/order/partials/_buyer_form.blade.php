@@ -66,19 +66,7 @@
                     </div>
 
                     <div class="form-group row mb-3">
-                        <label for="address" class="col-sm-3 col-form-label">Pristatymo adresas</label>
-                        <div class="col-sm-9">
-                            <input name="address" type="text" class="form-control" id="address" value="{{ isset($isEdit) ? $buyer->address : '' }}">
-                            @if ($errors->has('address'))
-                                <span class="text-danger" role="alert">
-                                 {{ $errors->first('address') }}
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="form-group row mb-3">
-                        <label for="last_country" class="col-sm-3 col-form-label">Pakrovimo iš sandėlio šalis</label>
+                        <label for="last_country" class="col-sm-3 col-form-label">Pasikrovimo iš sandėlio šalis</label>
                         <div class="col-sm-9">
                             <select class="form-control" id="last_country" name="last_country">
                                 @foreach($countryMap as $country)
@@ -96,7 +84,19 @@
                     </div>
 
                     <div class="form-group row mb-3">
-                        <label for="dep_country" class="col-sm-3 col-form-label">Iškrovimo šalis pas pirkeją</label>
+                        <label for="load_date" class="col-sm-3 col-form-label">Pasikrovimo iš sandėlio data</label>
+                        <div class="col-sm-9">
+                            <input name="load_date" type="date" class="form-control" id="load_date" value="{{ isset($isEdit) ? $buyer->load_date : '' }}">
+                            @if ($errors->has('load_date'))
+                                <span class="text-danger" role="alert">
+                                 {{ $errors->first('load_date') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="form-group row mb-3">
+                        <label for="dep_country" class="col-sm-3 col-form-label">Išsikrovimo šalis pas pirkeją</label>
                         <div class="col-sm-9">
                             <select class="form-control" id="dep_country" name="dep_country">
                                 @foreach($countryMap as $country)
@@ -108,6 +108,30 @@
                             @if ($errors->has('dep_country'))
                                 <span class="text-danger" role="alert">
                                  {{ $errors->first('dep_country') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="form-group row mb-3">
+                        <label for="delivery_date" class="col-sm-3 col-form-label">Pristatymo data</label>
+                        <div class="col-sm-9">
+                            <input name="delivery_date" type="date" class="form-control" id="delivery_date" value="{{ isset($isEdit) ? $buyer->delivery_date : '' }}">
+                            @if ($errors->has('delivery_date'))
+                                <span class="text-danger" role="alert">
+                                 {{ $errors->first('delivery_date') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="form-group row mb-3">
+                        <label for="address" class="col-sm-3 col-form-label">Pristatymo adresas</label>
+                        <div class="col-sm-9">
+                            <input name="address" type="text" class="form-control" id="address" value="{{ isset($isEdit) ? $buyer->address : '' }}">
+                            @if ($errors->has('address'))
+                                <span class="text-danger" role="alert">
+                                 {{ $errors->first('address') }}
                                 </span>
                             @endif
                         </div>

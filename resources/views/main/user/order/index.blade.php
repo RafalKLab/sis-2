@@ -95,6 +95,20 @@
                                                                     <th style="width: 100%">Pirkėjai</th>
                                                                 @endcan
                                                             @endif
+                                                                @if($itemIndex === 4)
+                                                                    <th>
+                                                                        Pasikrovimo iš sandėlio data
+                                                                    </th>
+                                                                    <th>
+                                                                        Pasikrovimo iš sandėlio šalis
+                                                                    </th>
+                                                                    <th>
+                                                                        Pristatymo data
+                                                                    </th>
+                                                                    <th>
+                                                                        Išsikrovimo šalis pas pirkeją
+                                                                    </th>
+                                                                @endif
                                                         @endforeach
                                                     </tr>
                                                     </thead>
@@ -110,6 +124,20 @@
                                                                             {{ $itemData['buyers'] }}
                                                                         </td>
                                                                     @endcan
+                                                                @endif
+                                                                @if($itemIndex === 4)
+                                                                    <td>
+                                                                        {{ $itemData['buyer_details']['load_date'] }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ $itemData['buyer_details']['load_country'] }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ $itemData['buyer_details']['delivery_date'] }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ $itemData['buyer_details']['delivery_country'] }}
+                                                                    </td>
                                                                 @endif
                                                             @endforeach
                                                         </tr>

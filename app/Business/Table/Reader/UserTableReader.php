@@ -261,20 +261,34 @@ class UserTableReader implements TableReaderInterface
                 $itemData[] = $value;
             }
 
+            $buyerDetails = [
+                'load_date' => '',
+                'load_country' => '',
+                'delivery_date' => '',
+                'delivery_country' => '',
+            ];
+
             $data[] = [
                 'details' => $itemData,
-                'buyers' => $this->collectOrderItemBuyers($item->id),
+                'buyers' => $this->collectOrderItemBuyers($item->id, $buyerDetails),
+                'buyer_details' => $buyerDetails,
             ];
         }
 
         return $data;
     }
 
-    private function collectOrderItemBuyers(int $id): string
+    private function collectOrderItemBuyers(int $id, array &$buyerDetails): string
     {
         $buyerNames = [];
         foreach (ItemBuyer::where('order_item_id', $id)->get() as $buyer) {
             $buyerNames[] = $buyer->name;
+            $buyerDetails = [
+                'load_date' => $buyer->load_date,
+                'load_country' => $buyer->last_country,
+                'delivery_date' => $buyer->delivery_date,
+                'delivery_country' => $buyer->dep_country,
+            ];
         }
 
         return implode(', ', $buyerNames);

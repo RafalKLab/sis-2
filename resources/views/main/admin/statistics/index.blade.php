@@ -77,7 +77,6 @@
                                                         <thead>
                                                         <tr>
                                                             <th scope="col">Užsakymas</th>
-                                                            <th scope="col">Sąskaitos numeris</th>
                                                             <th scope="col">Pelnas</th>
                                                         </tr>
                                                         </thead>
@@ -89,7 +88,6 @@
                                                                         {{ $actualProfitDetails['order_key'] }}
                                                                     </a>
                                                                 </td>
-                                                                <td>{{ $actualProfitDetails['invoice_number'] }}</td>
                                                                 <td class="text-success">{{ $actualProfitDetails['order_sales_sum'] }}</td>
                                                             </tr>
                                                         @endforeach
@@ -122,7 +120,6 @@
                                                         <thead>
                                                         <tr>
                                                             <th scope="col">Užsakymas</th>
-                                                            <th scope="col">Sąskaitos numeris</th>
                                                             <th scope="col">Pelnas</th>
                                                         </tr>
                                                         </thead>
@@ -134,7 +131,6 @@
                                                                         {{ $expectedProfitDetails['order_key'] }}
                                                                     </a>
                                                                 </td>
-                                                                <td>{{ $expectedProfitDetails['invoice_number'] }}</td>
                                                                 <td class="text-primary">{{ $expectedProfitDetails['order_sales_sum'] }}</td>
                                                             </tr>
                                                         @endforeach

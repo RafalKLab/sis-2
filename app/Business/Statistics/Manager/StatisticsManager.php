@@ -83,7 +83,7 @@ class StatisticsManager
     private function calculateMonthStatistics(string $month, int $companyId): array
     {
         $orderIds = $this->getOrdersForMonth($month, $companyId);
-//        dd($orderIds);
+
         return [
             'orders' => $this->getOrderKeys($orderIds),
             'profit' => $this->calculateProfit($orderIds),
@@ -101,18 +101,17 @@ class StatisticsManager
             ->pluck('order_id')
             ->toArray();
 
-        $orderSaleInvoices = $this->getOrdersWithSalesInvoices($orderIds);
+        $orderBuyerInvoices = $this->getOrdersProfitStatusByBuyersInvoices($orderIds);
 
         $ordersByUserId = [];
         $orders = Order::find($orderIds);
         foreach ($orders as $order) {
             // Check if order is paid
-            if (!array_key_exists($order->id, $orderSaleInvoices)) {
+            if (!array_key_exists($order->id, $orderBuyerInvoices)) {
                 continue;
             }
 
-            $invoice = Invoice::where('invoice_number', $orderSaleInvoices[$order->id])->first();
-            if ($invoice->status !== ConfigDefaultInterface::INVOICE_STATUS_PAID) {
+            if (!$orderBuyerInvoices[$order->id]) {
                 continue;
             }
 
@@ -167,7 +166,7 @@ class StatisticsManager
             ->pluck('order_id')
             ->toArray();
 
-        $orderSaleInvoices = $this->getOrdersWithSalesInvoices($orderIds);
+        $orderBuyerInvoices = $this->getOrdersProfitStatusByBuyersInvoices($orderIds);
 
         $ordersByUserId = [];
         $orders = Order::whereIn('id', $orderIds)
@@ -177,13 +176,12 @@ class StatisticsManager
         foreach ($orders as $order) {
             // Check if order is paid
             $notPaidOrder = false;
-            if (!array_key_exists($order->id, $orderSaleInvoices)) {
+            if (!array_key_exists($order->id, $orderBuyerInvoices)) {
                 $notPaidOrder = true;
             }
 
             if (!$notPaidOrder) {
-                $invoice = Invoice::where('invoice_number', $orderSaleInvoices[$order->id])->first();
-                if ($invoice->status !== ConfigDefaultInterface::INVOICE_STATUS_PAID) {
+                if (!$orderBuyerInvoices[$order->id]) {
                     $notPaidOrder = true;
                 }
             }
@@ -280,9 +278,10 @@ class StatisticsManager
         $expectedProfit = 0.0;
         $expectedProfitDetails = [];
 
-        $orderSalesInvoices = $this->getOrdersWithSalesInvoices($orderIds);
+        $orderBuyerInvoices = $this->getOrdersProfitStatusByBuyersInvoices($orderIds);
+
         foreach ($orderIds as $orderId) {
-            if (!array_key_exists($orderId, $orderSalesInvoices)) {
+            if (!array_key_exists($orderId, $orderBuyerInvoices)) {
                 continue;
             }
 
@@ -293,16 +292,13 @@ class StatisticsManager
                 ->first()
                 ->value;
 
-            // find order invoice entity to check status
-            $invoice = Invoice::where('invoice_number', $orderSalesInvoices[$orderId])->first();
             $details = [
                 'order_id' => $orderId,
                 'order_key' => OrderService::getKeyFieldFrom($orderId)->value,
                 'order_sales_sum' => $this->formatNumberWithDecimals($orderProfit),
-                'invoice_number' => $invoice->invoice_number,
             ];
 
-            if ($invoice->status === ConfigDefaultInterface::INVOICE_STATUS_PAID) {
+            if ($orderBuyerInvoices[$orderId]) {
                 $actualProfit += $orderProfit;
                 $actualProfitDetails[] = $details;
             } else {
@@ -317,16 +313,6 @@ class StatisticsManager
             'expected_profit' => $this->formatNumberWithDecimals($expectedProfit),
             'expected_profit_details' => $expectedProfitDetails,
         ];
-    }
-
-    private function getOrdersWithSalesInvoices(array $orderIds): array
-    {
-        $salesInvoiceFieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_IDENTIFIER_SALES_INVOICE)->id;
-
-        return OrderData::whereIn('order_id', $orderIds)
-            ->where('field_id', $salesInvoiceFieldId)
-            ->pluck('value', 'order_id')
-            ->toArray();
     }
 
     private function addMonthNames(array $annualStatistics): array
@@ -463,4 +449,30 @@ class StatisticsManager
 
         return $sum;
     }
+
+    private function getOrdersProfitStatusByBuyersInvoices(array $orderIds): array
+    {
+        // checks order buyer invoices if all invoices are paid than 1 else 0
+        $ordersProfitStatus = [];
+
+        foreach ($orderIds as $orderId) {
+            $orderBuyerInvoices = Invoice::where('order_id', $orderId)->whereNotNull('customer')->get();
+
+            if (count($orderBuyerInvoices) == 0) {
+                continue;
+            }
+
+            $status = 1;
+            foreach ($orderBuyerInvoices as $buyerInvoice) {
+                if ($buyerInvoice->status !== ConfigDefaultInterface::INVOICE_STATUS_PAID) {
+                    $status = 0;
+                }
+            }
+
+            $ordersProfitStatus[$orderId] = $status;
+        }
+
+        return $ordersProfitStatus;
+    }
+
 }

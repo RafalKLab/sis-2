@@ -12,6 +12,7 @@ use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Feedback\FeedbackController;
 use App\Http\Controllers\FieldSettings\FieldSettingsController;
 use App\Http\Controllers\File\FileController;
+use App\Http\Controllers\Goal\GoalController;
 use App\Http\Controllers\Invoice\InvoiceController;
 use App\Http\Controllers\Note\NoteController;
 use App\Http\Controllers\ProfileController;
@@ -162,6 +163,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/statistics/users', [UserStatisticsController::class, 'index'])->name('statistics-user.index');
         Route::get('/statistics/users/{userId}/{year}/{month}', [UserStatisticsController::class, 'show'])->name('statistics-user.show');
         Route::post('/statistics/users/{userId}/{year}/{month}', [UserStatisticsController::class, 'show'])->name('statistics-user.show');
+
+        /* Goals page */
+        Route::get('/goals', [GoalController::class, 'index'])->name('goals.index');
+        Route::get('/goals/add', [GoalController::class, 'add'])->name('goals.add');
+        Route::post('/goals/store', [GoalController::class, 'store'])->name('goals.store');
     });
 });
 

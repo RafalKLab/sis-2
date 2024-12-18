@@ -1,0 +1,66 @@
+.goal-card {
+    background-color: #363636;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    width: 500px;
+}
+
+.circle-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+.circle-container .circle {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    flex-direction: column;
+}
+
+.circle-container .circle::before {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    border-radius: 50%;
+    background: #222;
+    opacity: 0.8;
+}
+
+.circle-container .circle::after {
+    content: '';
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    background: #333;
+    border: 15px solid #4d4c51;
+    border-radius: 50%;
+}
+
+.circle-container .circle .number {
+    position: relative;
+    color: #fff;
+    z-index: 10;
+    line-height: 1em;
+    font-size: 2.5em;
+}
+
+.circle-container .circle span {
+    font-size: 0.5em;
+    font-weight: 500;
+}
+
+.right {
+    font-size: 2em;
+}
+
+.goal {
+    padding: 10px;
+}

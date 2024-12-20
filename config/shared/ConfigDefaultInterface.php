@@ -25,10 +25,8 @@ interface ConfigDefaultInterface
     public const PERMISSION_DELETE_CUSTOMER_NOTES = 'Delete customer notes';
     public const PERMISSION_MANAGE_INVOICE_TABLE = 'Manage invoice table';
     public const PERMISSION_MANAGE_WAREHOUSES = 'Manage warehouses';
-
     public const PERMISSION_ACCESS_CARRIER_TABLE = 'Access carrier table';
     public const PERMISSION_DELETE_CARRIER_NOTES = 'Delete carrier notes';
-
     public const PERMISSION_DELETE_ORDER_COMMENTS = 'Delete order comments';
     public const PERMISSION_DELETE_INVOICE = 'Delete invoice';
 
@@ -66,7 +64,6 @@ interface ConfigDefaultInterface
             self::PERMISSION_REGISTER_ORDER,
             self::PERMISSION_SEE_ALL_ORDERS,
             self::PERMISSION_SEE_RELATED_ORDERS,
-
         ],
         'Order product related permissions' => [
             self::PERMISSION_SEE_ORDER_PRODUCTS,

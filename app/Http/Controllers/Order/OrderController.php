@@ -1269,6 +1269,48 @@ class OrderController extends MainController
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Comment has been deleted');
     }
 
+    public function deleteInvoice(int $orderId, int $fieldId)
+    {
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_DELETE_INVOICE)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        $orderInvoice = OrderData::where('order_id', $orderId)->where('field_id', $fieldId)->first();
+        if ($orderInvoice === null) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Invoice not found');
+        }
+
+        $invoiceNumber = $orderInvoice->value;
+        $invoiceEntity = Invoice::where('invoice_number', $invoiceNumber)->first();
+        if ($invoiceEntity) {
+            $invoiceEntity->delete();
+        }
+
+        $orderInvoice->delete();
+
+        $transfer = $this->factory()
+            ->getActivityLogTransferObject()
+            ->setUser(Auth::user()->email)
+            ->setTitle(ActivityLogConstants::DANGER_LOG)
+            ->setAction(ActivityLogConstants::ACTION_DELETE)
+            ->setNewData(sprintf('invoice: %s', $invoiceNumber));
+
+        $this->factory()->createActivityLogManager()->log($transfer);
+
+        return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Invoice deleted');
+    }
+
     protected function extractTargetItem(array $orderData, int $itemId): array
     {
         foreach ($orderData['items'] as $item) {

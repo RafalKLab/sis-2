@@ -79,6 +79,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/edit/{orderId}/field/{fieldId}', [OrderController::class, 'editField'])->name('orders.edit-field');
     Route::post('/orders/edit/{id}', [OrderController::class, 'update'])->name('orders.update');
     Route::post('/orders/company/edit/{id}', [OrderController::class, 'updateCompany'])->name('orders.update-company');
+    Route::get('/orders/invoice/delete/{orderId}/{fieldId}', [OrderController::class, 'deleteInvoice'])->name('orders.delete-invoice');
+
 
     /* order tree */
     Route::get('/orders/{id}/tree', [OrderController::class, 'orderTree'])->name('orders.tree');

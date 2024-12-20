@@ -801,7 +801,14 @@
                                             @else
                                                 <td></td>
                                             @endif
-                                            <td><a href="{{ route('orders.edit-field', ['orderId'=>$orderData['id'], 'fieldId'=>$data['field_id']]) }}" title="Edit {{ $data['field_name'] }}" class="text-primary"><i class="fa-solid fa-pen"></i></a></td>
+                                            <td>
+                                                <a href="{{ route('orders.edit-field', ['orderId'=>$orderData['id'], 'fieldId'=>$data['field_id']]) }}" title="Edit {{ $data['field_name'] }}" class="text-primary"><i class="fa-solid fa-pen"></i></a>
+                                                @can('Delete invoice')
+                                                    @if($data['value'])
+                                                        <a href="{{ route('orders.delete-invoice', ['orderId'=>$orderData['id'], 'fieldId'=>$data['field_id']]) }}" title="Delete" class="text-danger" onclick="return confirmAction();"><i class="fa-solid fa-eraser"></i></a>
+                                                    @endif
+                                                @endcan
+                                            </td>
                                         </tr>
                                         @break
                                     @default
@@ -830,7 +837,7 @@
 </div>
 <script>
     function confirmAction() {
-        return confirm('Are you sure you want to remove item?');
+        return confirm('Are you sure you want to remove ?');
     }
 
     function showCompanyModal() {

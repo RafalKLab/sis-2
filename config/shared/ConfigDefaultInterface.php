@@ -260,9 +260,11 @@ interface ConfigDefaultInterface
     ];
 
     public const INVOICE_STATUS_AWAITING = 'awaiting_payment';
+    public const INVOICE_STATUS_PARTIAL = 'partial_payment';
     public const INVOICE_STATUS_PAID = 'paid';
     public const AVAILABLE_INVOICE_STATUS_SELECT = [
         self::INVOICE_STATUS_AWAITING => 'Laukia apmokėjimo',
+        self::INVOICE_STATUS_PARTIAL => 'Dalinis apmokėjimas',
         self::INVOICE_STATUS_PAID => 'Apmokėta'
     ];
 

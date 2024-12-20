@@ -22,8 +22,12 @@ class InvoiceService
             return 'order-field-status-';
         }
 
-        if ($invoice->status === 'paid') {
+        if ($invoice->status === ConfigDefaultInterface::INVOICE_STATUS_PAID) {
             return 'order-field-status-green';
+        }
+
+        if ($invoice->status === ConfigDefaultInterface::INVOICE_STATUS_PARTIAL) {
+            return 'order-field-status-magenta';
         }
 
         // Check date and set display color class

@@ -793,6 +793,8 @@
                                                     <div class="{{ $data['additional_data']['display_class']}}">
                                                         @if($data['additional_data']['status'] === 'paid')
                                                             Apmokėta
+                                                        @elseif($data['additional_data']['status'] === 'partial_payment')
+                                                            Dalinis apmokėjimas
                                                         @else
                                                             Apmokėti iki {{ $data['additional_data']['pay_until_date'] }}
                                                         @endif

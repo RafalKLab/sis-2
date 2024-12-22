@@ -25,6 +25,7 @@ interface ConfigDefaultInterface
     public const PERMISSION_DELETE_CUSTOMER_NOTES = 'Delete customer notes';
     public const PERMISSION_MANAGE_INVOICE_TABLE = 'Manage invoice table';
     public const PERMISSION_MANAGE_WAREHOUSES = 'Manage warehouses';
+    public const PERMISSION_MANAGE_WAREHOUSE_TENTATIVE_DATE = 'Update tentative date';
     public const PERMISSION_ACCESS_CARRIER_TABLE = 'Access carrier table';
     public const PERMISSION_DELETE_CARRIER_NOTES = 'Delete carrier notes';
     public const PERMISSION_DELETE_ORDER_COMMENTS = 'Delete order comments';
@@ -57,6 +58,7 @@ interface ConfigDefaultInterface
         self::PERMISSION_SEE_ITEM_BUYER,
         self::PERMISSION_SEE_RELATED_ORDERS,
         self::PERMISSION_DELETE_INVOICE,
+        self::PERMISSION_MANAGE_WAREHOUSE_TENTATIVE_DATE,
     ];
 
     public const PERMISSION_GROUPS = [
@@ -90,6 +92,7 @@ interface ConfigDefaultInterface
         ],
         'Warehouse table related permissions' => [
             self::PERMISSION_MANAGE_WAREHOUSES,
+            self::PERMISSION_MANAGE_WAREHOUSE_TENTATIVE_DATE,
         ],
         'Carrier table related permissions' => [
             self::PERMISSION_ACCESS_CARRIER_TABLE,

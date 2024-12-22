@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\MainController;
+use App\Models\Order\OrderItem;
 use App\Models\Warehouse\Warehouse;
+use App\Models\Warehouse\WarehouseItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -37,7 +39,6 @@ class WarehouseController extends MainController
 
         $items = $this->factory()->createWarehouseManager()->collectWarehouseItems($warehouse);
         $warehouseStockOverview = $this->factory()->createWarehouseManager()->collectWarehouseStockOverview($warehouse->id);
-
         $warehouseItemsValueByName = [];
         foreach ($items['items'] as $item) {
             if (array_key_exists($item['name'], $warehouseItemsValueByName)) {
@@ -127,5 +128,37 @@ class WarehouseController extends MainController
         return redirect()
             ->route('warehouses.view', ['name'=>$warehouse->name])
             ->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Warehouse updated'));
+    }
+
+    public function updateTentativeDate(Request $request)
+    {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_MANAGE_WAREHOUSE_TENTATIVE_DATE)) {
+            return redirect()->route('warehouses.index')->with(ConfigDefaultInterface::FLASH_ERROR, ConfigDefaultInterface::ERROR_MISSING_PERMISSION);
+        }
+
+        $validated = $request->validate([
+            'item_id' => 'required',
+            'warehouse_name' => 'required',
+            'date' => 'required | date'
+        ]);
+
+        $item = OrderItem::find($validated['item_id']);
+        if ($item === null) {
+            return redirect()->back()->with(ConfigDefaultInterface::FLASH_ERROR, 'Item not found!');
+        }
+
+        WarehouseItem::updateOrCreate(
+            [
+                'order_item_id' => $validated['item_id'],
+                'warehouse_name' => $validated['warehouse_name'],
+            ],
+            [
+                'tentative_date' => $validated['date'],
+            ]
+        );
+
+        return redirect()
+            ->route('warehouses.view', ['name'=>$validated['warehouse_name']])
+            ->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Date updated');
     }
 }

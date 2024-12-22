@@ -14,10 +14,16 @@
             <div class="col-md-9">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <div class="col-md-5"><i class="fa-solid fa-box-open"></i>Products in stock</div>
+                        <div class="col-md-5"><i class="fa-solid fa-box-open"></i>Products in stock
+                        </div>
                         <div class="col-md-3 d-flex justify-content-end">
                         </div>
                     </div>
+                    @if($items['items_exceeding_deadline'])
+                        <div style="padding: 5px;">
+                            <div class="alert alert-danger">{{ $items['items_exceeding_deadline'] }} prekės viršija preliminarią datą</div>
+                        </div>
+                    @endif
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table" id="datatablesSimple">
@@ -32,6 +38,8 @@
                                     <th scope="col">Vieneto kaina</th>
                                     <th scope="col">Vieneto savikaina</th>
                                     <th scope="col">Bendra vertė</th>
+                                    <th scope="col">Komentarai</th>
+                                    <th scope="col">Preliminari data</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -50,6 +58,29 @@
                                         <td>{{ $item['price'] }}</td>
                                         <td>{{ $item['prime_cost'] }}</td>
                                         <td>{{ $item['total_price'] }}</td>
+                                        <td>
+                                            <div class="d-flex justify-content-between">
+                                                <div>
+                                                    <p>Preke turi buti parduota.
+                                                    <small class="text-secondary">rafcioks@gmail.com <br> 2024-12-22</small>
+                                                    </p>
+                                                </div>
+                                                <div><a href="" class="text-primary"><i class="fa-regular fa-window-restore"></i></a></div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex justify-content-between">
+                                                @if($item['exceeded_deadline'])
+                                                    <div class="text-danger"><i title="Viršyta preliminari data" class="fa-solid fa-triangle-exclamation text-danger"></i>&nbsp;<b>{{ $item['tentative_date'] }}</b></div>
+                                                @else
+                                                    <div> {{ $item['tentative_date'] }}</div>
+                                                @endif
+                                                @can('Update tentative date')
+                                                    <div>
+                                                        <a href="" onclick="setItemIdForDateForm({{$item['item_id']}}, `{{ $item['tentative_date'] }}`); showModal('#dateModal'); event.preventDefault();" class="{{ $item['exceeded_deadline'] ? 'text-danger' : 'text-primary' }}"><i class="fa-regular fa-calendar"></i></a></div>
+                                                    </div>
+                                               @endcan
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -66,13 +97,13 @@
                                 <div class="col-md-6">
                                     <i class="fa-solid fa-warehouse"></i>
                                     {{ $warehouse->name }} <span class="text-danger">
-                                @if(!$warehouse->is_active)
+                                        @if(!$warehouse->is_active)
                                             Disabled
                                         @endif
                             </span>
                                 </div>
                                 <div class="col-md-3 d-flex justify-content-end">
-                                    <span class="text-primary"><i style="cursor: pointer" id="edit_warehouse" class="fa-solid fa-pen" onclick="showModal()"></i></span>
+                                    <span class="text-primary"><i style="cursor: pointer" id="edit_warehouse" class="fa-solid fa-pen" onclick="showModal('#updateWarehouseModal')"></i></span>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -85,31 +116,11 @@
                                                     {{ $item }}
                                                     <span id="totalProducts" class="totalProducts" data-target="{{ $itemData['amount'] }}">0</span>
                                                     {{ $itemData['unit'] }}
-                                                    €<span id="netWorth" class="netWorth" data-target="{{ $itemData['total_price'] }}">0.00</span>
+                                                    <span id="netWorth" class="netWorth" data-target="{{ $itemData['total_price'] }}">0.00</span> €
                                                 </div>
                                             </div>
                                         </div>
                                     @endforeach
-{{--                                    <div class="col-md-6">--}}
-{{--                                        <div class="card product-worth">--}}
-{{--                                            <div class="amount-block">--}}
-{{--                                                <span id="totalProducts" data-target="{{ $items['total_quantity'] }}">0</span>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="label-block">--}}
-{{--                                                Prekių kiekis--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="col-md-6">--}}
-{{--                                        <div class="card product-worth">--}}
-{{--                                            <div class="amount-block">--}}
-{{--                                                €<span id="netWorth" data-target="{{ $items['total_worth'] }}">0.00</span>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="label-block">--}}
-{{--                                                Bendra vertė--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
                                 </div>
                             </div>
                         </div>
@@ -160,7 +171,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Edit Modal -->
     <div class="modal fade" id="updateWarehouseModal" tabindex="-1" role="dialog" aria-labelledby="updateWarehouseModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -223,6 +234,32 @@
         </div>
     </div>
 
+    <!-- Date Modal -->
+    <div class="modal fade" id="dateModal" tabindex="-1" aria-labelledby="dateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dateModalLabel">Preliminari data</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="dateForm" method="POST" action="{{ route('warehouses.update-date') }}">
+                        @csrf
+                        <input type="hidden" id="itemIdField" name="item_id" value="">
+                        <input type="hidden" name="warehouse_name" value="{{ $warehouse->name }}">
+
+                        <div class="mb-3">
+                            <input type="date" class="form-control" id="dateField" name="date" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 @section('script')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -240,8 +277,21 @@
             window.requestAnimationFrame(step);
         }
 
-        function showModal() {
-            $('#updateWarehouseModal').modal('show');
+        function showModal(modalId) {
+            $(modalId).modal('show');
+        }
+
+        function setItemIdForDateForm(itemId, date) {
+            const itemIdField = document.getElementById('itemIdField');
+            const dateField = document.getElementById('dateField');
+
+            if (itemIdField) {
+                itemIdField.value = itemId;
+            }
+
+            if (dateField) {
+                dateField.value = date;
+            }
         }
 
         document.addEventListener('DOMContentLoaded', function() {

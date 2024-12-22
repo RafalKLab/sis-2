@@ -99,6 +99,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/warehouses/{name}', [WarehouseController::class, 'view'])->name('warehouses.view')->where('name', '.*');
     Route::put('/warehouses/{name}', [WarehouseController::class, 'update'])->name('warehouses.update')->where('name', '.*');
     Route::post('/warehouses', [WarehouseController::class, 'create'])->name('warehouses.create');
+    Route::post('/warehouses/item/update-date', [WarehouseController::class, 'updateTentativeDate'])->name('warehouses.update-date');
 
     /* Api route for order select creation */
     Route::get('/api/orders', [OrderController::class, 'orders'])->name('api.orders');

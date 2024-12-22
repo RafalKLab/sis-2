@@ -8,15 +8,20 @@ use App\Models\Order\OrderItemData;
 use App\Models\Table\FieldSettings;
 use App\Models\Table\TableField;
 use App\Models\Warehouse\Warehouse;
+use App\Models\Warehouse\WarehouseItem;
 use App\Models\Warehouse\WarehouseStock;
 use App\Service\OrderService;
 use App\Service\TableService;
 
 use App\Service\WarehouseService;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use shared\ConfigDefaultInterface;
 
 class WarehouseManager
 {
+    protected int $itemsExceedingDeadline = 0;
+
     public function collectAllWarehouseItems(): array
     {
         $warehouses = Warehouse::where('is_active', 1)->get();
@@ -40,6 +45,7 @@ class WarehouseManager
         $totalItemQuantity = 0.0;
         $totalWorth = 0.00;
         $items = [];
+        $availableItemIds = [];
         foreach ($itemIds as $itemId) {
 
             $item = OrderItem::find($itemId);
@@ -61,6 +67,14 @@ class WarehouseManager
             $totalWorth += $itemWorth;
             $totalItemQuantity += $itemAmount;
 
+            $tentativeDate = $this->getItemTentativeDate($itemId, $warehouse);
+            $exceededDeadline = $this->checkDeadline($tentativeDate);
+            if ($exceededDeadline) {
+                $this->itemsExceedingDeadline ++;
+            }
+
+            $availableItemIds[] = $itemId;
+
             $items[] = [
                 'name' => $this->getItemFieldDataByIdentifier($itemId, ConfigDefaultInterface::FIELD_IDENTIFIER_ITEM_NAME)?->value,
                 'amount' => $itemAmount,
@@ -73,14 +87,19 @@ class WarehouseManager
                 'order' => $this->getOrderDataByItemId($itemId),
                 'item_id' => $itemId,
                 'quality' => $this->getItemFieldDataByIdentifier($itemId, ConfigDefaultInterface::FIELD_IDENTIFIER_ITEM_QUALITY)?->value,
-                'prime_cost' => $itemPrimeCost
+                'prime_cost' => $itemPrimeCost,
+                'tentative_date' => $tentativeDate,
+                'exceeded_deadline' => $exceededDeadline,
             ];
         }
+
+        $this->cleanPurchasedItemsTentativeDates($availableItemIds, $warehouse);
 
         return [
             'items' => $items,
             'total_worth' => number_format($totalWorth, 2, '.', ''),
             'total_quantity' => $totalItemQuantity,
+            'items_exceeding_deadline' => $this->itemsExceedingDeadline,
         ];
     }
 
@@ -212,5 +231,36 @@ class WarehouseManager
         unset($stockEntity);
 
         return $warehouseStockEntities;
+    }
+
+    protected function getItemTentativeDate(mixed $itemId, Warehouse $warehouse): ?string
+    {
+        return optional(WarehouseItem::where('order_item_id', $itemId)->first())->tentative_date;
+    }
+
+    protected function checkDeadline(?string $tentativeDate): bool
+    {
+        if ($tentativeDate === null) {
+            return false;
+        }
+
+        $tentativeDateCarbon = Carbon::parse($tentativeDate)->startOfDay();
+        $now = Carbon::now()->startOfDay();
+
+        if ($now->gt($tentativeDateCarbon)) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    private function cleanPurchasedItemsTentativeDates(array $availableItemIds, Warehouse $warehouse): void
+    {
+        DB::transaction(function () use ($warehouse, $availableItemIds) {
+            WarehouseItem::where('warehouse_name', $warehouse->name)
+                ->whereNotIn('order_item_id', $availableItemIds)
+                ->delete();
+        });
     }
 }

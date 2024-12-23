@@ -39,3 +39,12 @@ table.table tr[data-url]:hover {
 table {
     font-size: 12px;
 }
+
+.remove-button a {
+    text-decoration: none;
+    color: gray;
+}
+
+.remove-button a:hover {
+    color: #D23548;
+}

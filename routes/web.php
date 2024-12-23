@@ -100,6 +100,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/warehouses/{name}', [WarehouseController::class, 'update'])->name('warehouses.update')->where('name', '.*');
     Route::post('/warehouses', [WarehouseController::class, 'create'])->name('warehouses.create');
     Route::post('/warehouses/item/update-date', [WarehouseController::class, 'updateTentativeDate'])->name('warehouses.update-date');
+    Route::get('/warehouse/{warehouseId}/item/{itemId}/comments', [WarehouseController::class, 'viewComments'])->name('warehouses.view-comments');
+    Route::post('/warehouse/{warehouseId}/item/{itemId}/comments', [WarehouseController::class, 'addComment'])->name('warehouses.add-comments');
+    Route::get('/warehouse/comments/remove/{noteId}', [WarehouseController::class, 'removeComment'])->name('warehouses.remove-comments');
 
     /* Api route for order select creation */
     Route::get('/api/orders', [OrderController::class, 'orders'])->name('api.orders');

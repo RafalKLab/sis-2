@@ -2,11 +2,14 @@
 
 namespace App\Business\Warehouse\Manager;
 
+use App\Business\Note\Manager\NoteManager;
+use App\Models\Note\Note;
 use App\Models\Order\OrderData;
 use App\Models\Order\OrderItem;
 use App\Models\Order\OrderItemData;
 use App\Models\Table\FieldSettings;
 use App\Models\Table\TableField;
+use App\Models\User;
 use App\Models\Warehouse\Warehouse;
 use App\Models\Warehouse\WarehouseItem;
 use App\Models\Warehouse\WarehouseStock;
@@ -22,6 +25,16 @@ class WarehouseManager
 {
     protected int $itemsExceedingDeadline = 0;
 
+    protected NoteManager $noteManager;
+
+    /**
+     * @param NoteManager $noteManager
+     */
+    public function __construct(NoteManager $noteManager)
+    {
+        $this->noteManager = $noteManager;
+    }
+
     public function collectAllWarehouseItems(): array
     {
         $warehouses = Warehouse::where('is_active', 1)->get();
@@ -33,14 +46,16 @@ class WarehouseManager
         return $data;
     }
 
-    public function collectWarehouseItems(Warehouse $warehouse): array
+    public function collectWarehouseItems(Warehouse $warehouse, ?array $itemIds = null): array
     {
         $warehouseDataFieldId = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_SELECT_WAREHOUSE)->id;
 
-        $itemIds = OrderItemData::where('field_id', $warehouseDataFieldId)
-            ->where('value', $warehouse->id)
-            ->pluck('order_item_id')
-            ->toArray();
+        if ($itemIds === null) {
+            $itemIds = OrderItemData::where('field_id', $warehouseDataFieldId)
+                ->where('value', $warehouse->id)
+                ->pluck('order_item_id')
+                ->toArray();
+        }
 
         $totalItemQuantity = 0.0;
         $totalWorth = 0.00;
@@ -90,6 +105,7 @@ class WarehouseManager
                 'prime_cost' => $itemPrimeCost,
                 'tentative_date' => $tentativeDate,
                 'exceeded_deadline' => $exceededDeadline,
+                'comment' => $this->getItemLastComment($itemId),
             ];
         }
 
@@ -233,7 +249,7 @@ class WarehouseManager
         return $warehouseStockEntities;
     }
 
-    protected function getItemTentativeDate(mixed $itemId, Warehouse $warehouse): ?string
+    protected function getItemTentativeDate(int $itemId, Warehouse $warehouse): ?string
     {
         return optional(WarehouseItem::where('order_item_id', $itemId)->first())->tentative_date;
     }
@@ -262,5 +278,18 @@ class WarehouseManager
                 ->whereNotIn('order_item_id', $availableItemIds)
                 ->delete();
         });
+    }
+
+    private function getItemLastComment(int $itemId): ?Note
+    {
+        $notes = $this->noteManager->getNotesByIdentifierAndTarget(ConfigDefaultInterface::WAREHOUSE_ITEM_IDENTIFIER, $itemId);
+        if (count($notes)) {
+            $note = $notes[0];
+            $note['author_email'] = User::find($note->author)->email;
+
+            return $note;
+        }
+
+        return null;
     }
 }

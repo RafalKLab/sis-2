@@ -7,6 +7,7 @@ use App\Business\ActivityLog\Transfer\ActivityLogTransferObject;
 use App\Business\ActivityLog\Writer\ActivityLogMysqlWriter;
 use App\Business\Carrier\Manager\CarrierManager;
 use App\Business\Customer\Manager\CustomerManager;
+use App\Business\Note\Manager\NoteManager;
 use App\Business\Order\Calculator\OrderDataCalculator;
 use App\Business\Order\Manager\OrderManager;
 use App\Business\Order\Score\OrderScoreCalculator;
@@ -83,7 +84,9 @@ class BusinessFactory
 
     public function createWarehouseManager(): WarehouseManager
     {
-        return new WarehouseManager();
+        return new WarehouseManager(
+            $this->createNoteManager()
+        );
     }
 
     public function createOrderScoreCalculator(): OrderScoreCalculator
@@ -114,5 +117,10 @@ class BusinessFactory
     public function createCarrierManager(): CarrierManager
     {
         return new CarrierManager();
+    }
+
+    public function createNoteManager(): NoteManager
+    {
+        return new NoteManager();
     }
 }

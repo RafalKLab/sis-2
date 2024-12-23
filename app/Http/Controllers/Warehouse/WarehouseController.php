@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\MainController;
+use App\Models\Note\Note;
 use App\Models\Order\OrderItem;
+use App\Models\User;
 use App\Models\Warehouse\Warehouse;
 use App\Models\Warehouse\WarehouseItem;
 use Illuminate\Http\Request;
@@ -161,4 +163,73 @@ class WarehouseController extends MainController
             ->route('warehouses.view', ['name'=>$validated['warehouse_name']])
             ->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Date updated');
     }
+
+    public function viewComments(int $warehouseId, int $itemId)
+    {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_MANAGE_WAREHOUSES)) {
+            return redirect()->route('dashboard')->with(ConfigDefaultInterface::FLASH_ERROR, ConfigDefaultInterface::ERROR_MISSING_PERMISSION);
+        }
+
+        $warehouse = Warehouse::find($warehouseId);
+        if (!$warehouse) {
+            return redirect()->route('warehouses.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Warehouse not found!');
+        }
+        $item = OrderItem::find($itemId);
+        if (!$item) {
+            return redirect()->route('warehouses.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item not found!');
+        }
+
+        $items = $this->factory()->createWarehouseManager()->collectWarehouseItems($warehouse, [$itemId]);
+        $comments = $this->factory()->createNoteManager()->getNotesByIdentifierAndTarget(ConfigDefaultInterface::WAREHOUSE_ITEM_IDENTIFIER, $itemId);
+
+        foreach ($comments as &$comment) {
+            $comment['author_email'] = User::find($comment->author)->email;
+        }
+        unset($comment);
+
+        return view('main.user.warehouse.comments', compact('items', 'warehouse', 'comments'));
+    }
+
+    public function addComment(Request $request ,int $warehouseId, int $itemId)
+    {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_WRITE_WAREHOUSE_ITEM_COMMENTS)) {
+            return redirect()->route('warehouses.index')->with(ConfigDefaultInterface::FLASH_ERROR, ConfigDefaultInterface::ERROR_MISSING_PERMISSION);
+        }
+
+        $warehouse = Warehouse::find($warehouseId);
+        if (!$warehouse) {
+            return redirect()->route('warehouses.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Warehouse not found!');
+        }
+        $item = OrderItem::find($itemId);
+        if (!$item) {
+            return redirect()->route('warehouses.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item not found!');
+        }
+
+        $validate = $request->validate([
+            'message' => 'required'
+        ]);
+
+        Note::create([
+            'author' => Auth::user()->id,
+            'message' => $validate['message'],
+            'identifier' => ConfigDefaultInterface::WAREHOUSE_ITEM_IDENTIFIER,
+            'target' => $itemId,
+        ]);
+
+        return redirect()
+            ->route('warehouses.view-comments', ['warehouseId'=>$warehouseId, 'itemId'=>$itemId])
+            ->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Comment created');
+    }
+
+    public function removeComment(int $noteId)
+    {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_DELETE_WAREHOUSE_ITEM_COMMENTS)) {
+            return redirect()->route('dashboard')->with(ConfigDefaultInterface::FLASH_ERROR, ConfigDefaultInterface::ERROR_MISSING_PERMISSION);
+        };
+
+        $this->factory()->createNoteManager()->deleteNote($noteId);
+
+        return redirect()->back();
+    }
+
 }

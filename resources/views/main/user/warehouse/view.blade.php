@@ -61,11 +61,14 @@
                                         <td>
                                             <div class="d-flex justify-content-between">
                                                 <div>
-                                                    <p>Preke turi buti parduota.
-                                                    <small class="text-secondary">rafcioks@gmail.com <br> 2024-12-22</small>
-                                                    </p>
+                                                    @if($item['comment'])
+                                                            <p>{{ $item['comment']->message }}
+                                                                <br>
+                                                                <small class="text-secondary">{{$item['comment']->author_email }}<br> {{$item['comment']->created_at}}</small>
+                                                            </p>
+                                                    @endif
                                                 </div>
-                                                <div><a href="" class="text-primary"><i class="fa-regular fa-window-restore"></i></a></div>
+                                                <div><a target="_blank" href="{{ route('warehouses.view-comments', ['warehouseId'=>$warehouse->id,'itemId' => $item['item_id']]) }}" class="text-primary"><i class="fa-regular fa-window-restore"></i></a></div>
                                             </div>
                                         </td>
                                         <td>

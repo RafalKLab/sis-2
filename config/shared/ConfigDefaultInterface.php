@@ -25,6 +25,8 @@ interface ConfigDefaultInterface
     public const PERMISSION_DELETE_CUSTOMER_NOTES = 'Delete customer notes';
     public const PERMISSION_MANAGE_INVOICE_TABLE = 'Manage invoice table';
     public const PERMISSION_MANAGE_WAREHOUSES = 'Manage warehouses';
+    public const PERMISSION_WRITE_WAREHOUSE_ITEM_COMMENTS = 'Write warehouse item comments';
+    public const PERMISSION_DELETE_WAREHOUSE_ITEM_COMMENTS = 'Delete warehouse item comments';
     public const PERMISSION_MANAGE_WAREHOUSE_TENTATIVE_DATE = 'Update tentative date';
     public const PERMISSION_ACCESS_CARRIER_TABLE = 'Access carrier table';
     public const PERMISSION_DELETE_CARRIER_NOTES = 'Delete carrier notes';
@@ -59,6 +61,8 @@ interface ConfigDefaultInterface
         self::PERMISSION_SEE_RELATED_ORDERS,
         self::PERMISSION_DELETE_INVOICE,
         self::PERMISSION_MANAGE_WAREHOUSE_TENTATIVE_DATE,
+        self::PERMISSION_WRITE_WAREHOUSE_ITEM_COMMENTS,
+        self::PERMISSION_DELETE_WAREHOUSE_ITEM_COMMENTS,
     ];
 
     public const PERMISSION_GROUPS = [
@@ -93,6 +97,8 @@ interface ConfigDefaultInterface
         'Warehouse table related permissions' => [
             self::PERMISSION_MANAGE_WAREHOUSES,
             self::PERMISSION_MANAGE_WAREHOUSE_TENTATIVE_DATE,
+            self::PERMISSION_WRITE_WAREHOUSE_ITEM_COMMENTS,
+            self::PERMISSION_DELETE_WAREHOUSE_ITEM_COMMENTS,
         ],
         'Carrier table related permissions' => [
             self::PERMISSION_ACCESS_CARRIER_TABLE,
@@ -204,6 +210,7 @@ interface ConfigDefaultInterface
     public const FIELD_IDENTIFIER_INVOICE_PURCHASE = 'invoice_purchase';
     public const FIELD_IDENTIFIER_LOAD_COUNTRY = 'load_country';
     public const FIELD_IDENTIFIER_DEP_COUNTRY = 'dep_country';
+    public const WAREHOUSE_ITEM_IDENTIFIER = 'warehouse_item';
 
     public const EXCLUDED_FIELDS_WHEN_TAKING_FROM_WAREHOUSE = [
         self::FIELD_TYPE_AMOUNT,

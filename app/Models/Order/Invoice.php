@@ -18,6 +18,7 @@ class Invoice extends Model
         'order_id',
         'field_id',
         'customer',
+        'is_trans',
         'sum',
     ];
 

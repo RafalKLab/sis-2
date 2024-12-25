@@ -344,6 +344,7 @@ class OrderManager
                 'buyer_id' => $buyerId,
                 'order_id' => $order->id,
                 'invoice' => $this->getInvoiceForBuyer($order->id, $buyer),
+                'invoice_transport' => $this->getInvoiceForBuyerTransport($order->id, $buyer),
             ];
         }
 
@@ -361,6 +362,32 @@ class OrderManager
         ];
 
         $invoice = Invoice::where('order_id', $orderId)->where('customer', $buyer)->first();
+
+        if ($invoice) {
+            $data = [
+                'number' => $invoice->invoice_number,
+                'status' => $invoice->status,
+                'issue_date' => $invoice->issue_date,
+                'pay_until_date' => $invoice->pay_until_date,
+                'display_class' => InvoiceService::getInvoiceDisplayColor($invoice->invoice_number),
+                'sum' => number_format($invoice->sum, 2, '.', ''),
+            ];
+        }
+
+        return $data;
+    }
+
+    private function getInvoiceForBuyerTransport(int $orderId, string $buyer): array
+    {
+        $data = [
+            'number' => null,
+            'status' => null,
+            'issue_date' => null,
+            'pay_until_date' => null,
+            'sum' => '0.00'
+        ];
+
+        $invoice = Invoice::where('order_id', $orderId)->where('customer', $buyer . ' Trans')->where('is_trans', true)->first();
 
         if ($invoice) {
             $data = [

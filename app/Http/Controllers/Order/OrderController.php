@@ -1096,6 +1096,8 @@ class OrderController extends MainController
 
     public function editCustomerInvoice(int $orderId, string $customer)
     {
+        $isTransportation = str_ends_with($customer, ' Trans');
+
         $order = Order::find($orderId);
         if (!$order) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
@@ -1110,6 +1112,7 @@ class OrderController extends MainController
         $orderData = $this->factory()->createOrderManager()->getOrderDetailsWithGroups($order);
 
         $invoice = Invoice::where('order_id', $orderId)->where('customer', $customer)->first();
+
         $sumCalculations = InvoiceService::calculateSum($orderId, $customer);
 
         if ($invoice) {
@@ -1123,6 +1126,7 @@ class OrderController extends MainController
                 'calculated_sum' => $sumCalculations['calculated_sum'],
                 'calculation_details' => $sumCalculations['details'],
                 'sum' => number_format($invoice->sum, 2, '.', ''),
+                'is_trans' => $invoice->is_trans,
             ];
         } else {
             $invoiceData = [
@@ -1134,6 +1138,7 @@ class OrderController extends MainController
                 'calculated_sum' => $sumCalculations['calculated_sum'],
                 'calculation_details' => $sumCalculations['details'],
                 'sum' => null,
+                'is_trans' => $isTransportation,
             ];
         }
 
@@ -1149,6 +1154,8 @@ class OrderController extends MainController
 
     public function saveCustomerInvoice(Request $request, int $orderId, string $customer)
     {
+        $isTransportation = str_ends_with($customer, ' Trans');
+
         $customMessages = [
             'required' => 'Šis laukas yra privalomas.',
             'date' => 'Šis laukas nėra galiojanti data.',
@@ -1219,6 +1226,7 @@ class OrderController extends MainController
                 'order_id' => $orderId,
                 'customer' => $customer,
                 'sum' => $validated['sum'],
+                'is_trans' => $isTransportation,
             ]);
 
             $returnMessage = sprintf('Invoice for %s created', $customer);

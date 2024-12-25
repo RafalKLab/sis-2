@@ -456,7 +456,7 @@ class StatisticsManager
         $ordersProfitStatus = [];
 
         foreach ($orderIds as $orderId) {
-            $orderBuyerInvoices = Invoice::where('order_id', $orderId)->whereNotNull('customer')->get();
+            $orderBuyerInvoices = Invoice::where('order_id', $orderId)->whereNotNull('customer')->where('is_trans', false)->get();
 
             if (count($orderBuyerInvoices) == 0) {
                 continue;

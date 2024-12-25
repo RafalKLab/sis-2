@@ -83,6 +83,7 @@ class GoalController extends MainController
         return (float) Invoice::where('status', ConfigDefaultInterface::INVOICE_STATUS_PAID)
             ->whereIn('order_id', $orderIds)
             ->whereNotNull('customer')
+            ->where('is_trans', false)
             ->sum('sum');
     }
 }

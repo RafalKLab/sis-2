@@ -705,6 +705,29 @@
                                         @endif
                                         <td><a href="{{ route('orders.edit-customer-invoice', ['orderId'=>$orderData['id'], 'customer'=>$buyer]) }}" title="Edit {{ $buyer }} invoice" class="text-primary"><i class="fa-solid fa-pen"></i></a></td>
                                     </tr>
+{{--                                    Customer transportation invoice--}}
+                                    <tr>
+                                        <th scope="row">SF. {{ $buyer }} Trans</th>
+                                        <td>@if($data['invoice_transport']['number']) <b>Nr: </b> @endif {{ $data['invoice_transport']['number'] }}</td>
+                                        <td><b>Suma:</b> {{ $data['invoice_transport']['sum'] }}</td>
+                                        @if ($data['invoice_transport']['pay_until_date'])
+                                            <td>
+                                                <div class="{{ $data['invoice_transport']['display_class']}}">
+                                                    @if($data['invoice_transport']['status'] === 'paid')
+                                                        Apmokėta
+                                                    @elseif($data['invoice_transport']['status'] === 'partial_payment')
+                                                        Dalinis apmokėjimas
+                                                    @else
+                                                        Apmokėti iki {{ $data['invoice_transport']['pay_until_date'] }}
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        @else
+                                            <td></td>
+                                        @endif
+                                        <td><a href="{{ route('orders.edit-customer-invoice', ['orderId'=>$orderData['id'], 'customer'=>$buyer . ' Trans']) }}" title="Edit {{ $buyer }} invoice" class="text-primary"><i class="fa-solid fa-pen"></i></a></td>
+                                    </tr>
+
                                 @endforeach
                                 @endcan
                                 @foreach($orderData['details']['SĄSKAITOS FAKTŪROS'] as $data)

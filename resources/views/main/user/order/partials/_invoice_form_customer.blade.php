@@ -11,8 +11,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Your table here -->
-                <table class="table">
+                @if(!$invoiceData['is_trans'])
+                    <table class="table">
                     <thead>
                     <tr>
                         <th>#</th>
@@ -44,6 +44,7 @@
                     </tr>
                     </tfoot>
                 </table>
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -93,7 +94,7 @@
                         @endif
 
                         <label for="sum" class="col-sm-3 col-form-label">Mokėjimo suma
-                        @if($invoiceData['calculated_sum'] !== $invoiceData['sum'])
+                        @if($invoiceData['calculated_sum'] !== $invoiceData['sum'] && !$invoiceData['is_trans'])
                             <span class="text-warning"><i title="Suma nėra lygi sumai, kuri buvo apskaičiuota automatiškai" class="fa-solid fa-triangle-exclamation"></i></span>
                         @endif
                         </label>
@@ -103,10 +104,12 @@
                                 {{ $errors->first('sum') }}
                             </div>
                         @endif
-                        <div class="feedback">
-                            <i><small>Automatiškai apskaičiuota suma: <b>{{ $invoiceData['calculated_sum'] }}</b></small></i>
-                            <i style="cursor: pointer;" onclick="showCalculationModal()" title="Rodyti skaičiavimus" class="fa-solid fa-up-right-from-square"></i>
-                        </div>
+                        @if(!$invoiceData['is_trans'])
+                            <div class="feedback">
+                                <i><small>Automatiškai apskaičiuota suma: <b>{{ $invoiceData['calculated_sum'] }}</b></small></i>
+                                <i style="cursor: pointer;" onclick="showCalculationModal()" title="Rodyti skaičiavimus" class="fa-solid fa-up-right-from-square"></i>
+                            </div>
+                        @endif
 
                         <label for="invoice_status" class="col-sm-3 col-form-label">Būsena</label>
                         <select class="form-control {{ $errors->has('invoice_status') ? 'is-invalid' : '' }}" id="invoice_status" name="invoice_status">

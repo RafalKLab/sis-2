@@ -103,6 +103,14 @@ class InvoiceService
         $sum = 0.0;
         $details = [];
 
+        // If invoice is for transport
+        if (str_ends_with($customer, ' Trans')) {
+            return [
+                'calculated_sum' => number_format($sum, 2, '.', ''),
+                'details' => $details,
+            ];
+        }
+
         $order = Order::find($orderId);
         foreach ($order->items as $item) {
             $buyerEntity = ItemBuyer::where('order_item_id', $item->id)->where('name', $customer)->first();

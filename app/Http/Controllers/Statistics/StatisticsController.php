@@ -42,9 +42,11 @@ class StatisticsController extends MainController
         $profitAreaChartData = $this->extractDataForProfitAreaChart($statistics);
         $currentMonth = StatisticsService::getMonthName(date('Y-m'));
 
+        $goals = $this->factory()->createGoalManager()->getGoals();
+
         return view(
             'main.admin.statistics.index',
-            compact('statistics', 'currentMonth', 'profitAreaChartData', 'targetYear', 'yearsSelect', 'targetCompany', 'companySelect'),
+            compact('statistics', 'currentMonth', 'profitAreaChartData', 'targetYear', 'yearsSelect', 'targetCompany', 'companySelect', 'goals'),
         );
     }
 

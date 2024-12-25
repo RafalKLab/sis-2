@@ -7,6 +7,7 @@ use App\Business\ActivityLog\Transfer\ActivityLogTransferObject;
 use App\Business\ActivityLog\Writer\ActivityLogMysqlWriter;
 use App\Business\Carrier\Manager\CarrierManager;
 use App\Business\Customer\Manager\CustomerManager;
+use App\Business\Goal\Manager\GoalManager;
 use App\Business\Note\Manager\NoteManager;
 use App\Business\Order\Calculator\OrderDataCalculator;
 use App\Business\Order\Manager\OrderManager;
@@ -92,6 +93,11 @@ class BusinessFactory
     public function createOrderScoreCalculator(): OrderScoreCalculator
     {
         return new OrderScoreCalculator();
+    }
+
+    public function createGoalManager(): GoalManager
+    {
+        return new GoalManager();
     }
 
     private function createTableConfig(): TableConfig

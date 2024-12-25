@@ -15,7 +15,6 @@ class GoalController extends MainController
     public function index()
     {
         $goals = Goal::orderBy('created_at', 'DESC')->get()->toArray();
-        $goals = $this->calculatePercentages($goals);
 
         return view('main.admin.goal.index', compact('goals'));
     }
@@ -30,16 +29,61 @@ class GoalController extends MainController
         $validated = $request->validate([
             'name' => 'required',
             'amount' => 'required|integer|min:1|max:2147483647',
-            'date' =>  'required | date'
+            'date' =>  'required | date',
+            'is_visible' => 'required'
         ]);
 
         Goal::create([
             'start_date' => $validated['date'],
             'name' => $validated['name'],
             'amount' => $validated['amount'],
+            'is_visible' => (bool) $validated['is_visible']
         ]);
 
         return redirect()->route('goals.index');
+    }
+
+    public function edit(int $id) {
+        $goal = Goal::find($id);
+        if (!$goal) {
+            return redirect()->route('goals.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Goal not found!');
+        }
+
+        return view('main.admin.goal.form', compact('goal'));
+    }
+
+    public function update(Request $request, int $id) {
+        $goal = Goal::find($id);
+        if (!$goal) {
+            return redirect()->route('goals.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Goal not found!');
+        }
+
+        $validated = $request->validate([
+            'name' => 'required',
+            'amount' => 'required|integer|min:1|max:2147483647',
+            'date' =>  'required | date',
+            'is_visible' => 'required'
+        ]);
+
+        $goal->update([
+            'start_date' => $validated['date'],
+            'name' => $validated['name'],
+            'amount' => $validated['amount'],
+            'is_visible' => (bool) $validated['is_visible']
+        ]);
+
+        return redirect()->route('goals.index')->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Goal updated');
+    }
+
+    public function delete(int $id) {
+        $goal = Goal::find($id);
+        if (!$goal) {
+            return redirect()->route('goals.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Goal not found!');
+        }
+
+        $goal->delete();
+
+        return redirect()->route('goals.index')->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Goal deleted');
     }
 
     private function calculatePercentages(array $goals): array
@@ -54,7 +98,8 @@ class GoalController extends MainController
                 : number_format($salesPercentage, 2);
 
             $leftSales = $goal['amount'] - $sales;
-            $leftPercentage = 100 - $salesPercentage;
+
+            $leftPercentage = 100 - (int) $salesPercentage;
 
             if ($sales > $goal['amount']) {
                 $leftSales = 0;

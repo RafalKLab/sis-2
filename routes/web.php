@@ -174,6 +174,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/goals', [GoalController::class, 'index'])->name('goals.index');
         Route::get('/goals/add', [GoalController::class, 'add'])->name('goals.add');
         Route::post('/goals/store', [GoalController::class, 'store'])->name('goals.store');
+        Route::get('/goals/edit/{id}', [GoalController::class, 'edit'])->name('goals.edit');
+        Route::put('/goals/update/{id}', [GoalController::class, 'update'])->name('goals.update');
+        Route::get('/goals/delete/{id}', [GoalController::class, 'delete'])->name('goals.delete');
     });
 });
 

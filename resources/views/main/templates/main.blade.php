@@ -94,19 +94,6 @@
                     @role('admin')
                     <div class="sb-sidenav-menu-heading">Admin</div>
 
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseGoals" aria-expanded="false" aria-controls="collapseGoals">
-                        <div class="sb-nav-link-icon"><i class="fa-solid fa-medal"></i></div>
-                        Goals
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse" id="collapseGoals" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="{{ route('goals.index') }}">View</a>
-                            <a class="nav-link" href="{{ route('goals.add') }}">Add</a>
-                        </nav>
-                    </div>
-
-
                     <a class="nav-link" href="{{ route('statistics.index') }}">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-chart-simple"></i></div>
                         Statistics
@@ -148,6 +135,11 @@
                             <a class="nav-link" href="{{ route('admin-fields.index') }}">Field settings</a>
                         </nav>
                     </div>
+
+                    <a class="nav-link" href="{{ route('goals.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-medal"></i></div>
+                        Goals
+                    </a>
 
                     @endrole
                 </div>

@@ -8,68 +8,60 @@
 @section('content')
     <div class="container-fluid py-2">
 
-        @if(empty($goals))
-            <h3>Nėra užsibrėžtų tikslų</h3>
-        @else
-            @foreach($goals as $goal)
-                <div class="goal">
-                    <h3>{{ $goal['name'] }}</h3>
-                    <div class="d-flex flex-wrap" style="gap:20px;">
-                        <div class="col-lg-4 goal-card target">
-                            <div class="row">
-                                <div class="col-md-6 left">
-                                    <div class="circle-container">
-                                        <div class="circle" data-degree="100" data-color="#4781FF">
-                                            <h2 class="number"><i class="fa-solid fa-medal" style="color: #4781FF"></i></h2>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 right">
-                                    TIKSLAS
-                                    <br>{{ $goal['amount'] }} €
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 goal-card target">
-                            <div class="row">
-                                <div class="col-md-6 left">
-                                    <div class="circle-container">
-                                        <div class="circle" data-degree="{{ $goal['sales_percentage'] }}" data-color="#0FDA67">
-                                            <h2 class="number" style="color: #0FDA67">{{ $goal['sales_percentage'] }}<span>%</span></h2>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 right">
-                                    Įvykdyta
-                                    <br>{{ $goal['sales'] }} €
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 goal-card target">
-                            <div class="row">
-                                <div class="col-md-6 left">
-                                    <div class="circle-container">
-                                        <div class="circle" data-degree="{{ $goal['left_percentage'] }}" data-color="#ff2972">
-                                            <h2 class="number" style="color: #ff2972">{{ $goal['left_percentage'] }}<span>%</span></h2>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 right">
-                                    Liko
-                                    <br>{{ $goal['left_sales'] }} €
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
+        <h4 class="mt-4">Goals</h4>
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="col-md-1"><i class="fa-solid fa-medal"></i></div>
+                <div class="col-md-1 d-flex justify-content-end">
+                    <a href="{{ route('goals.add') }}" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i></a>
                 </div>
-            @endforeach
-        @endif
-
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th>Start date</th>
+                            <th>Visible</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($goals as $goal)
+                            <tr>
+                                <td>{{$goal['name']}}</td>
+                                <td>{{$goal['amount']}}</td>
+                                <td>{{$goal['start_date']}}</td>
+                                <td>
+                                    @if($goal['is_visible'])
+                                        <span class="span-success">YES</span>
+                                    @else
+                                        <span class="span-danger">NO</span>
+                                    @endif
+                                </td>
+                                <td>
+                                        <div class="btn-group" style="display: flex; width: 100%;">
+                                            <a href="{{ route('goals.edit', ['id'=>$goal['id']]) }}" title="Edit" class="btn btn-outline-primary"><i class="fa-solid fa-pen"></i></a>
+                                            <a onclick="return confirmAction();" href="{{ route('goals.delete', ['id'=>$goal['id']]) }}" title="Remove" class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
+                                        </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 @section('script')
     <script>
+        function confirmAction() {
+            return confirm('Are you sure you want to remove ?');
+        }
+
         document.addEventListener("DOMContentLoaded", function (event) {
             let circle = document.querySelectorAll('.circle');
             circle.forEach(function (progress) {

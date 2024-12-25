@@ -13,6 +13,7 @@ class Goal extends Model
         'start_date',
         'name',
         'amount',
-        'status'
+        'status',
+        'is_visible',
     ];
 }

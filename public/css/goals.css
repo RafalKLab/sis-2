@@ -64,3 +64,21 @@
 .goal {
     padding: 10px;
 }
+
+.span-danger {
+    color: #7E202B;
+    background: #F5D7DA;
+    border: 1px solid #F0C2C7;
+    padding: 5px;
+    border-radius: 25%;
+}
+
+.span-success {
+    color: #1D5134;
+    background: #D3E7DD;
+    border: 1px solid #BEDBCD;
+    padding: 5px;
+    border-radius: 25%;
+}
+
+

@@ -1496,6 +1496,7 @@ class OrderController extends MainController
             [
                 'order_id' => $orderId,
                 'field_id' => $transFieldId,
+                'value' => $sum,
             ],
             [
                 'value' => $sum

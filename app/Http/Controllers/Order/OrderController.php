@@ -1492,17 +1492,17 @@ class OrderController extends MainController
 
         $transFieldId = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_2)->id;
 
-        OrderData::updateOrCreate(
-            [
-                'order_id' => $orderId,
-                'field_id' => $transFieldId,
-            ],
-            [
+        $transPrice2Entity= OrderData::where('order_id', $orderId)->where('field_id', $transFieldId)->first();
+        if ($transPrice2Entity) {
+            $transPrice2Entity->value = $sum;
+            $transPrice2Entity->save();
+        } else {
+            OrderData::create([
                 'order_id' => $orderId,
                 'field_id' => $transFieldId,
                 'value' => $sum,
-            ],
-        );
+            ]);
+        }
 
         $order = Order::find($orderId);
         $this->executeOrderCalculations($order);

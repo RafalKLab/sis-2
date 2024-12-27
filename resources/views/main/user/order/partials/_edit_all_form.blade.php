@@ -125,6 +125,17 @@
                                         @endforeach
                                     </select>
                                     @break
+                                @case('transport price 2')
+                                    <input name="field_{{$data['field_id'] }}" type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
+                                    <small class="form-text text-muted">
+                                        Automatic calculation based on the following invoices:
+                                        <ul style="list-style-type: none;">
+                                            @foreach($data['additional_data'] as $invoiceData)
+                                                <li>{{$invoiceData['name']}}: <i>Nr. {{$invoiceData['number']}}</i> <b>{{$invoiceData['sum']}}€</b></li>
+                                            @endforeach
+                                        </ul>
+                                    </small>
+                                    @break
                                 @default
                                     <input name="field_{{$data['field_id'] }}" type="text" class="form-control" id="{{ $data['field_id'] }}" value="{{ $data['value'] }}">
                             @endswitch

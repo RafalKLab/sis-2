@@ -1232,6 +1232,10 @@ class OrderController extends MainController
             $returnMessage = sprintf('Invoice for %s created', $customer);
         }
 
+        if ($isTransportation) {
+            $this->updateOrderTransPrice($orderId);
+        }
+
         return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, $returnMessage);
     }
 
@@ -1476,5 +1480,29 @@ class OrderController extends MainController
         $targetFieldId = TableField::where('type', $targetField)->first()?->id;
 
         return OrderItemData::where('order_item_id', $itemId)->where('field_id', $targetFieldId)->first();
+    }
+
+    private function updateOrderTransPrice(int $orderId): void
+    {
+        $transInvoices = Invoice::where('order_id', $orderId)->where('is_trans', true)->get();
+        $sum = 0;
+        foreach ($transInvoices as $invoice) {
+            $sum += $invoice->sum;
+        }
+
+        $transFieldId = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_2)->id;
+
+        OrderData::updateOrCreate(
+            [
+                'order_id' => $orderId,
+                'field_id' => $transFieldId,
+            ],
+            [
+                'value' => $sum
+            ],
+        );
+
+        $order = Order::find($orderId);
+        $this->executeOrderCalculations($order);
     }
 }

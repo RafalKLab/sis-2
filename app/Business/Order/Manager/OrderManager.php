@@ -248,6 +248,7 @@ class OrderManager
         return match ($field->type) {
             ConfigDefaultInterface::FIELD_TYPE_INVOICE => $this->getInvoiceData($orderDataEntity?->value, $field, $orderId),
             ConfigDefaultInterface::FIELD_TYPE_DUTY_7, ConfigDefaultInterface::FIELD_TYPE_DUTY_15 => $this->getAdditionalDutyData($field, $orderDataEntity),
+            ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_2 => $this->getAdditionalTransportPrice2Data($orderId),
             default => [],
         };
     }
@@ -532,5 +533,20 @@ class OrderManager
         }
 
         return $comments;
+    }
+
+    private function getAdditionalTransportPrice2Data(int $orderId): array
+    {
+        $invoices = Invoice::where('order_id', $orderId)->where('is_trans', true)->get();
+        $data = [];
+        foreach ($invoices as $invoice) {
+            $data[] = [
+                'name' => $invoice->customer,
+                'number' => $invoice->invoice_number,
+                'sum' => $invoice->sum,
+            ];
+        }
+
+        return $data;
     }
 }

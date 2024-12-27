@@ -1484,6 +1484,7 @@ class OrderController extends MainController
 
     private function updateOrderTransPrice(int $orderId): void
     {
+        $order = Order::find($orderId);
         $transInvoices = Invoice::where('order_id', $orderId)->where('is_trans', true)->get();
         $sum = 0;
         foreach ($transInvoices as $invoice) {
@@ -1497,14 +1498,13 @@ class OrderController extends MainController
             $transPrice2Entity->value = $sum;
             $transPrice2Entity->save();
         } else {
-            OrderData::create([
-                'order_id' => $orderId,
+            $order->data()->create([
                 'field_id' => $transFieldId,
                 'value' => $sum,
             ]);
         }
 
-        $order = Order::find($orderId);
+
         $this->executeOrderCalculations($order);
     }
 }

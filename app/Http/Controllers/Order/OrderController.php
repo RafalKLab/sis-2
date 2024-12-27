@@ -1079,7 +1079,8 @@ class OrderController extends MainController
 
         // Check if buyer has invoice
         $buyerInvoice = Invoice::where('order_id', $orderId)->where('customer', $buyer->name)->first();
-        if ($buyerInvoice) {
+        $buyerTransInvoice = Invoice::where('order_id', $orderId)->where('customer', $buyer->name . ' Trans')->first();
+        if ($buyerInvoice || $buyerTransInvoice) {
             return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_ERROR, sprintf('Can not delete buyer that has invoice assigned'));
         }
 

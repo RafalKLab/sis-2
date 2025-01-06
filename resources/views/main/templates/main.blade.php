@@ -49,6 +49,11 @@
                         Dashboard
                     </a>
 
+                    <a class="nav-link" href="{{ route('statistics.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-chart-simple"></i></div>
+                        Statistics
+                    </a>
+
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseOrders" aria-expanded="false" aria-controls="collapseOrders">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-bars"></i></div>
                         Orders
@@ -93,11 +98,6 @@
 
                     @role('admin')
                     <div class="sb-sidenav-menu-heading">Admin</div>
-
-                    <a class="nav-link" href="{{ route('statistics.index') }}">
-                        <div class="sb-nav-link-icon"><i class="fa-solid fa-chart-simple"></i></div>
-                        Statistics
-                    </a>
 
                     <a class="nav-link" href="{{ route('statistics-user.index') }}">
                         <div class="sb-nav-link-icon"><i class="fa-regular fa-address-card"></i></div>

@@ -118,6 +118,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/order/file/{fileId}/delete', [FileController::class, 'delete'])->name('order-files.delete');
     Route::get('/order/file/{fileId}/download', [FileController::class, 'download'])->name('order-files.download');
 
+    /* Statistics */
+    Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
+    Route::post('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
+
     /* Admin-only Routes */
     Route::middleware(['role:admin'])->group(function () {
         /* User management */
@@ -162,9 +166,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/fields/move-down/{id}', [AdminFieldController::class, 'moveDownFieldOrder'])->name('admin-fields.move-down');
 
         /* Statistics */
-        Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
-        Route::post('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
-
         Route::get('/statistics/users', [UserStatisticsController::class, 'index'])->name('statistics-user.index');
         Route::post('/statistics/users', [UserStatisticsController::class, 'index'])->name('statistics-user.index');
         Route::get('/statistics/users/{userId}/{year}/{month}', [UserStatisticsController::class, 'show'])->name('statistics-user.show');

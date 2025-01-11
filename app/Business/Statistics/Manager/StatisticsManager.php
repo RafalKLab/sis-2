@@ -14,10 +14,13 @@ use App\Service\TableService;
 use DateInterval;
 use DatePeriod;
 use DateTime;
+use Dflydev\DotAccessData\Data;
 use shared\ConfigDefaultInterface;
 
 class StatisticsManager
 {
+    protected const IS_ACTUAL_PROFIT = 'is_actual_profit';
+    protected const BUYER_INVOICES = 'buyer_invoices';
 
     public function retrieveAnnualStatistics(string $targetYear, int $companyId): array
     {
@@ -83,10 +86,11 @@ class StatisticsManager
     private function calculateMonthStatistics(string $month, int $companyId): array
     {
         $orderIds = $this->getOrdersForMonth($month, $companyId);
+        $monthInvoices = $this->getInvoicesForMonth($month, $companyId);
 
         return [
             'orders' => $this->getOrderKeys($orderIds),
-            'profit' => $this->calculateProfit($orderIds),
+            'profit' => $this->calculateProfit($monthInvoices),
             'paid_in_advance' => $this->calculatePaidInAdvanceOrders($orderIds),
             'debts' => $this->calculateDebts($orderIds),
             'expenses' => $this->calculateExpenses($orderIds),
@@ -101,6 +105,7 @@ class StatisticsManager
             ->pluck('order_id')
             ->toArray();
 
+        // TODO Implement with invoice issue date
         $orderBuyerInvoices = $this->getOrdersProfitStatusByBuyersInvoices($orderIds);
 
         $ordersByUserId = [];
@@ -166,6 +171,7 @@ class StatisticsManager
             ->pluck('order_id')
             ->toArray();
 
+        // TODO Implement with invoice issue date
         $orderBuyerInvoices = $this->getOrdersProfitStatusByBuyersInvoices($orderIds);
 
         $ordersByUserId = [];
@@ -271,19 +277,14 @@ class StatisticsManager
             ->toArray();
     }
 
-    private function calculateProfit(array $orderIds): array
+    private function calculateProfit(array $monthInvoices): array
     {
         $actualProfit = 0.0;
         $actualProfitDetails = [];
         $expectedProfit = 0.0;
         $expectedProfitDetails = [];
 
-        $orderBuyerInvoices = $this->getOrdersProfitStatusByBuyersInvoices($orderIds);
-
-        foreach ($orderIds as $orderId) {
-            if (!array_key_exists($orderId, $orderBuyerInvoices)) {
-                continue;
-            }
+        foreach ($monthInvoices[static::BUYER_INVOICES] as $orderId => $invoices) {
 
             // find order sales value
             $orderTotalProfitFieldId = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_PROFIT)->id;
@@ -298,7 +299,7 @@ class StatisticsManager
                 'order_sales_sum' => $this->formatNumberWithDecimals($orderProfit),
             ];
 
-            if ($orderBuyerInvoices[$orderId]) {
+            if ($monthInvoices[static::BUYER_INVOICES][$orderId][static::IS_ACTUAL_PROFIT]) {
                 $actualProfit += $orderProfit;
                 $actualProfitDetails[] = $details;
             } else {
@@ -473,6 +474,42 @@ class StatisticsManager
         }
 
         return $ordersProfitStatus;
+    }
+
+    private function getInvoicesForMonth(string $month, int $companyId): array
+    {
+        $monthPattern = $month . '%'; // Append a '%' wildcard to the month string
+
+        $buyerInvoices = Invoice::where('is_trans', false)
+            ->whereNotNull('customer')
+            ->where('issue_date', 'LIKE', $monthPattern)
+                ->whereHas('order', function ($query) use ($companyId) {
+                    $query->where('company_id', $companyId);
+                })
+                ->get();
+
+        // group invoices by order id
+        $invoicesByOrder = [];
+        foreach ($buyerInvoices as $invoice) {
+            $invoicesByOrder[$invoice->order_id][] = [
+                'status' => $invoice->status,
+            ];
+        }
+
+        // check invoice statuses, mark as actual profit only in all invoices are paid
+        foreach ($invoicesByOrder as $orderId => $invoices) {
+            $actualProfit = true;
+            foreach ($invoices as $invoice) {
+                if ($invoice['status'] !== ConfigDefaultInterface::INVOICE_STATUS_PAID) {
+                    $actualProfit = false;
+                }
+            }
+            $invoicesByOrder[$orderId][static::IS_ACTUAL_PROFIT] = $actualProfit;
+        }
+
+        return [
+            static::BUYER_INVOICES => $invoicesByOrder,
+        ];
     }
 
 }

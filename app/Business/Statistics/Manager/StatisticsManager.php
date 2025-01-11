@@ -478,38 +478,34 @@ class StatisticsManager
 
     private function getInvoicesForMonth(string $month, int $companyId): array
     {
-        $monthPattern = $month . '%'; // Append a '%' wildcard to the month string
+        $monthPattern = $month . '%';
 
+        // Fetch buyer invoices with necessary data and relationships
         $buyerInvoices = Invoice::where('is_trans', false)
             ->whereNotNull('customer')
             ->where('issue_date', 'LIKE', $monthPattern)
-                ->whereHas('order', function ($query) use ($companyId) {
-                    $query->where('company_id', $companyId);
-                })
-                ->get();
+            ->whereHas('order', function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })
+            ->with(['order'])
+            ->get()
+            ->groupBy('order_id');
 
-        // group invoices by order id
-        $invoicesByOrder = [];
-        foreach ($buyerInvoices as $invoice) {
-            $invoicesByOrder[$invoice->order_id][] = [
-                'status' => $invoice->status,
+        $invoicesByOrder = $buyerInvoices->map(function ($invoices) {
+            $allPaid = $invoices->every(function ($invoice) {
+                return $invoice->status === ConfigDefaultInterface::INVOICE_STATUS_PAID;
+            });
+
+            return [
+                'invoices' => $invoices->map(fn($invoice) => ['status' => $invoice->status])->toArray(),
+                static::IS_ACTUAL_PROFIT => $allPaid,
             ];
-        }
-
-        // check invoice statuses, mark as actual profit only in all invoices are paid
-        foreach ($invoicesByOrder as $orderId => $invoices) {
-            $actualProfit = true;
-            foreach ($invoices as $invoice) {
-                if ($invoice['status'] !== ConfigDefaultInterface::INVOICE_STATUS_PAID) {
-                    $actualProfit = false;
-                }
-            }
-            $invoicesByOrder[$orderId][static::IS_ACTUAL_PROFIT] = $actualProfit;
-        }
+        });
 
         return [
-            static::BUYER_INVOICES => $invoicesByOrder,
+            static::BUYER_INVOICES => $invoicesByOrder->toArray(),
         ];
     }
+
 
 }

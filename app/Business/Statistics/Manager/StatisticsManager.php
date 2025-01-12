@@ -21,6 +21,7 @@ class StatisticsManager
 {
     protected const IS_ACTUAL_PROFIT = 'is_actual_profit';
     protected const BUYER_INVOICES = 'buyer_invoices';
+    protected const OBLIGATION_INVOICES = 'obligation_invoices';
 
     public function retrieveAnnualStatistics(string $targetYear, int $companyId): array
     {
@@ -92,8 +93,8 @@ class StatisticsManager
             'orders' => $this->getOrderKeys($orderIds),
             'profit' => $this->calculateProfit($monthInvoices),
             'paid_in_advance' => $this->calculatePaidInAdvanceOrders($orderIds),
-            'debts' => $this->calculateDebts($orderIds),
-            'expenses' => $this->calculateExpenses($orderIds),
+            'debts' => $this->calculateDebts($monthInvoices),
+            'expenses' => $this->calculateExpenses($monthInvoices),
         ];
     }
     private function calculateMonthStatisticsUsers(string $month): array
@@ -348,34 +349,31 @@ class StatisticsManager
         ];
     }
 
-    private function calculateDebts(array $orderIds): array
+    private function calculateDebts(array $monthInvoices): array
     {
         $totalDebts = 0;
         $totalDebtsSum = 0.0;
         $details = [];
 
-        foreach ($orderIds as $orderId) {
-            $orderInvoices = InvoiceService::getNotPaidInvoicesForOrder($orderId);
+        foreach ($monthInvoices[static::OBLIGATION_INVOICES] as $orderId => $invoices) {
+            $debtInvoices = array_filter($invoices, function ($invoice) {
+                return $invoice['status'] !== ConfigDefaultInterface::INVOICE_STATUS_PAID;
+            });
 
-            if (empty($orderInvoices)) {
-                continue;
-            }
-
-            // Keep only expense invoices
-            $orderInvoices = array_filter($orderInvoices, function($invoice) {
+            $debtInvoices = $this->expandObligationInvoices($debtInvoices);
+            $debtInvoices = array_filter($debtInvoices, function($invoice) {
                 return in_array($invoice['identifier'], ConfigDefaultInterface::EXPENSE_INVOICES);
             });
 
-            $totalDebts += count($orderInvoices);
+            $totalDebts += count($debtInvoices);
             $orderDebts = [
                 'order_id' => $orderId,
                 'order_key' => OrderService::getKeyFieldFrom($orderId)->value,
-                'debts' => $orderInvoices
+                'debts' => $debtInvoices
             ];
 
             $totalDebtsSum += $this->countInvoiceSum($orderDebts['debts']);
             $details[] = $orderDebts;
-
         }
 
         return [
@@ -385,32 +383,29 @@ class StatisticsManager
         ];
     }
 
-    private function calculateExpenses(array $orderIds): array
+    private function calculateExpenses(array $monthInvoices): array
     {
         $totalExpenses = 0.0;
         $details = [];
 
-        foreach ($orderIds as $orderId) {
-            $orderInvoices = InvoiceService::getPaidInvoicesForOrder($orderId);
+        foreach ($monthInvoices[static::OBLIGATION_INVOICES] as $orderId => $invoices) {
+            $debtInvoices = array_filter($invoices, function ($invoice) {
+                return $invoice['status'] === ConfigDefaultInterface::INVOICE_STATUS_PAID;
+            });
 
-            if (empty($orderInvoices)) {
-                continue;
-            }
-
-            // Keep only expense invoices
-            $orderInvoices = array_filter($orderInvoices, function($invoice) {
+            $debtInvoices = $this->expandObligationInvoices($debtInvoices);
+            $debtInvoices = array_filter($debtInvoices, function($invoice) {
                 return in_array($invoice['identifier'], ConfigDefaultInterface::EXPENSE_INVOICES);
             });
 
             $orderDebts = [
                 'order_id' => $orderId,
                 'order_key' => OrderService::getKeyFieldFrom($orderId)->value,
-                'expenses' => $orderInvoices
+                'expenses' => $debtInvoices
             ];
 
             $totalExpenses += $this->countInvoiceSum($orderDebts['expenses']);
             $details[] = $orderDebts;
-
         }
 
         return [
@@ -502,10 +497,39 @@ class StatisticsManager
             ];
         });
 
+        // Obligations (expenses/debts)
+        $obligations = Invoice::where('is_trans', false)
+            ->where('customer', null)
+            ->where('issue_date', 'LIKE', $monthPattern)
+            ->whereHas('order', function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })
+            ->with(['order'])
+            ->get()
+            ->groupBy('order_id');
+
+
         return [
             static::BUYER_INVOICES => $invoicesByOrder->toArray(),
+            static::OBLIGATION_INVOICES => $obligations->toArray(),
         ];
     }
 
+    private function expandObligationInvoices(array $debtInvoices): array
+    {
+        $invoices = [];
+        foreach ($debtInvoices as $debtInvoice) {
+            $field = $debtInvoice['field_id'] ? TableService::getFieldById($debtInvoice['field_id']) : null;
+
+            $invoices[] = [
+                'invoice_name' => $field->name ?? '',
+                'invoice_number' => $debtInvoice['invoice_number'],
+                'sum' => number_format($debtInvoice['sum'], 2, '.', ''),
+                'identifier' => $field->identifier ?? '',
+            ];
+        }
+
+        return $invoices;
+    }
 
 }

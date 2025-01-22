@@ -16,7 +16,6 @@ class GoalManager
 
         foreach ($goals as &$goal) {
             $sales = $this->calculateOrderSales($goal['start_date']);
-
             $salesPercentage = $sales * 100 / $goal['amount'];
 
             $salesPercentage = (floor($salesPercentage) == $salesPercentage)
@@ -44,15 +43,8 @@ class GoalManager
 
     private function calculateOrderSales(string $startDate): float
     {
-        $fieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_IDENTIFIER_ORDER_DATE)->id;
-
-        $orderIds = OrderData::where('field_id', $fieldId)
-            ->where('value', '>=', $startDate)
-            ->pluck('order_id')
-            ->toArray();
-
         return (float) Invoice::where('status', ConfigDefaultInterface::INVOICE_STATUS_PAID)
-            ->whereIn('order_id', $orderIds)
+            ->where('issue_date', '>=', $startDate)
             ->whereNotNull('customer')
             ->where('is_trans', false)
             ->sum('sum');

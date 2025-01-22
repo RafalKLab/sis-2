@@ -11,7 +11,7 @@ class CompanyController extends MainController
 {
     public function index()
     {
-        $companies = Company::all();
+        $companies = Company::orderBy('position')->get();
 
         return view('main.admin.company.index', compact('companies'));
     }
@@ -24,8 +24,9 @@ class CompanyController extends MainController
     public function store(Request $request) {
         $validated = $request->validate([
             'name' => 'string|required',
+            'position' => 'required|numeric'
         ]);
-
+        
         $company = Company::create($validated);
 
         return redirect()->route('admin-companies.index')
@@ -44,6 +45,7 @@ class CompanyController extends MainController
     public function update(Request $request, int $id) {
         $validated = $request->validate([
             'name' => 'string|required',
+            'position' => 'required|numeric'
         ]);
 
         $company = Company::find($id);
@@ -52,6 +54,7 @@ class CompanyController extends MainController
         }
 
         $company->name = $validated['name'];
+        $company->position = $validated['position'];
         $company->save();
 
         return redirect()->route('admin-companies.index')

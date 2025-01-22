@@ -19,6 +19,16 @@
                         @endif
                     </div>
 
+                    <div class="form-group mb-2">
+                        <label for="name">Position</label>
+                        <input type="number" class="form-control {{ $errors->has('position') ? 'is-invalid' : '' }}" id="position" name="position" placeholder="Enter position" value="{{ old('position') ?? $company->position}}">
+                        @if ($errors->has('position'))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('position') }}
+                            </div>
+                        @endif
+                    </div>
+
                     <button type="submit" class="btn btn-primary mt-4">Save</button>
                 </form>
             </div>

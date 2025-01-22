@@ -275,7 +275,7 @@ class OrderController extends MainController
 
         $orderKeyFieldId = OrderService::getKeyField()->id;
         $relatedOrders = OrderData::where('field_id', $orderKeyFieldId)->orderBy('value', 'desc')->pluck('value', 'order_id')->toArray();
-        $companies = Company::all()->pluck('name', 'id')->toArray();
+        $companies = Company::orderBy('position')->get()->pluck('name', 'id')->toArray();
 
         return view('main.user.order.register', compact('relatedOrders', 'companies'));
     }

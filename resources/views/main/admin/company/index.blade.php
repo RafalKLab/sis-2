@@ -17,7 +17,7 @@
                     <table class="table" id="datatablesSimple">
                         <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>Position</th>
                             <th>Company name</th>
                             <th>Actions</th>
                         </tr>
@@ -25,7 +25,7 @@
                         <tbody>
                         @foreach($companies as $company)
                             <tr>
-                                <th>{{$company->id}}</th>
+                                <th>{{$company->position}}</th>
                                 <th>{{$company->name}}</th>
                                 <th>
                                     <div class="btn-group" style="display: flex; width: 100%;">

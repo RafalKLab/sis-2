@@ -15,7 +15,9 @@ class GoalManager
         $goals = Goal::orderBy('created_at', 'DESC')->where('is_visible', true)->get()->toArray();
 
         foreach ($goals as &$goal) {
-            $sales = $this->calculateOrderSales($goal['start_date']);
+            $salesData = $this->calculateOrderSales($goal['start_date']);
+            $sales = $salesData['sales'];
+
             $salesPercentage = $sales * 100 / $goal['amount'];
 
             $salesPercentage = (floor($salesPercentage) == $salesPercentage)
@@ -36,17 +38,36 @@ class GoalManager
             $goal['sales_percentage'] = $salesPercentage;
             $goal['left_sales'] = number_format($leftSales, 0, '.', ' ');
             $goal['left_percentage'] = $leftPercentage;
+            $goal['sales_data'] = $salesData;
         }
 
         return $goals;
     }
 
-    private function calculateOrderSales(string $startDate): float
+    private function calculateOrderSales(string $startDate): array
     {
-        return (float) Invoice::where('status', ConfigDefaultInterface::INVOICE_STATUS_PAID)
-            ->where('issue_date', '>=', $startDate)
+        $invoices = Invoice::where('issue_date', '>=', $startDate)
             ->whereNotNull('customer')
             ->where('is_trans', false)
-            ->sum('sum');
+            ->get();
+
+        $sum = 0.0;
+        $invoiceData = [];
+        foreach ($invoices as $invoice) {
+            $sum += (float) $invoice->sum;
+            $invoiceData[] = [
+                'number' => $invoice->invoice_number,
+                'issue_date' => $invoice->issue_date,
+                'sum' => $invoice->sum,
+                'buyer' => $invoice->customer,
+                'order_id' => $invoice->order_id,
+                'order_key' => $invoice->order->getKeyField(),
+            ];
+        }
+
+        return [
+            'sales' => $sum,
+            'invoice_data' => $invoiceData,
+        ];
     }
 }

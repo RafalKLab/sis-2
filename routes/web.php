@@ -70,7 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/orders/{orderId}/item/{itemId}/edit-buyer/{buyerId}', [OrderController::class, 'updateBuyer'])->name('orders.update-item-buyer');
     Route::get('/orders/{orderId}/item/{itemId}/remove-buyer/{buyerId}', [OrderController::class, 'removeBuyer'])->name('orders.remove-item-buyer');
 
-    /* User orders table */
+    /* Orders table */
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/register', [OrderController::class, 'register'])->name('orders.register');
     Route::post('/orders/register', [OrderController::class, 'registerConfirm'])->name('orders.register-confirm');

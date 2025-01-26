@@ -81,4 +81,19 @@
     border-radius: 25%;
 }
 
+.invoice-list {
+    cursor: pointer;
+    font-size: 16px;
+}
 
+.goal-order-link {
+    color: black;
+}
+
+.goal-order-link:hover {
+    color: black;
+}
+
+.goal-order-link:visited {
+    color: black;
+}

@@ -93,6 +93,7 @@ Route::middleware('auth')->group(function () {
     /* Customer invoices */
     Route::get('/orders/edit/{orderId}/customer-invoice/{customer}', [OrderController::class, 'editCustomerInvoice'])->name('orders.edit-customer-invoice');
     Route::post('/orders/edit/{orderId}/customer-invoice/{customer}', [OrderController::class, 'saveCustomerInvoice'])->name('orders.save-customer-invoice');
+    Route::get('/orders/delete/{orderId}/customer-invoice/{customer}', [OrderController::class, 'deleteCustomerInvoice'])->name('orders.delete-customer-invoice');
 
     /* Warehouse */
     Route::get('/warehouses', [WarehouseController::class, 'index'])->name('warehouses.index');

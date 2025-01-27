@@ -33,6 +33,7 @@ interface ConfigDefaultInterface
     public const PERMISSION_DELETE_CARRIER_NOTES = 'Delete carrier notes';
     public const PERMISSION_DELETE_ORDER_COMMENTS = 'Delete order comments';
     public const PERMISSION_DELETE_INVOICE = 'Delete invoice';
+    public const PERMISSION_DELETE_BUYER_INVOICE = 'Delete buyer invoice';
 
     public const AVAILABLE_ROLES = [
         self::ROLE_USER,
@@ -65,6 +66,7 @@ interface ConfigDefaultInterface
         self::PERMISSION_WRITE_WAREHOUSE_ITEM_COMMENTS,
         self::PERMISSION_DELETE_WAREHOUSE_ITEM_COMMENTS,
         self::PERMISSION_ADD_ITEM_BUYER,
+        self::PERMISSION_DELETE_BUYER_INVOICE,
     ];
 
     public const PERMISSION_GROUPS = [
@@ -96,6 +98,7 @@ interface ConfigDefaultInterface
         'Invoice table related permissions' => [
             self::PERMISSION_MANAGE_INVOICE_TABLE,
             self::PERMISSION_DELETE_INVOICE,
+            self::PERMISSION_DELETE_BUYER_INVOICE,
         ],
         'Warehouse table related permissions' => [
             self::PERMISSION_MANAGE_WAREHOUSES,

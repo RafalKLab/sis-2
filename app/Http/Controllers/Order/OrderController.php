@@ -27,13 +27,14 @@ use shared\ConfigDefaultInterface;
 
 class OrderController extends MainController
 {
-    public function orderTree(int $orderId) {
+    public function orderTree(int $orderId)
+    {
         $order = Order::find($orderId);
         if (!$order) {
             return redirect()->back();
         }
 
-        $orderHierarchy  = $this->factory()->createOrderManager()->getRelatedOrderHierarchy($order);
+        $orderHierarchy = $this->factory()->createOrderManager()->getRelatedOrderHierarchy($order);
 
         return view('main.user.order.tree.tree', compact('orderHierarchy'));
     }
@@ -46,7 +47,7 @@ class OrderController extends MainController
         $search = $request->search;
         $tableData = $this->factory()->createTableManager()->retrieveTableData($search);
         if ($tableData['exact_match']) {
-            return redirect()->route('orders.view', ['id'=>$tableData['exact_match']]);
+            return redirect()->route('orders.view', ['id' => $tableData['exact_match']]);
         }
 
         $end_time = microtime(true);
@@ -123,7 +124,8 @@ class OrderController extends MainController
         return view('main.user.order.edit', compact('orderData', 'orderFormData', 'excludedFieldsForDetails'));
     }
 
-    public function editField(int $orderId, int $fieldId) {
+    public function editField(int $orderId, int $fieldId)
+    {
         $order = Order::find($orderId);
         if (!$order) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
@@ -180,7 +182,7 @@ class OrderController extends MainController
         $allInputs = $request->all();
 
         // Filter inputs that start with 'field_'
-        $fieldInputs = array_filter($allInputs, function($key) {
+        $fieldInputs = array_filter($allInputs, function ($key) {
             return strpos($key, 'field_') === 0;
         }, ARRAY_FILTER_USE_KEY);
 
@@ -198,7 +200,7 @@ class OrderController extends MainController
             if ($orderData) {
                 // If value in request is different from old value then update
                 // If null replace with empty
-                $value = (string) $value;
+                $value = (string)$value;
                 if ($orderData->value !== $value) {
                     $orderData->update([
                         'value' => $value,
@@ -225,9 +227,9 @@ class OrderController extends MainController
             $order->touch();
             $this->executeOrderCalculations($order);
 
-            return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Successfully updated %s fields', $updatedFields));
+            return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Successfully updated %s fields', $updatedFields));
         } else {
-            return redirect()->route('orders.view', ['id'=>$orderId]);
+            return redirect()->route('orders.view', ['id' => $orderId]);
         }
     }
 
@@ -251,7 +253,7 @@ class OrderController extends MainController
                 'exists:companies,id'
             ],
         ]);
-        $oldCompany = (string) $order->company?->name;
+        $oldCompany = (string)$order->company?->name;
 
         $order->company_id = $validated['company'];
         $order->save();
@@ -364,7 +366,8 @@ class OrderController extends MainController
         ]);
     }
 
-    public function addItem(int $orderId) {
+    public function addItem(int $orderId)
+    {
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_ADD_ORDER_PRODUCTS)) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
         }
@@ -393,11 +396,12 @@ class OrderController extends MainController
 
         return view(
             'main.user.order.add-item',
-            compact('orderData', 'orderFormData', 'itemFromWarehouse', 'excludedFields', 'lockedFields','excludedFieldsForDetails'),
+            compact('orderData', 'orderFormData', 'itemFromWarehouse', 'excludedFields', 'lockedFields', 'excludedFieldsForDetails'),
         );
     }
 
-    public function addItemFromWarehouse(int $orderId) {
+    public function addItemFromWarehouse(int $orderId)
+    {
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_ADD_ORDER_PRODUCTS)) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
         }
@@ -426,7 +430,8 @@ class OrderController extends MainController
         return view('main.user.order.add-item-from-warehouse', compact('orderData', 'orderFormData', 'warehouseItems', 'excludedFieldsForDetails'));
     }
 
-    public function storeItemFromWarehouse(Request $request, int $orderId) {
+    public function storeItemFromWarehouse(Request $request, int $orderId)
+    {
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_ADD_ORDER_PRODUCTS)) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
         }
@@ -494,8 +499,7 @@ class OrderController extends MainController
 
         $lockedFields = TableService::getLockedFields();
         $duplicateFields = TableService::getDuplicateFields();
-        foreach ($itemFromWarehouse->data as $itemData)
-        {
+        foreach ($itemFromWarehouse->data as $itemData) {
             if (in_array($itemData->field_id, $lockedFields)) {
                 $newItem->data()->create([
                     'value' => $itemData->value,
@@ -514,19 +518,19 @@ class OrderController extends MainController
         // Set amount from warehouse
         $amountFromWarehouseFieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_TYPE_AMOUNT_FROM_WAREHOUSE)->id;
         $newItem->data()->create([
-            'value' => (float) $request->amount,
+            'value' => (float)$request->amount,
             'field_id' => $amountFromWarehouseFieldId,
         ]);
 
         // Set available amount from warehouse
         $amountFromWarehouseFieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)->id;
         $newItem->data()->create([
-            'value' => (float) $request->amount,
+            'value' => (float)$request->amount,
             'field_id' => $amountFromWarehouseFieldId,
         ]);
 
         // Set item prime cost from warehouse
-        $itemPrice = (float) $this->getItemFieldDataByType($itemFromWarehouse->id, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_NUMBER)?->value;
+        $itemPrice = (float)$this->getItemFieldDataByType($itemFromWarehouse->id, ConfigDefaultInterface::FIELD_TYPE_PURCHASE_NUMBER)?->value;
         $itemPrimeCost = $this->factory()->createWarehouseManager()->calculateItemPrimeCost($itemPrice, $itemFromWarehouse->id);
 
         $itemPrimeCostFieldId = TableService::getFieldByIdentifier(ConfigDefaultInterface::FIELD_TYPE_ITEM_PRIME_COST)->id;
@@ -547,7 +551,8 @@ class OrderController extends MainController
         ]);
     }
 
-    public function storeItem(Request $request, int $orderId) {
+    public function storeItem(Request $request, int $orderId)
+    {
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_ADD_ORDER_PRODUCTS)) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
         }
@@ -567,7 +572,7 @@ class OrderController extends MainController
         $allInputs = $request->all();
 
         // Filter inputs that start with 'field_'
-        $fieldInputs = array_filter($allInputs, function($key) {
+        $fieldInputs = array_filter($allInputs, function ($key) {
             return strpos($key, 'field_') === 0;
         }, ARRAY_FILTER_USE_KEY);
 
@@ -583,7 +588,7 @@ class OrderController extends MainController
             $fieldId = preg_replace('/[^0-9]/', '', $key);
             // If value in request is different from old value then update
             // If null replace with empty
-            $value = (string) $value;
+            $value = (string)$value;
 
             // Create new order data entity only if value is not null
             if ($value) {
@@ -601,10 +606,11 @@ class OrderController extends MainController
 
         WarehouseService::updateItemWarehouseStock($orderItem);
 
-        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('New item was added to order'));
+        return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('New item was added to order'));
     }
 
-    public function unlockItem(int $orderId, int $itemId) {
+    public function unlockItem(int $orderId, int $itemId)
+    {
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_EDIT_ORDER_PRODUCTS)) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
         }
@@ -653,7 +659,7 @@ class OrderController extends MainController
         }
 
         if ($item->is_locked) {
-            return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
+            return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
         }
 
         $itemFromWarehouse = $item->is_taken_from_warehouse;
@@ -699,7 +705,7 @@ class OrderController extends MainController
         $allInputs = $request->all();
 
         // Filter inputs that start with 'field_'
-        $fieldInputs = array_filter($allInputs, function($key) {
+        $fieldInputs = array_filter($allInputs, function ($key) {
             return strpos($key, 'field_') === 0;
         }, ARRAY_FILTER_USE_KEY);
 
@@ -711,7 +717,7 @@ class OrderController extends MainController
             if ($itemData) {
                 // If value in request is different from old value then update
                 // If null replace with empty
-                $value = (string) $value;
+                $value = (string)$value;
                 if ($itemData->value !== $value) {
                     $itemData->update([
                         'value' => $value,
@@ -734,15 +740,15 @@ class OrderController extends MainController
         $this->executeItemCalculations($item);
 
         $item->refresh();
-        if (!$item->is_taken_from_warehouse)
-        {
+        if (!$item->is_taken_from_warehouse) {
             WarehouseService::updateItemWarehouseStock($item);
         }
 
-        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item was updated '));
+        return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item was updated '));
     }
 
-    public function removeItem(int $orderId, int $itemId) {
+    public function removeItem(int $orderId, int $itemId)
+    {
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_REMOVE_ORDER_PRODUCTS)) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'User does not have permission for this action');
         }
@@ -758,7 +764,7 @@ class OrderController extends MainController
         }
 
         if ($item->is_locked) {
-            return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
+            return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
         }
 
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
@@ -773,7 +779,7 @@ class OrderController extends MainController
 
         $this->executeItemCalculations($item);
 
-        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item was removed'));
+        return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item was removed'));
     }
 
     public function addBuyer(int $orderId, int $itemId)
@@ -793,7 +799,7 @@ class OrderController extends MainController
         }
 
         if ($item->is_locked) {
-            return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
+            return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
         }
 
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
@@ -811,9 +817,9 @@ class OrderController extends MainController
         ];
 
         if ($item->is_taken_from_warehouse) {
-            $availableItemQuantity = (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
+            $availableItemQuantity = (float)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
         } else {
-            $availableItemQuantity = (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+            $availableItemQuantity = (float)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
         }
 
         $countryMap = ConfigDefaultInterface::ORDER_COUNTRY_MAP;
@@ -831,7 +837,8 @@ class OrderController extends MainController
         );
     }
 
-    public function storeBuyer(Request $request, int $orderId) {
+    public function storeBuyer(Request $request, int $orderId)
+    {
         if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_ADD_ITEM_BUYER)) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, ConfigDefaultInterface::ERROR_MISSING_PERMISSION);
         }
@@ -908,7 +915,7 @@ class OrderController extends MainController
             WarehouseService::updateItemWarehouseStock($orderItem);
         }
 
-        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was added '));
+        return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was added '));
     }
 
     public function editBuyer(int $orderId, int $itemId, int $buyerId)
@@ -930,7 +937,7 @@ class OrderController extends MainController
         }
 
         if ($item->is_locked) {
-            return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
+            return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
         }
 
         $buyer = ItemBuyer::find($buyerId);
@@ -949,10 +956,10 @@ class OrderController extends MainController
 
         // Available quantity check
         if ($item->is_taken_from_warehouse) {
-            $availableItemQuantity = (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
+            $availableItemQuantity = (float)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
             $availableItemQuantity += $buyer->quantity;
         } else {
-            $availableItemQuantity = (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+            $availableItemQuantity = (float)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
             $availableItemQuantity += $buyer->quantity;
         }
 
@@ -1010,10 +1017,10 @@ class OrderController extends MainController
 
         // Available quantity check
         if ($item->is_taken_from_warehouse) {
-            $availableItemQuantity = (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
+            $availableItemQuantity = (float)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AVAILABLE_AMOUNT_FROM_WAREHOUSE)?->value;
             $availableItemQuantity += $buyer->quantity;
         } else {
-            $availableItemQuantity = (float) $this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
+            $availableItemQuantity = (float)$this->getItemFieldDataByType($itemId, ConfigDefaultInterface::FIELD_TYPE_AMOUNT_TO_WAREHOUSE)?->value;
             $availableItemQuantity += $buyer->quantity;
         }
 
@@ -1051,7 +1058,7 @@ class OrderController extends MainController
             WarehouseService::updateItemWarehouseStock($item);
         }
 
-        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was updated '));
+        return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was updated '));
     }
 
     public function removeBuyer(int $orderId, int $itemId, int $buyerId)
@@ -1077,7 +1084,7 @@ class OrderController extends MainController
         }
 
         if ($item->is_locked) {
-            return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
+            return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
         }
 
         $buyer = ItemBuyer::find($buyerId);
@@ -1089,7 +1096,7 @@ class OrderController extends MainController
         $buyerInvoice = Invoice::where('order_id', $orderId)->where('customer', $buyer->name)->first();
         $buyerTransInvoice = Invoice::where('order_id', $orderId)->where('customer', $buyer->name . ' Trans')->first();
         if ($buyerInvoice || $buyerTransInvoice) {
-            return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_ERROR, sprintf('Can not delete buyer that has invoice assigned'));
+            return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_ERROR, sprintf('Can not delete buyer that has invoice assigned'));
         }
 
         $buyer->delete();
@@ -1100,7 +1107,7 @@ class OrderController extends MainController
             WarehouseService::updateItemWarehouseStock($item);
         }
 
-        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was removed '));
+        return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, sprintf('Item buyer was removed '));
     }
 
     public function editCustomerInvoice(int $orderId, string $customer)
@@ -1245,7 +1252,47 @@ class OrderController extends MainController
             $this->updateOrderTransPrice($orderId);
         }
 
-        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, $returnMessage);
+        return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, $returnMessage);
+    }
+
+    public function deleteCustomerInvoice(int $orderId, string $customer)
+    {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_DELETE_BUYER_INVOICE)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, ConfigDefaultInterface::ERROR_MISSING_PERMISSION);
+        }
+
+        $order = Order::find($orderId);
+        if (!$order) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+        }
+
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_SEE_ALL_ORDERS)) {
+            if ($order->user_id !== Auth::user()->id) {
+                return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
+            }
+        }
+
+        // Retrieve the single customer invoice
+        $customerInvoice = Invoice::where('order_id', $orderId)->where('customer', $customer)->first();
+
+        // Delete the customer invoice if it exists
+        if ($customerInvoice) {
+            $this->logCustomerInvoiceDeleted($customerInvoice);
+            $customerInvoice->delete();
+        }
+
+        // Retrieve the single customer trans invoice
+        $customerTransInvoice = Invoice::where('order_id', $orderId)->where('customer', $customer . ' Trans')->first();
+
+        // Delete the customer trans invoice if it exists
+        if ($customerTransInvoice) {
+            $this->logCustomerInvoiceDeleted($customerTransInvoice);
+            $customerTransInvoice->delete();
+        }
+
+        $message = sprintf('Customer: %s invoices have been deleted!', $customer);
+
+        return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, $message);
     }
 
     public function storeComment(Request $request, int $orderId)
@@ -1271,8 +1318,9 @@ class OrderController extends MainController
             'content' => $validated['content'],
         ]);
 
-        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'New comment has been added');
+        return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'New comment has been added');
     }
+
     public function deleteComment(Request $request, int $commentId)
     {
         $comment = Comment::find($commentId);
@@ -1287,7 +1335,7 @@ class OrderController extends MainController
         $orderId = $comment->order_id;
         $comment->delete();
 
-        return redirect()->route('orders.view', ['id'=>$orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Comment has been deleted');
+        return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Comment has been deleted');
     }
 
     public function deleteInvoice(int $orderId, int $fieldId)
@@ -1502,7 +1550,7 @@ class OrderController extends MainController
 
         $transFieldId = TableService::getFieldByType(ConfigDefaultInterface::FIELD_TYPE_TRANSPORT_PRICE_2)->id;
 
-        $transPrice2Entity= OrderData::where('order_id', $orderId)->where('field_id', $transFieldId)->first();
+        $transPrice2Entity = OrderData::where('order_id', $orderId)->where('field_id', $transFieldId)->first();
         if ($transPrice2Entity) {
             $transPrice2Entity->value = $sum;
             $transPrice2Entity->save();
@@ -1515,5 +1563,22 @@ class OrderController extends MainController
 
 
         $this->executeOrderCalculations($order);
+    }
+
+    private function logCustomerInvoiceDeleted(Invoice $customerInvoice): void
+    {
+        $transfer = $this->factory()
+            ->getActivityLogTransferObject()
+            ->setUser(Auth::user()->email)
+            ->setTitle(ActivityLogConstants::DANGER_LOG)
+            ->setAction(ActivityLogConstants::ACTION_DELETE)
+            ->setNewData(sprintf(
+                'invoice %s of buyer: %s from order: %s',
+                $customerInvoice->invoice_number,
+                $customerInvoice->customer,
+                $customerInvoice->order->getKeyField(),
+            ));
+
+        $this->factory()->createActivityLogManager()->log($transfer);
     }
 }

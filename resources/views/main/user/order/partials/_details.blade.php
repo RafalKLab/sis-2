@@ -706,7 +706,14 @@
                                         @else
                                             <td></td>
                                         @endif
-                                        <td><a href="{{ route('orders.edit-customer-invoice', ['orderId'=>$orderData['id'], 'customer'=>$buyer]) }}" title="Edit {{ $buyer }} invoice" class="text-primary"><i class="fa-solid fa-pen"></i></a></td>
+                                        <td>
+                                            <a href="{{ route('orders.edit-customer-invoice', ['orderId'=>$orderData['id'], 'customer'=>$buyer]) }}" title="Edit {{ $buyer }} invoice" class="text-primary"><i class="fa-solid fa-pen"></i></a>
+                                            @can('Delete buyer invoice')
+                                                @if($data['invoice']['number'])
+                                                    <a href="{{ route('orders.delete-customer-invoice', ['orderId'=>$orderData['id'], 'customer'=>$buyer]) }}" title="Delete buyer invoice" class="text-danger" onclick="return confirmAction();"><i class="fa-solid fa-eraser"></i></a>
+                                                @endif
+                                            @endcan
+                                        </td>
                                     </tr>
 {{--                                    Customer transportation invoice--}}
                                     <tr>

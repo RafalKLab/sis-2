@@ -9,7 +9,7 @@
     <div class="container-fluid py-2">
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <div class="col-md-1"><b>Įvykdyta: @if($goalData) {{$goalData['sales']}} € </b>@endif</div>
+                <div class="col-md-3"><b>Įvykdyta: @if($goalData) {{$goalData['sales']}} € </b>@endif</div>
                 <div class="col-md-1 d-flex justify-content-end">
                 </div>
             </div>

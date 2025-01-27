@@ -763,6 +763,10 @@ class OrderController extends MainController
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Item not found');
         }
 
+        if ($item->buyers()->count()) {
+            return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item has buyers and can not be deleted!');
+        }
+
         if ($item->is_locked) {
             return redirect()->route('orders.view', ['id' => $orderId])->with(ConfigDefaultInterface::FLASH_ERROR, 'Item is locked and can not be modified');
         }

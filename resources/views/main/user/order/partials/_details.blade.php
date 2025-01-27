@@ -342,13 +342,16 @@
                                                     @if($item['settings']['is_locked'] && Auth::user()->hasPermissionTo('Unlock item'))
                                                         <a href="{{ route('orders.unlock-item', ['orderId'=>$orderData['id'], 'itemId'=>$item['settings']['item_id']]) }}" class="text-primary" title="Unlock item" onclick="return confirm('Are you sure you want to unlock this item?')"><i class="fa-solid fa-lock-open text-warning"></i></a>
                                                     @endif
-                                                    <a style="margin-left: 10px;" title="Add buyer" href="{{route('orders.add-item-buyer', ['orderId'=>$orderData['id'], 'itemId'=>$item['settings']['item_id']])}}"><i class="fa-solid fa-user-plus"></i></a>
-                                                    @if(Auth::user()->hasPermissionTo('Edit order products'))
-                                                        <a style="margin-left: 10px;" href="{{ route('orders.edit-item', ['orderId' => $orderData['id'], 'itemId' => $item['settings']['item_id']]) }}" title="Edit"><i class="fa-solid fa-pen"></i></a>
-                                                    @endif
-                                                    @if(Auth::user()->hasPermissionTo('Remove order products'))
-                                                        <a style="font-size: 20px; margin-left: 10px;" href="{{ route('orders.remove-item', ['orderId' =>$orderData['id'], 'itemId' => $item['settings']['item_id']]) }}" onclick="return confirmAction()" class="text-danger" title="Remove"><i class="fa-solid fa-xmark"></i></a>
-                                                    @endif
+
+                                                    @can('Add item buyer')
+                                                            <a style="margin-left: 10px;" title="Add buyer" href="{{route('orders.add-item-buyer', ['orderId'=>$orderData['id'], 'itemId'=>$item['settings']['item_id']])}}"><i class="fa-solid fa-user-plus"></i></a>
+                                                    @endcan
+                                                    @can('Edit order products')
+                                                            <a style="margin-left: 10px;" href="{{ route('orders.edit-item', ['orderId' => $orderData['id'], 'itemId' => $item['settings']['item_id']]) }}" title="Edit"><i class="fa-solid fa-pen"></i></a>
+                                                    @endcan
+                                                    @can('Remove order products')
+                                                            <a style="font-size: 20px; margin-left: 10px;" href="{{ route('orders.remove-item', ['orderId' =>$orderData['id'], 'itemId' => $item['settings']['item_id']]) }}" onclick="return confirmAction()" class="text-danger" title="Remove"><i class="fa-solid fa-xmark"></i></a>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                             <tr id="collapseItem_{{$item['settings']['collapse_id']}}" class="collapse">

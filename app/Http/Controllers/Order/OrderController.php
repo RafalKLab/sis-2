@@ -778,6 +778,10 @@ class OrderController extends MainController
 
     public function addBuyer(int $orderId, int $itemId)
     {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_ADD_ITEM_BUYER)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, ConfigDefaultInterface::ERROR_MISSING_PERMISSION);
+        }
+
         $order = Order::find($orderId);
         if (!$order) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');
@@ -828,6 +832,10 @@ class OrderController extends MainController
     }
 
     public function storeBuyer(Request $request, int $orderId) {
+        if (!Auth::user()->hasPermissionTo(ConfigDefaultInterface::PERMISSION_ADD_ITEM_BUYER)) {
+            return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, ConfigDefaultInterface::ERROR_MISSING_PERMISSION);
+        }
+
         $order = Order::find($orderId);
         if (!$order) {
             return redirect()->route('orders.index')->with(ConfigDefaultInterface::FLASH_ERROR, 'Order not found');

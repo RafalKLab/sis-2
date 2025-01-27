@@ -44,6 +44,7 @@
                                 <td>
                                         <div class="btn-group" style="display: flex; width: 100%;">
                                             <a href="{{ route('goals.edit', ['id'=>$goal['id']]) }}" title="Edit" class="btn btn-outline-primary"><i class="fa-solid fa-pen"></i></a>
+                                            <a href="{{ route('goals.info', ['id'=>$goal['id']]) }}" title="Info" class="btn btn-outline-info"><i class="fa-solid fa-list"></i></a>
                                             <a onclick="return confirmAction();" href="{{ route('goals.delete', ['id'=>$goal['id']]) }}" title="Remove" class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
                                         </div>
                                 </td>

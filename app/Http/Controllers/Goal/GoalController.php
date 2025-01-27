@@ -86,6 +86,18 @@ class GoalController extends MainController
         return redirect()->route('goals.index')->with(ConfigDefaultInterface::FLASH_SUCCESS, 'Goal deleted');
     }
 
+    public function info(int $id) {
+        $goalsData = $this->factory()->createGoalManager()->getGoals();
+        $goalData = null;
+        foreach ($goalsData as $goalsDatum) {
+            if ($goalsDatum['id'] === $id) {
+                $goalData = $goalsDatum;
+            }
+        }
+
+        return view('main.admin.goal.info', compact('goalData'));
+    }
+
     private function calculatePercentages(array $goals): array
     {
         foreach ($goals as &$goal) {

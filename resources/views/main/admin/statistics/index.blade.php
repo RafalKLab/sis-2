@@ -41,9 +41,6 @@
                                 <div class="col-md-6 right">
                                     Įvykdyta
                                     <br>{{ $goal['sales'] }} €
-                                    <p>
-                                        <i title="info" onclick="showModal('#goalInvoiceList')" class="fa-solid fa-list invoice-list"></i>
-                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -418,46 +415,6 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="goalInvoiceList" tabindex="-1" aria-labelledby="goalInvoiceList" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="goalInvoiceList">Įvykdyta: @if($goals) {{ $goals[0]['sales'] }}€ @endif</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table" id="datatablesSimple">
-                            <thead>
-                            <tr>
-                                <th>Užsakymas</th>
-                                <th>Sąskaitos numeris</th>
-                                <th>Pirkėjas</th>
-                                <th>Išrašymo data</th>
-                                <th>Suma</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                @if(!empty($goals))
-                                    @foreach($goals[0]['sales_data']['invoice_data'] as $invoice)
-                                        <tr>
-                                            <td>
-                                                <a class="goal-order-link" href="{{ route('orders.view', ['id' => $invoice['order_id']]) }}">{{ $invoice['order_key'] }}</a>
-                                            </td>
-                                            <td>{{ $invoice['number'] }}</td>
-                                            <td>{{ $invoice['buyer'] }}</td>
-                                            <td>{{ $invoice['issue_date'] }}</td>
-                                            <td>{{ $invoice['sum'] }} €</td>
-                                        </tr>
-                                    @endforeach
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 @section('script')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -492,9 +449,6 @@
     </script>
 
     <script>
-        function showModal(modalId) {
-            $(modalId).modal('show');
-        }
 
         document.addEventListener('DOMContentLoaded', function() {
             const yearLink = document.querySelector('.stats-change-year-link');
